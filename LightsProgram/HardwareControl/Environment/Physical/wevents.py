@@ -4,6 +4,7 @@ import time
 import random
 import RPi.GPIO as GPIO
 import Internals.Utils.wlogger as wlogger
+import Main.config as config
 
 import termios
 import sys
@@ -12,9 +13,9 @@ import tty
 
 print_debug = True
 
-colourInputPin = 7
-speedInputPin = 8
-patternInputPin = 24
+colourInputPin = 24
+speedInputPin = 25
+patternInputPin = 8
 
 
 colourOutputPin = 13
@@ -23,9 +24,9 @@ patternOutputPin = 12
 
 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(colourInputPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(speedInputPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(patternInputPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(colourInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(speedInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(patternInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 GPIO.setup(colourOutputPin, GPIO.OUT)
 GPIO.setup(speedOutputPin, GPIO.OUT)
@@ -139,7 +140,7 @@ def buttonThread():
     
     # This changes the length of time the buttons are paused for. This 
     # will need to be calibrated.
-    num_pause_steps = 20
+    num_pause_steps = config.pause_cycles
     
     
     while continue_thread:
@@ -147,98 +148,98 @@ def buttonThread():
         
         
         #Temp taking keyboard input.
-        key = getkey()
-        print("Key: " + str(key))
+        #key = getkey()
+        #print("Key: " + str(key))
 
-        if key == "c":
-            with lock:
-                print("input c")
-                new_colour_int = (wlight_colour.value + 1) % WColour.MAX.value
-                wlight_colour = WColour(new_colour_int)
+        #if key == "c":
+            #with lock:
+                #print("input c")
+                #new_colour_int = (wlight_colour.value + 1) % WColour.MAX.value
+                #wlight_colour = WColour(new_colour_int)
 
-        elif key == "s":
-            with lock:
-                print("input s")
-                new_speed_int = (wlight_speed.value + 1) % WSpeed.MAX.value
-                wlight_speed = WSpeed(new_speed_int)
+        #elif key == "s":
+            #with lock:
+                #print("input s")
+                #new_speed_int = (wlight_speed.value + 1) % WSpeed.MAX.value
+                #wlight_speed = WSpeed(new_speed_int)
 
-        elif key == "p":
-            with lock:
-                print("input p")
-                new_pattern_int = (wlight_pattern.value + 1) % WPattern.MAX.value
-                wlight_pattern = WPattern(new_pattern_int)
+        #elif key == "p":
+            #with lock:
+                #print("input p")
+                #new_pattern_int = (wlight_pattern.value + 1) % WPattern.MAX.value
+                #wlight_pattern = WPattern(new_pattern_int)
                 
-        elif key == "e":
-            raise KeyboardInterrupt
+        #elif key == "e":
+            #raise KeyboardInterrupt
                 
         #End of temp
         
         ## Gather button inputs
-        #inputColourButton = GPIO.input(colourInputPin)
-        #inputSpeedValueButton = GPIO.input(speedInputPin)
-        #inputPatternValueButton = GPIO.input(patternInputPin)
+        inputColourButton = GPIO.input(colourInputPin)
+        inputSpeedValueButton = GPIO.input(speedInputPin)
+        inputPatternValueButton = GPIO.input(patternInputPin)
         
-        ## Check which buttons are available.
-        #colourButtonAvailable = canColourChange < count
-        #speedButtonAvailable = canSpeedChange < count
-        #patternButtonAvailable = canPatternChange < count
+        # Check which buttons are available.
+        colourButtonAvailable = canColourChange < count
+        speedButtonAvailable = canSpeedChange < count
+        patternButtonAvailable = canPatternChange < count
         
-        ## Turn LEDs off if the buttons are available.
-        #if colourButtonAvailable:
-            #x=0 # Temp
-            #GPIO.output(colourOutputPin, GPIO.LOW)
+        # Turn LEDs off if the buttons are available.
+        if colourButtonAvailable:
+            x=0 # Temp
+            GPIO.output(colourOutputPin, GPIO.LOW)
             
-        #if speedButtonAvailable:
-            #x=0 # Temp
-            #GPIO.output(speedOutputPin, GPIO.LOW)
+        if speedButtonAvailable:
+            x=0 # Temp
+            GPIO.output(speedOutputPin, GPIO.LOW)
             
-        #if patternButtonAvailable:
-            #x=0 # Temp
-            #GPIO.output(patternOutputPin, GPIO.LOW)
+        if patternButtonAvailable:
+            x=0 # Temp
+            GPIO.output(patternOutputPin, GPIO.LOW)
         
-        ## For each button cycle the corresponding variable if the button
-        ## has been pressed and it has not been pressed "recently"
-        #if inputColourButton and colourButtonAvailable:
-            #button_press_count += 1
-            #canColourChange= count + num_pause_steps
+        # For each button cycle the corresponding variable if the button
+        # has been pressed and it has not been pressed "recently"
+        if inputColourButton and colourButtonAvailable:
+            button_press_count += 1
+            canColourChange= count + num_pause_steps
             
-            #with lock:
-                #new_colour_int = (wlight_colour.value + 1) % WColour.MAX.value
-                #wlight_colour = WColour(new_colour_int)
-                ##wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
+            with lock:
+                new_colour_int = (wlight_colour.value + 1) % WColour.MAX.value
+                wlight_colour = WColour(new_colour_int)
+                #wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
                 
-            #if print_debug:
-                #print("Button press - Colour", flush=True)
-                #print(wlight_colour)
-            #GPIO.output(colourOutputPin, GPIO.HIGH)
+            if print_debug:
+                print("Button press - Colour", flush=True)
+                print(wlight_colour)
+            GPIO.output(colourOutputPin, GPIO.HIGH)
         
 
-        #elif inputSpeedValueButton and speedButtonAvailable:
-            #button_press_count += 1
-            #canSpeedChange= count + num_pause_steps
+        elif inputSpeedValueButton and speedButtonAvailable:
+            button_press_count += 1
+            canSpeedChange= count + num_pause_steps
             
-            #with lock:
-                #new_speed_int = (wlight_speed.value + 1) % WSpeed.MAX.value
-                #wlight_speed = WSpeed(new_speed_int)
+            with lock:
+                new_speed_int = (wlight_speed.value + 1) % WSpeed.MAX.value
+                wlight_speed = WSpeed(new_speed_int)
             
-            #if print_debug:
-                #print("Button press - Speed", flush=True)
-                #print(wlight_speed)
-            #GPIO.output(speedOutputPin, GPIO.HIGH)
+            if print_debug:
+                print("Button press - Speed", flush=True)
+                print(wlight_speed)
+            GPIO.output(speedOutputPin, GPIO.HIGH)
             
         
 
-        #elif inputPatternValueButton and patternButtonAvailable:
-            #button_press_count += 1
-            #canPatternChange = count + num_pause_steps
+        elif inputPatternValueButton and patternButtonAvailable:
+            button_press_count += 1
+            canPatternChange = count + num_pause_steps
             
-            #with lock:
-                #new_pattern_int = (wlight_pattern.value + 1) % WPattern.MAX.value
-                #wlight_pattern = WPattern(new_pattern_int)
-            #if print_debug:
-                #print("Button press - Pattern", flush=True)
-                #print(wlight_pattern)
-            #GPIO.output(patternOutputPin, GPIO.HIGH)
+            with lock:
+                new_pattern_int = (wlight_pattern.value + 1) % WPattern.MAX.value
+                wlight_pattern = WPattern(new_pattern_int)
+            if print_debug:
+                print("Button press - Pattern", flush=True)
+                print(wlight_pattern)
+            GPIO.output(patternOutputPin, GPIO.HIGH)
 
         
         # Small time delay between each run through. This does not

@@ -2,6 +2,7 @@
 import Adafruit_GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 from math import ceil
+import Main.config as config
 
 RGB_MAP = { 'rgb': [3, 2, 1], 'rbg': [3, 1, 2], 'grb': [2, 3, 1],
             'gbr': [2, 1, 3], 'brg': [1, 3, 2], 'bgr': [1, 2, 3] }
@@ -67,7 +68,7 @@ class APA102:
     down the line to the last LED.
     """
     # Constants
-    MAX_BRIGHTNESS = 20 #Safeguard: Max. brightness that can be selected. 
+    MAX_BRIGHTNESS = config.MAX_BRIGHTNESS #Safeguard: Max. brightness that can be selected. 
     LED_START = 0b11100000 # Three "1" bits, followed by 5 brightness bits
 
     def __init__(self, num_led, global_brightness=MAX_BRIGHTNESS,

@@ -1,24 +1,28 @@
 import RPi.GPIO as GPIO
 import time
 
+inputPinA = 24
+inputPinB = 25
+inputPinC = 8
+
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(19, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(inputPinA, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(inputPinB, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(inputPinC, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 while True:
-  inputValueYellow = GPIO.input(4)
-  inputValueBlue = GPIO.input(22)
-  inputValueGreen= GPIO.input(19)
+  inputValueA = GPIO.input(inputPinA)
+  inputValueB = GPIO.input(inputPinB)
+  inputValueC = GPIO.input(inputPinC)
 
-  if(inputValueYellow == True):
-    print("Button press - Yellow")
+  if(inputValueA == True):
+    print("Button press - A")
     time.sleep(0.3)
 
-  if(inputValueBlue == True):
-    print("Button press - Blue")
+  if(inputValueB == True):
+    print("Button press - B")
     time.sleep(0.3)
 
-  if(inputValueGreen== True):
-    print("Button press - Green")
+  if(inputValueC == True):
+    print("Button press - C")
     time.sleep(0.3)
