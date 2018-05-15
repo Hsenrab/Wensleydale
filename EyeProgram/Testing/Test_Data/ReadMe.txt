@@ -1,0 +1,1 @@
+This folder is to store any data required for tests. Each test should have its own folder containing all its test data.

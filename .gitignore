@@ -1,0 +1,9 @@
+# Git ignore file #
+
+# Log files
+*Log.txt*
+*Log*.txt*
+
+# Byte-compiled
+*py[cod]
+*$py.class

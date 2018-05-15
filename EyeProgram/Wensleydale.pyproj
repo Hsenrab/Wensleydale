@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>ad01025d-74b2-4c90-9efd-8580c54b48a4</ProjectGuid>
+    <ProjectHome>.</ProjectHome>
+    <StartupFile>Scripts\LoggerTest.py</StartupFile>
+    <SearchPath>
+    </SearchPath>
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <Name>Wensleydale</Name>
+    <RootNamespace>Wensleydale</RootNamespace>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>true</DebugSymbols>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Internals\Utils\wlogger.py" />
+    <Compile Include="Internals\Utils\wtime.py" />
+    <Compile Include="Main\config.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Main\Main.py" />
+    <Compile Include="Scripts\LoggerTest.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Scripts\ScriptSetup.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\Tests\TestSetup.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\Tests\test_main.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\Tests\test_wlogger.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Testing\Test_Utils\test_utils.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Development\DevEye.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Development\OpenGLCube.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Development\OpenGLSphere.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Development\sphere.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Hardware Control\Eyes\Virtual\Eye.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Wensleydale.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Development\" />
+    <Folder Include="Documentation\" />
+    <Folder Include="Hardware Control\" />
+    <Folder Include="Hardware Control\Eyes\" />
+    <Folder Include="Hardware Control\Eyes\Physical\" />
+    <Folder Include="Hardware Control\Eyes\Virtual\" />
+    <Folder Include="Internals\" />
+    <Folder Include="Internals\Eyes\" />
+    <Folder Include="Internals\Patterns\" />
+    <Folder Include="Internals\Utils\" />
+    <Folder Include="Main\" />
+    <Folder Include="Scripts\" />
+    <Folder Include="Testing\" />
+    <Folder Include="Testing\Test_Utils\" />
+    <Folder Include="Testing\Test Data\" />
+    <Folder Include="Testing\Test Data\Test_WLogger\" />
+    <Folder Include="Testing\Test Data\Test_WLogger\Outputs\" />
+    <Folder Include="Testing\Tests\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Development\ReadMe.txt" />
+    <Content Include="Documentation\ReadMe.txt" />
+    <Content Include="Hardware Control\Eyes\Physical\ReadMe.txt" />
+    <Content Include="Hardware Control\Eyes\Virtual\ReadMe.txt" />
+    <Content Include="Internals\Eyes\ReadMe.txt" />
+    <Content Include="Internals\Patterns\ReadMe.txt" />
+    <Content Include="Main\ReadMe.txt" />
+    <Content Include="Scripts\ReadMe.txt" />
+    <Content Include="Testing\Test Data\ReadMe.txt" />
+    <Content Include="Testing\Tests\ReadMe.txt" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
+  <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <!-- Uncomment the CoreCompile target to enable the Build command in
+       Visual Studio and specify your pre- and post-build commands in
+       the BeforeBuild and AfterBuild targets below. -->
+  <!--<Target Name="CoreCompile" />-->
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+</Project>
