@@ -10,25 +10,39 @@ import os
 wensleydale_directory = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__), '..')))
 test_data_dir = os.path.normpath(os.path.join(wensleydale_directory, 'Testing', 'Test_Data'))
 
-
-# Environment variables
-real_hardware = os.environ.get('WENSLEYDALE', '0') != '0'
-if real_hardware:
-    print("Using real hardware \n")
-else:
-    print("Using simulated hardware \n")
+import Main.enums as enums
 
 # Log Directory
 log_directory = os.path.join(wensleydale_directory, 'Logs')
 
 
-
+######################
 # Hardware set up
+######################
 
 # Maximum brightness of LEDs
 MAX_BRIGHTNESS = 5
 
 # Delay before button can be pressed again. (Cycles not seconds)
 pause_cycles = 30
+
+# Pin set up.
+colourInputPin = 24
+speedInputPin = 25
+patternInputPin = 8
+
+colourOutputPin = 13
+speedOutputPin = 16
+patternOutputPin = 12
+
+############################
+# Initial configuration on startup
+############################
+# Set up initial 
+wlight_colour = enums.WColour.Blue
+wlight_speed = enums.WSpeed.Hare
+wlight_pattern = enums.WPattern.Singles
+wlight_direction = enums.WDirection.Forwards
+
 
 
