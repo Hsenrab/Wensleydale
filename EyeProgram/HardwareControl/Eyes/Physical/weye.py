@@ -127,6 +127,7 @@ class Eye:
             return horiz_angle, vert_angle
         
         print("Warning eye bound hit")
+        wlogger.log_warning("Eye bound hit")
         norm_horiz_angle = horiz_angle / current_radius
         norm_vert_angle = vert_angle / current_radius
         

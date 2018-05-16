@@ -40,6 +40,7 @@ while(True):
     myController.Eye_Roll()
     myController.Eye_Roll()
     myController.Eye_Roll()
+    myController.re_centre(1)
     wlogger.log_info("Ended Eye Roll Movement")
     
 

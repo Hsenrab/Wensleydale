@@ -150,17 +150,83 @@ class Controller:
 
         self.redraw()
         
-    def straight_re_centre(self, stepSize):
+    def calculate_small_step_size(self, stepSize, bigDistance, smallDistance):
+        """This function calculates a stepsize for the smaller distance to be travelled"""
+        wlogger.log_info("calculating small step size")
+        
+        smallStepSize = (abs(smallDistance) * stepSize)/abs(bigDistance)
+        
+        print(smallStepSize)
+        
+        if (smallDistance < 0 and bigDistance < 0):
+            return -smallStepSize
+        else:
+            return smallStepSize
+        
+    def straight_to_point(self, stepSize, X, Y):
         """ This function moves each eye to the centre in a straight line"""
         wlogger.log_info("Performing Straight Recentre")
         
-        #calculate distance from 0,0 of Left Eye
+        #calculate distance from given point of Left Eye
+        leftVertChange = Y - self.LeftEye.eye_vert_angle
+        leftHorizChange = X - self.LeftEye.eye_vert_angle
+        leftDistance = math.sqrt((leftVertChange**2)+(leftHorizChange**2))
         
-        Leftdistance = math.sqrt((self.LeftEye.eye_vert_angle**2)+(self.LeftEye.eye_horiz_angle**2))
+        #calculate distance from given point of Right Eye
+        rightVertChange = Y - self.RightEye.eye_vert_angle
+        rightHorizChange = X - self.RightEye.eye_horiz_angle
+        rightDistance = math.sqrt((rightVertChange**2)+(rightHorizChange**2))
         
-        #calculate distance from 0,0 of Right Eye
+        #Determine large distance,and calculate smaller step size accordingly
+        if(leftDistance > rightDistance):
+            rightStepSize = self.calculate_small_step_size(stepSize, leftDistance, rightDistance)
+            leftStepSize = stepSize
+            steps = math.floor(leftDistance/stepSize)
+            
+        elif(rightDistance > leftDistance):
+            leftStepSize = self.calculate_small_step_size(stepSize, rightDistance, leftDistance)
+            rightStepSize = stepSize
+            steps = math.floor(rightDistance/stepSize)
         
-        Rightdistance = math.sqrt((self.RightEye.eye_vert_angle**2)+(self.RightEye.eye_horiz_angle**2))
+        else:
+            leftStepSize = stepSize
+            rightStepSize = stepSize
+            steps = math.floor(leftDistance/stepSize)
+            print("The Eyes are moving the same distance")
+            print(steps)
+        
+        #determine which axis has a large distance for each eye, and calculate step sizes accordingly
+        if (leftVertChange == leftHorizChange):
+            leftVertStepSize = leftStepSize
+            leftHorizStepSize =leftStepSize
+            
+        elif (leftVertChange > leftHorizChange):
+            leftHorizStepSize = self.calculate_small_step_size(leftStepSize, leftVertChange, leftHorizChange)
+            leftVertStepSize = leftStepSize
+        
+        elif (leftHorizChange > leftVertChange):
+            leftVertStepSize = self.calculate_small_step_size(leftStepSize, leftHorizChange, leftVertChange)
+            leftHorizStepSize = leftStepSize
+            
+        if (rightVertChange == rightHorizChange):
+            rightVertStepSize = rightStepSize
+            rightHorizStepSize = rightStepSize
+            
+        elif (rightVertChange > rightHorizChange):
+            rightHorizStepSize = self.calculate_small_step_size(rightStepSize, rightVertChange, rightHorizChange)
+            rightVertStepSize = rightStepSize
+        
+        elif (rightHorizChange > rightVertChange):
+            rightVertStepSize = self.calculate_small_step_size(rightStepSize, rightHorizChange, rightVertChange)
+            rightHorizStepSize = rightStepSize
+            
+        # take required number of steps to get as close to the area as possible    
+        for i in range(steps):
+            print("Step " + str(i))
+            self.LeftEye.step_vert_angle(leftVertStepSize)
+            self.LeftEye.step_horiz_angle(leftHorizStepSize)
+            self.RightEye.step_vert_angle(rightVertStepSize)
+            self.RightEye.step_horiz_angle(rightHorizStepSize)
         
 
     def re_centre(self, stepSize):
