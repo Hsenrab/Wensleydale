@@ -35,10 +35,14 @@ colourOutputPin = 13
 speedOutputPin = 16
 patternOutputPin = 12
 
+# Number of active leds - this needs to be calibrated once on the dog.
+num_active_leds = 204
+
 ############################
 # Initial configuration on startup
 ############################
-# Set up initial 
+
+pattern_position_index = 0
 wlight_colour = enums.WColour.White
 wlight_speed = enums.WSpeed.Cheetah
 wlight_pattern = enums.WPattern.Singles
