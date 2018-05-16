@@ -35,11 +35,11 @@ while(True):
     myController.cross_eyes(1)
     wlogger.log_info("Ended Cross-Eyed Movement")
     
-    wlogger.log_info("Commencing Straight Eye Roll Movement")
+    wlogger.log_info("Commencing Eye Roll Movement")
     myController.Eye_Roll()
     myController.Eye_Roll()
     myController.Eye_Roll()
     myController.Eye_Roll()
-    wlogger.log_info("Ended Straight Eye Roll Movement")
+    wlogger.log_info("Ended Eye Roll Movement")
     
 
