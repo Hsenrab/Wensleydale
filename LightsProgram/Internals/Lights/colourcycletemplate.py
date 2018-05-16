@@ -26,6 +26,8 @@ class ColorCycleTemplate:
         self.num_cycles = num_cycles  # How many times will the program run
         self.global_brightness = global_brightness  # Brightness of the strip
         self.order = order  # Strip colour ordering
+        
+        
 
     def init(self, strip, num_led):
         """This method is called to initialize a color program.

@@ -22,18 +22,18 @@ class Block:
         self.local_pattern = enums.WPattern.Singles
         self.invert_direction = False
         
-    def set_local_variables(colour, speed, pattern):
+    def set_local_variables(self, colour, speed, pattern):
         self.local_colour = colour
         self.local_speed = speed
         self.local_pattern = pattern
         
-    def set_local_colour(colour):
+    def set_local_colour(self, colour):
         self.local_colour = colour
     
-    def set_local_speed(speed):
+    def set_local_speed(self, speed):
         self.local_speed = speed
     
-    def set_local_pattern(pattern):
+    def set_local_pattern(self, pattern):
         self.local_pattern = pattern
         
     def invert_direction():
@@ -67,12 +67,10 @@ class BlockLightPattern(ColorCycleTemplate):
         # Set up pins
         wevents.set_up_pins() 
         
-        # Set up pattern list.
-        #config.patternList = [enums.WPattern.Singles, enums.WPattern.Slide,
-        #                enums.WPattern.AllOn]
         
-        config.patternList = [enums.WPattern.AllOn]
-        config.wlight_pattern = config.patternList[0]
+        # Call sub initialiser.
+        self.sub_init()
+        print(config.patternList)
         
         # Set up listening thread.
         input_thread = threading.Thread(target=wevents.buttonThread).start()
@@ -80,11 +78,16 @@ class BlockLightPattern(ColorCycleTemplate):
         
     def set_blocks_to_current_global(self, *args):
         
+        with threading.Lock():
+            current_pattern = config.wlight_pattern
+            current_speed = config.wlight_speed
+            current_colour = config.wlight_colour
+            
+        print(current_pattern)
+        
         for block in args:
-            block.local_colour = config.wlight_colour
-            block.local_speed = config.wlight_speed
-            block.local_pattern = config.wlight_pattern
-
+            block.set_local_variables(current_colour, current_speed, current_pattern)
+            
         
     def update_blocks(self, strip, num_steps_per_cycle, current_step, current_cycle,*args):
         if not args:
@@ -94,9 +97,14 @@ class BlockLightPattern(ColorCycleTemplate):
         
         if args[0].local_pattern == enums.WPattern.Singles:
             patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        if args[0].local_pattern == enums.WPattern.AllOn:
+        elif args[0].local_pattern == enums.WPattern.AllOn:
             patterns.all_on(strip, *args)
-        else: #args[0].local_pattern == config.WPattern.Slide
+        elif args[0].local_pattern == enums.WPattern.Slide:
+            patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, *args)
+        elif args[0].local_pattern == enums.WPattern.BlockedSlide:
+            for block in args:
+                patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, block)
+        else: #args[0].local_pattern == config.WPattern.Slide (to catch anything dodgy)
             patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, *args)
         
         # pattern runs across all blocks
@@ -105,14 +113,15 @@ class BlockLightPattern(ColorCycleTemplate):
 class ChangingBlockLightPattern(BlockLightPattern):
     """Paints a pattern on the strip based on the status of global variables."""
     
-    def update(self, strip, num_led, num_steps_per_cycle, current_step,
-               current_cycle):
-
-        with threading.Lock():
-            current_pattern = config.wlight_pattern
-            current_speed = config.wlight_speed
-            current_colour = config.wlight_colour
+    def sub_init(self):
+        # Set up pattern list.
+        config.patternList = [enums.WPattern.Singles, enums.WPattern.Slide,
+                        enums.WPattern.AllOn, enums.WPattern.BlockedSlide]
+        
+        
     
+    def update(self, strip, num_led, num_steps_per_cycle, current_step,
+               current_cycle):    
             
         self.set_blocks_to_current_global(  self.LegBackLeft, 
                                             self.LegFrontRight,
@@ -130,12 +139,12 @@ class ChangingBlockLightPattern(BlockLightPattern):
         
 
         self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
+                        self.BodyLowerRight,
+                        self.BodyLowerLeft,
+                        self.BodyUpperRight,
+                        self.BodyUpperLeft,
                         self.LegBackLeft, 
                         self.LegFrontRight,
-                        self.BodyUpperLeft,
-                        self.BodyUpperRight,
-                        self.BodyLowerLeft,
-                        self.BodyLowerRight,
                         self.CollarFront,
                         self.CollarBack,
                         self.EarLeft,

@@ -21,7 +21,7 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 5
+MAX_BRIGHTNESS = 1
 
 # Delay before button can be pressed again. (Cycles not seconds)
 pause_cycles = 30

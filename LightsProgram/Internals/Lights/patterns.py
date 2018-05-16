@@ -5,7 +5,7 @@ from Internals.Lights.colourcycletemplate import ColorCycleTemplate
 import Internals.Utils.wlogger as wlogger
 import math
 
-print_debug = True
+print_debug = False
 
 
 def slide(strip, num_steps_per_cycle, current_step, current_cycle, *args):

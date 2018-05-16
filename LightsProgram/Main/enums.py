@@ -47,7 +47,8 @@ class WPattern(enum.Enum):
     Slide = 3
     Rainbow = 4
     AllOn = 5
-    MAX = 6
+    BlockedSlide = 6
+    MAX = 7
 
 
 # Enum holding the direction options.
