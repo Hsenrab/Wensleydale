@@ -42,7 +42,7 @@ class Eye:
         
         # Note that unless move_to(0, 0) is called the initial position will
         # be wrong. This is called in the controller as calling PCA9685(0x40)
-        # turns of any pwm signal being sent so this must be donw after the
+        # turns off any pwm signal being sent so this must be done after the
         # eyes have each been constructed.
         
 
@@ -186,7 +186,8 @@ class Eye:
     def conv_servo_angle_ms(self, angle):
         """ Maps a servo angle to a number of ms PWM period required to move it to that position.
         A typical servo positioning system moves between -90 and 90 degress with periods between 1 and 2 ms.
-        However, this library automatically takes the input angle and scales it to a position between the max servo range variables """
+        However, this library automatically takes the input angle and scales it to a position between the max
+        servo range variables """
 
         scaled_angle = (float(angle) - float(self.servo_angle_min)) / float(self.servo_angle_range)
         return float(self.pwm_period_min + (scaled_angle * self.pwm_period_range))

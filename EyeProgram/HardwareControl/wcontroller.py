@@ -96,7 +96,8 @@ class Controller:
             self.redraw()
 
     def cross_eyes_checker(self):
-        """ This function checks the current positions of the eyes in relation to each other and returns an integer"""
+        """ This function checks the current positions of the eyes in relation to each other and returns an integer
+        symbolising how to proceed with crossing the eyes"""
         wlogger.log_info("Performing Eye Position Check")
 
         if self.LeftEye.eye_horiz_angle < self.LeftEye.eye_movement_max_radius and self.RightEye.eye_horiz_angle > -self.RightEye.eye_movement_max_radius:
@@ -186,7 +187,8 @@ class Controller:
             left_eye_distance_sq = self.LeftEye.eye_vert_angle**2 + self.LeftEye.eye_horiz_angle**2            
             
             
-            # If the step size is bigger than the distance remaining there is a chance of overstepping - only step the smaller distance.
+            # If the step size is bigger than the distance remaining there is a chance of overstepping
+            # - only step the smaller distance.
             if right_eye_distance_sq > left_eye_distance_sq:
                 if stepSize**2 > right_eye_distance_sq:
                     self.StepTowardsCentre(self.RightEye, math.sqrt(right_eye_distance_sq))
@@ -218,7 +220,7 @@ class Controller:
         
 
     def Straight_Eye_Roll(self, stepSize):
-        """ This function represents one of the eye rolls that gromit does, almost straight up and straight back down again."""
+        """ This function represents one of Gromits animated eye rolls."""
         wlogger.log_info("Performing Straight Eye Roll")
         
         while ((self.LeftEye.eye_vert_angle + stepSize) < self.LeftEye.eye_movement_corner_angle
@@ -242,6 +244,7 @@ class Controller:
                     
             
     def Low_Cross_Eyes(self, stepSize):
+        """This function represents Gromit's eyes focussing on his nose"""
         wlogger.log_info("Performing Low Cross Eyes")
                 
         while ((self.LeftEye.eye_vert_angle - stepSize) > -self.LeftEye.eye_movement_corner_angle
@@ -255,7 +258,8 @@ class Controller:
                    
             
     def Eye_Roll(self):
-        
+        """Performs a full circle of the eyes."""
+        wlogger.log_info("Performing Eye Roll")
         for i in range(0, 360):  
             angle_rad = (i*math.pi)/180
             horiz_angle = self.LeftEye.eye_movement_max_radius * math.cos(angle_rad)
