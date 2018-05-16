@@ -71,6 +71,8 @@ def buttonThread():
     count = 0
     
     pattern_cycle = cycle(config.patternList)
+    with lock:
+        config.wlight_pattern = next(pattern_cycle)
     
     # This changes the length of time the buttons are paused for. This 
     # will need to be calibrated.

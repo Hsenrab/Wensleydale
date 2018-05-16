@@ -129,10 +129,10 @@ class ChangingBlockLightPattern(BlockLightPattern):
     
     def sub_init(self):
         # Set up pattern list.
-        config.patternList = [enums.WPattern.RenishawMorse] #enums.WPattern.Singles, enums.WPattern.Slide,
-                        #enums.WPattern.AllOn, enums.WPattern.BlockedSlide,
-                        #enums.WPattern.Snakes, enums.WPattern.RenishawMorse]
-        config.wlight_pattern = config.patternList[0]
+        config.patternList = [  enums.WPattern.Singles,
+                                enums.WPattern.BlockedSlide,
+                                enums.WPattern.Snakes,
+                                enums.WPattern.RenishawMorse]
         
     
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
