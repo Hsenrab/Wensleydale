@@ -39,10 +39,12 @@ patternOutputPin = 12
 # Initial configuration on startup
 ############################
 # Set up initial 
-wlight_colour = enums.WColour.Blue
-wlight_speed = enums.WSpeed.Hare
+wlight_colour = enums.WColour.White
+wlight_speed = enums.WSpeed.Cheetah
 wlight_pattern = enums.WPattern.Singles
 wlight_direction = enums.WDirection.Forwards
+
+patternList = []
 
 
 

@@ -6,6 +6,7 @@ import RPi.GPIO as GPIO
 import Internals.Utils.wlogger as wlogger
 import Main.config as config
 import Main.enums as enums
+from itertools import cycle
 
 import termios
 import sys
@@ -14,16 +15,18 @@ import tty
 
 print_debug = True
 
-GPIO.setwarnings(False)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(config.colourInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(config.speedInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(config.patternInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
-GPIO.setup(config.colourOutputPin, GPIO.OUT)
-GPIO.setup(config.speedOutputPin, GPIO.OUT)
-GPIO.setup(config.patternOutputPin, GPIO.OUT)
+def set_up_pins():
+    GPIO.setwarnings(False)
+    
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(config.colourInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(config.speedInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(config.patternInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    
+    GPIO.setup(config.colourOutputPin, GPIO.OUT)
+    GPIO.setup(config.speedOutputPin, GPIO.OUT)
+    GPIO.setup(config.patternOutputPin, GPIO.OUT)
 
 
 
@@ -54,9 +57,6 @@ def getkey():
 # main thread. This is also why all buttons are on the same thread. This
 # is a candidate for further investigation if there is time. 
 def buttonThread():
-    config.wlight_colour
-    config.wlight_speed
-    config.wlight_pattern
     global button_press_count
     
 
@@ -69,6 +69,8 @@ def buttonThread():
     canPatternChange=0
     
     count = 0
+    
+    pattern_cycle = cycle(config.patternList)
     
     # This changes the length of time the buttons are paused for. This 
     # will need to be calibrated.
@@ -167,9 +169,9 @@ def buttonThread():
             button_press_count += 1
             canPatternChange = count + num_pause_steps
             
+            
             with lock:
-                new_pattern_int = (config.wlight_pattern.value + 1) % enums.WPattern.MAX.value
-                config.wlight_pattern = enums.WPattern(new_pattern_int)
+                config.wlight_pattern = next(pattern_cycle)
             if print_debug:
                 print("Button press - Pattern", flush=True)
                 print(config.wlight_pattern)
@@ -184,7 +186,7 @@ def buttonThread():
         time.sleep(0.1)
         
 
-input_thread = threading.Thread(target=buttonThread).start()
+
 
 
 

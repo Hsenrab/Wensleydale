@@ -10,6 +10,7 @@ import Internals.Lights.patterns as patterns
 
 print_debug = False
 
+
 class Block:
     """ Holds information for each sub block of LEDs """
     def __init__(self, start_index, end_index):
@@ -47,23 +48,34 @@ class BlockLightPattern(ColorCycleTemplate):
     that can have different patterns"""
     
     def init(self, strip, num_led):
-        #Set up different blocks on the dog.
-        # Not on Junior self.LegBackRight(0, 288)
-        self.LegBackLeft = Block(0, 20)
-        self.LegFrontRight = Block(30, 50)
-        # Not on Junior self.LegFrontLeft()
+        #Set up different blocks on the dog. Current number relate to
+        # Screen set up..
+
+        self.LegBackLeft = Block(106, 127)
+        self.LegFrontRight = Block(133, 144)
+        self.CollarFront = Block(170, 195)
+        self.CollarBack = Block(200, 219)
+        self.BodyLowerRight = Block(0, 18)
+        self.BodyLowerLeft = Block(24, 42)
+        self.BodyUpperRight = Block(48, 70)
+        self.BodyUpperLeft = Block(75, 100)
+        self.EarLeft = Block(225, 239)
+        self.EarRight = Block(245, 257)
+        self.EarFrontLeft = Block(263, 272)
+        self.EarFrontRight = Block(278, 288)
         
-        #TODO
-        #self.CollarFront = Block()
-        #self.Collarback = Block()
-        #self.BackLowerRight = Block()
-        #self.BackLowerLeft = Block()
-        #self.BackUpperRight = Block()
-        #self.BackUpperLeft = Block()
-        #self.EarLeft = Block()
-        #self.EarRight = Block()
-        #self.EarLeftFront = Block()
-        #self.EarRightFront = Block()
+        # Set up pins
+        wevents.set_up_pins() 
+        
+        # Set up pattern list.
+        #config.patternList = [enums.WPattern.Singles, enums.WPattern.Slide,
+        #                enums.WPattern.AllOn]
+        
+        config.patternList = [enums.WPattern.AllOn]
+        config.wlight_pattern = config.patternList[0]
+        
+        # Set up listening thread.
+        input_thread = threading.Thread(target=wevents.buttonThread).start()
         
         
     def set_blocks_to_current_global(self, *args):
@@ -82,6 +94,8 @@ class BlockLightPattern(ColorCycleTemplate):
         
         if args[0].local_pattern == enums.WPattern.Singles:
             patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, *args)
+        if args[0].local_pattern == enums.WPattern.AllOn:
+            patterns.all_on(strip, *args)
         else: #args[0].local_pattern == config.WPattern.Slide
             patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, *args)
         
@@ -98,16 +112,36 @@ class ChangingBlockLightPattern(BlockLightPattern):
             current_pattern = config.wlight_pattern
             current_speed = config.wlight_speed
             current_colour = config.wlight_colour
-        
+    
             
-        # Todo - Add the rest of the blocks in.
-        self.set_blocks_to_current_global(  self.LegBackLeft,
-                                            self.LegFrontRight)
-                                            
+        self.set_blocks_to_current_global(  self.LegBackLeft, 
+                                            self.LegFrontRight,
+                                            self.BodyUpperLeft,
+                                            self.BodyUpperRight,
+                                            self.BodyLowerLeft,
+                                            self.BodyLowerRight,
+                                            self.CollarFront,
+                                            self.CollarBack,
+                                            self.EarLeft,
+                                            self.EarRight,
+                                            self.EarFrontLeft,
+                                            self.EarFrontRight)
+                                                                
         
 
         self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                        self.LegBackLeft, self.LegFrontRight)
+                        self.LegBackLeft, 
+                        self.LegFrontRight,
+                        self.BodyUpperLeft,
+                        self.BodyUpperRight,
+                        self.BodyLowerLeft,
+                        self.BodyLowerRight,
+                        self.CollarFront,
+                        self.CollarBack,
+                        self.EarLeft,
+                        self.EarRight,
+                        self.EarFrontLeft,
+                        self.EarFrontRight)
 
         return 1 # Always update as globals may have changed the pattern.
     

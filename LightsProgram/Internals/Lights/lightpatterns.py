@@ -12,6 +12,17 @@ print_debug = False
 class ChangingLightPattern(ColorCycleTemplate):
     """Paints a pattern on the strip based on the status of global variables."""
     
+    def init(self, strip, num_led):
+        # Set up pins
+        wevents.set_up_pins()
+        
+        # Set up pattern list.
+        config.patternList = [enums.WPattern.Flashing, enums.WPattern.Rainbow,
+                        enums.WPattern.Singles, enums.WPattern.Snakes]
+        
+        # Set up listening thread.
+        input_thread = threading.Thread(target=wevents.buttonThread).start()
+    
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
                current_cycle):
 

@@ -97,8 +97,6 @@ def singles(strip, num_steps_per_cycle, current_step, current_cycle, *args):
                            math.floor(enums.colourDi[current_colour][1]*255),
                            math.floor(enums.colourDi[current_colour][2]*255), 
                            config.MAX_BRIGHTNESS)
-                print("Local LED number: " + str(local_led_index))
-                print("LED number: " + str(led))
             else:
                 # Paint gap LED black.
                 strip.set_pixel(led, 0.0, 0.0, 0.0)
@@ -117,8 +115,8 @@ def all_on(strip, *args):
     if not args:
         return
 
-    current_colour = args[0].colour
-    current_speed = args[0].speed
+    current_colour = args[0].local_colour
+    current_speed = args[0].local_speed
 
         
     if print_debug: 
@@ -135,13 +133,11 @@ def all_on(strip, *args):
         for led in range(block.start_index, block.end_index):
             
             # Paint single LEDS with given colour
-            strip.set_pixel(led, math.floor(wevents.colourDi[current_colour][0]*255),
-                           math.floor(wevents.colourDi[current_colour][1]*255),
-                           math.floor(wevents.colourDi[current_colour][2]*255), 
+            strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
+                           math.floor(enums.colourDi[current_colour][1]*255),
+                           math.floor(enums.colourDi[current_colour][2]*255),
                            config.MAX_BRIGHTNESS)
-                           
-            print("Local LED number: " + str(local_led_index))
-            print("LED number: " + str(led))
+
 
             local_led_index += 1
 
