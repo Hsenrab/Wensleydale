@@ -71,8 +71,12 @@ def buttonThread():
     count = 0
     
     pattern_cycle = cycle(config.patternList)
+    colour_cycle = cycle(config.colourList)
+    speed_cycle = cycle(config.speedList)
     with lock:
         config.wlight_pattern = next(pattern_cycle)
+        config.wlight_colour = next(colour_cycle)
+        config.wlight_speed = next(speed_cycle)
     
     # This changes the length of time the buttons are paused for. This 
     # will need to be calibrated.
@@ -122,15 +126,12 @@ def buttonThread():
         
         # Turn LEDs off if the buttons are available.
         if colourButtonAvailable:
-            x=0 # Temp
             GPIO.output(config.colourOutputPin, GPIO.LOW)
             
         if speedButtonAvailable:
-            x=0 # Temp
             GPIO.output(config.speedOutputPin, GPIO.LOW)
             
         if patternButtonAvailable:
-            x=0 # Temp
             GPIO.output(config.patternOutputPin, GPIO.LOW)
         
         # For each button cycle the corresponding variable if the button
@@ -140,8 +141,7 @@ def buttonThread():
             canColourChange= count + num_pause_steps
             
             with lock:
-                new_colour_int = (config.wlight_colour.value + 1) % enums.WColour.MAX.value
-                config.wlight_colour = enums.WColour(new_colour_int)
+                config.wlight_colour = next(colour_cycle)
                 #wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
                 
             if print_debug:
@@ -156,8 +156,7 @@ def buttonThread():
             canSpeedChange= count + num_pause_steps
             
             with lock:
-                new_speed_int = (config.wlight_speed.value + 1) % enums.WSpeed.MAX.value
-                config.wlight_speed = enums.WSpeed(new_speed_int)
+                config.wlight_speed = next(speed_cycle)
             
             if print_debug:
                 print("Button press - Speed", flush=True)
@@ -170,7 +169,6 @@ def buttonThread():
         elif inputPatternValueButton and patternButtonAvailable:
             button_press_count += 1
             canPatternChange = count + num_pause_steps
-            
             
             with lock:
                 config.wlight_pattern = next(pattern_cycle)

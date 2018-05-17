@@ -42,13 +42,13 @@ num_active_leds = 204
 # Initial configuration on startup
 ############################
 
-pattern_position_index = 0
 wlight_colour = enums.WColour.White
 wlight_speed = enums.WSpeed.Cheetah
 wlight_pattern = enums.WPattern.Singles
 wlight_direction = enums.WDirection.Forwards
 
 patternList = []
+colourList = []
 
 
 
