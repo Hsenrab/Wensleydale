@@ -58,6 +58,6 @@ while(True):
     myController.straight_to_point(1, 40, 40)
     myController.straight_to_point(1, 0, 0)
     myController.Low_Cross_Eyes(1)
-    time.sleep(3)
+    #time.sleep(3)
     myController.straight_to_point(1, 0, 0)
     wlogger.log_info("Ended combined sequence")

@@ -11,13 +11,16 @@ wlogger.setup_loggers(config.log_directory)
 myController = wcontroller.Controller()
 
 stepSize = 1
-X = 40
-Y = 40
+X = 48
+Y = 48
 
-myController.extreme_left(stepSize)
+
+coordinates = [X, Y]
+centre = [0, 0]
+
 wlogger.log_info("Commencing Straight to Point Movement")
-myController.straight_to_point(stepSize, X, Y)
-myController.straight_to_point(stepSize, 0, 0)
+myController.straight_to_point(stepSize, coordinates)
+myController.straight_to_point(stepSize, centre)
 wlogger.log_info("Ended Straight to Point Movement")
 
 

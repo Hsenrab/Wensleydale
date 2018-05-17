@@ -166,16 +166,29 @@ class Controller:
         return steps, bigStep, step2, step3, step4
 
         
-    def straight_to_point(self, stepSize, X, Y):
+    def straight_to_point(self, stepSize, coordinates):
+        
+        if (len(coordinates) == 2):
+            LEX = coordinates[0]
+            LEY = coordinates[1]
+            REX = coordinates[0]
+            REY = coordinates[1]
+        elif (len(coordinates) == 4):
+            LEX = coordinates[0]
+            LEY = coordinates[1]
+            REX = coordinates[2]
+            REY = coordinates[3]
+        else:
+            print("You must give 1 or 2 (X, Y) coordinates")
         
         debug = True
         #calculate distance from given point of Left Eye
-        leftVertChange = Y - self.LeftEye.eye_vert_angle
-        leftHorizChange = X - self.LeftEye.eye_horiz_angle
+        leftVertChange = LEY - self.LeftEye.eye_vert_angle
+        leftHorizChange = LEX - self.LeftEye.eye_horiz_angle
         
         #calculate distance from given point of Right Eye
-        rightVertChange = Y - self.RightEye.eye_vert_angle
-        rightHorizChange = X - self.RightEye.eye_horiz_angle
+        rightVertChange = REY - self.RightEye.eye_vert_angle
+        rightHorizChange = REX - self.RightEye.eye_horiz_angle
         
         if (abs(leftVertChange) == max(abs(leftVertChange), abs(leftHorizChange), abs(rightVertChange), abs(rightHorizChange))):            
             steps, LVStepSize, LHStepSize, RVStepSize, RHStepSize = self.calculate_StepSizes(stepSize,leftVertChange, leftHorizChange, rightVertChange, rightHorizChange)
@@ -205,11 +218,11 @@ class Controller:
             message = "step " + str(i+1) + " of " + str(steps)
             wlogger.log_info(message)
             
-            LVertRemDist = Y - self.LeftEye.eye_vert_angle
-            LHorizRemDist = X - self.LeftEye.eye_horiz_angle
+            LVertRemDist = LEY - self.LeftEye.eye_vert_angle
+            LHorizRemDist = LEX - self.LeftEye.eye_horiz_angle
         
-            RVertRemDist = Y - self.RightEye.eye_vert_angle
-            RHorizRemDist = X - self.RightEye.eye_horiz_angle
+            RVertRemDist = REY - self.RightEye.eye_vert_angle
+            RHorizRemDist = REX - self.RightEye.eye_horiz_angle
             
             LVStepSize = min(abs(LVStepSize), abs(LVertRemDist))
             LHStepSize = min(abs(LHStepSize), abs(LHorizRemDist))
@@ -235,6 +248,7 @@ class Controller:
             print("LV:" +str(self.LeftEye.eye_vert_angle))
             print("RH:" +str(self.RightEye.eye_horiz_angle))
             print("RV:" +str(self.RightEye.eye_vert_angle))
+            
 
     def re_centre(self, stepSize):
         """ This function calculates which eye is further from the centre and then calls the StepTowardsCentre function to move that eye closer to the centre"""
