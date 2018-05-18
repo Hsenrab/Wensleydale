@@ -11,8 +11,9 @@ wlogger.setup_loggers(config.log_directory)
 myController = wcontroller.Controller()
 
 wlogger.log_info("Commencing Straight Eye Roll Movement")
-for i in range(1):
-    myController.Straight_Eye_Roll(1)
+myController.straight_to_point(5, [20, 0, -20, 0])
+for i in range(3):
+    myController.Straight_Eye_Roll(4)
     time.sleep(3)
     
 wlogger.log_info("Ended Straight Eye Roll Movement")

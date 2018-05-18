@@ -300,29 +300,28 @@ class Controller:
         self.LeftEye.recentre_servo()
         self.RightEye.recentre_servo()
         
+    def angular_movement(self, startAngle, endAngle, distFromCentre, angleStepSize):
+        
+        for i in range(startAngle, endAngle, angleStepSize):  
+            angle_rad = (i*math.pi)/180
+            horiz_angle = distFromCentre * math.cos(angle_rad)
+            vert_angle = distFromCentre * math.sin(angle_rad)            
+            self.move_to(horiz_angle, vert_angle)
+            time.sleep(0.01)
+        
 
     def Straight_Eye_Roll(self, stepSize):
         """ This function represents one of Gromits animated eye rolls."""
         wlogger.log_info("Performing Straight Eye Roll")
+        restPosition = [20, 0, -20, 0]
+        startPosition = [0, -25, 0, -25]
         
-        while ((self.LeftEye.eye_vert_angle + stepSize) < self.LeftEye.eye_movement_corner_angle
-               and (self.LeftEye.eye_horiz_angle + stepSize) < self.LeftEye.eye_movement_corner_angle
-               and (self.RightEye.eye_vert_angle + stepSize) < self.RightEye.eye_movement_corner_angle
-               and (self.RightEye.eye_horiz_angle + stepSize) < self.RightEye.eye_movement_corner_angle):
-                   self.LeftEye.step_vert_angle(stepSize)
-                   self.RightEye.step_vert_angle(stepSize)
-                   self.LeftEye.step_horiz_angle(stepSize)
-                   self.RightEye.step_horiz_angle(stepSize)
-                   
-
-        for i in range(45, 110):  
-            angle_rad = (i*math.pi)/180
-            horiz_angle = self.LeftEye.eye_movement_max_radius * math.cos(angle_rad)
-            vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(angle_rad)            
-            self.move_to(horiz_angle, vert_angle)
-            time.sleep(0.01)
         
-        self.re_centre(1)
+        self.straight_to_point(stepSize, startPosition)
+        
+        #Section for individual movements
+        
+        self.straight_to_point(stepSize, restPosition)
                     
             
     def Low_Cross_Eyes(self, stepSize):
