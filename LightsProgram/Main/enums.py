@@ -20,7 +20,7 @@ colourDi[WColour.Green] = (0.0, 0.0, 1.0)
 colourDi[WColour.Blue] = (0.0, 1.0, 0.0)
 colourDi[WColour.Cyan] = (0.0, 0.8, 1.0)
 colourDi[WColour.Yellow] = (1.0, 0.0, 0.5)
-colourDi[WColour.Pink] = (1.0, 1.0, 0.0)
+colourDi[WColour.Pink] = (1.0, 0.8, 0.0)
 colourDi[WColour.White] = (1.0, 0.8, 1.0)
 colourDi[WColour.Orange] = (1.0, 0.0, 0.1)
 
@@ -50,7 +50,9 @@ class WPattern(enum.Enum):
     BlockedSlide = 6
     RenishawMorse = 7
     RainbowSlide = 8
-    MAX = 9
+    Twinkle = 9
+    RandomInOut = 10
+    MAX = 11
 
 
 # Enum holding the direction options.

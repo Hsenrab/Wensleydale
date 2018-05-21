@@ -76,7 +76,7 @@ class ChangingLightPattern(ColorCycleTemplate):
             strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
                            math.floor(enums.colourDi[current_colour][1]*255),
                            math.floor(enums.colourDi[current_colour][2]*255),
-                            config.MAX_BRIGHTNESS/2)
+                            config.current_brightness/2)
 
     @staticmethod
     def clear_strip(strip):
@@ -111,7 +111,7 @@ class ChangingLightPattern(ColorCycleTemplate):
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
                            math.floor(enums.colourDi[current_colour][1]*255),
                            math.floor(enums.colourDi[current_colour][2]*255), 
-                           config.MAX_BRIGHTNESS)
+                           config.current_brightness)
             else:
                 # Paint gap LED black.
                 strip.set_pixel(led, 0.0, 0.0, 0.0)
@@ -148,7 +148,7 @@ class ChangingLightPattern(ColorCycleTemplate):
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
                            math.floor(enums.colourDi[current_colour][1]*255),
                            math.floor(enums.colourDi[current_colour][2]*255), 
-                           config.MAX_BRIGHTNESS)
+                           config.current_brightness)
             else:
                 # Paint gap LED black.
                 strip.set_pixel(led, 0.0, 0.0, 0.0)
@@ -191,7 +191,7 @@ class ChangingLightPattern(ColorCycleTemplate):
             rounded_wheel = int(round(wheel_colour, 0)) % 255
             # Get the actual color out of the wheel
             pixel_color = strip.wheel(rounded_wheel)
-            strip.set_pixel_rgb(i, pixel_color, config.MAX_BRIGHTNESS/2)
+            strip.set_pixel_rgb(i, pixel_color, config.current_brightness/2)
         return 1 # All pixels are set in the buffer, so repaint the strip now
     
     @staticmethod

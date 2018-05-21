@@ -16,12 +16,17 @@ import Main.enums as enums
 log_directory = os.path.join(wensleydale_directory, 'Logs')
 
 
+
 ######################
 # Hardware set up
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 1
+MAX_BRIGHTNESS = 20
+NIGHT_BRIGHTNESS = 0.5
+current_brightness = MAX_BRIGHTNESS
+cycles_without_button_press = 0
+num_cycles_before_dimming = 100
 
 # Delay before button can be pressed again. (Cycles not seconds)
 pause_cycles = 30
