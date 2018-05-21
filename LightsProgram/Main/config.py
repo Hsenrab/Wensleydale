@@ -26,9 +26,14 @@ MAX_BRIGHTNESS = 20
 NIGHT_BRIGHTNESS = 0.5
 current_brightness = MAX_BRIGHTNESS
 cycles_without_button_press = 0
-num_cycles_before_dimming = 100
+
+# There are approx 9.5 cycles per second.
+num_cycles_before_dimming = 200
+num_cycles_before_random_changes = 100
+random_change_frequency = 100
 
 # Delay before button can be pressed again. (Cycles not seconds)
+# There are approx 9.5 cycles per second.
 pause_cycles = 30
 
 # Pin set up.

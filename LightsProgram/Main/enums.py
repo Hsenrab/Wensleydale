@@ -52,7 +52,9 @@ class WPattern(enum.Enum):
     RainbowSlide = 8
     Twinkle = 9
     RandomInOut = 10
-    MAX = 11
+    ColourSnakesCombine = 11
+    BiColourSnakesCombine = 12
+    MAX = 13
 
 
 # Enum holding the direction options.

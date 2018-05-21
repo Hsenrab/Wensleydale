@@ -524,4 +524,219 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args
     wlogger.log_info(strip.leds)
     
     
+def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, *args):
+    """ This function sets of snakes of different colours moving in opposite directions
+        and combines them where they overlap"""
+        
+    if not args:
+        return
+        
+        
+    snake_length = 5
+    mid_chain_gap = 10
+    chain_gap = 30
     
+    snake_chain_length = snake_length*3 + mid_chain_gap*2
+    single_colour_cycle_length = snake_chain_length + chain_gap
+    full_cycle_length = single_colour_cycle_length*3
+    
+    print(snake_chain_length)
+    print(single_colour_cycle_length)
+    print(full_cycle_length)
+        
+    current_speed = args[0].get_speed()
+
+    if print_debug: 
+        print("----------------------------")
+        print("ColourSnakesCombine")
+        print(current_speed)
+        
+    # Calculate total number of LEDs
+    total_num_leds = 0
+    for block in args:
+        block_num_leds = block.get_end_index() - block.get_start_index()
+        total_num_leds += block_num_leds
+        
+    
+    # Pattern specific behaviour
+    pattern_speed_factor = 1
+    num_steps_per_pattern_step = enums.speedDi[current_speed]*pattern_speed_factor
+
+    # The index of the LED within the current blocks.
+    local_led_index = 0
+    
+    
+    # First colour the snakes moving in one direction.
+    for block in args:
+        for led in range(block.get_start_index(), block.get_end_index()):
+            
+            current_pattern_index = (local_led_index + args[0].get_pattern_index()) % full_cycle_length
+            
+            if current_pattern_index < single_colour_cycle_length:
+                current_colour = enums.WColour.Blue
+                print("Blue: " + str(current_pattern_index))
+            elif current_pattern_index < 2*single_colour_cycle_length:
+                current_colour = enums.WColour.Red
+                print("Red: " + str(current_pattern_index))
+            else:
+                current_colour = enums.WColour.Green
+                print("Green: " + str(current_pattern_index))
+            
+            print(current_pattern_index % single_colour_cycle_length)
+            print(current_pattern_index % (snake_length + mid_chain_gap))
+            
+            sub_pattern_index = current_pattern_index % single_colour_cycle_length
+            if  sub_pattern_index < snake_chain_length \
+                and sub_pattern_index % (snake_length + mid_chain_gap) < snake_length:
+                    
+                print("Painted")
+                # Paint snake LEDS with given colour
+                strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
+                           math.floor(enums.colourDi[current_colour][1]*255),
+                           math.floor(enums.colourDi[current_colour][2]*255), 
+                           config.current_brightness)
+            else:
+                # Paint gap LED black.
+                strip.set_pixel(led, 0.0, 0.0, 0.0)
+                
+            local_led_index += 1
+            
+            
+    # Add the snakes moving in the other direction.
+    for block in args:
+        for led in range(block.get_start_index(), block.get_end_index()):
+            
+            current_pattern_index = (local_led_index - args[0].get_pattern_index()) % full_cycle_length
+            
+            if current_pattern_index < single_colour_cycle_length:
+                current_colour = enums.WColour.Blue
+                print("Blue: " + str(current_pattern_index))
+            elif current_pattern_index < 2*single_colour_cycle_length:
+                current_colour = enums.WColour.Red
+                print("Red: " + str(current_pattern_index))
+            else:
+                current_colour = enums.WColour.Green
+                print("Green: " + str(current_pattern_index))
+            
+            print(current_pattern_index % single_colour_cycle_length)
+            print(current_pattern_index % (snake_length + mid_chain_gap))
+            
+            sub_pattern_index = current_pattern_index % single_colour_cycle_length
+            if  sub_pattern_index < snake_chain_length \
+                and sub_pattern_index % (snake_length + mid_chain_gap) < snake_length:
+                    
+                print("Painted 2nd")
+                # Paint snake LEDS with given colour
+                
+                red, blue, green = strip.get_pixel(led)
+                red = red + (math.floor(enums.colourDi[current_colour][0]*255)) % 256
+                blue = blue + (math.floor(enums.colourDi[current_colour][1]*255)) % 256
+                green = green + (math.floor(enums.colourDi[current_colour][2]*255)) % 256
+                
+                strip.set_pixel(led, red, blue, green, config.current_brightness)
+
+            local_led_index += 1
+            
+    
+    if(current_step % num_steps_per_pattern_step == 0):
+        args[0].increment_pattern_index(1)
+
+
+    info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
+                  + str(current_speed)
+    wlogger.log_info(info_string)
+    wlogger.log_info(strip.leds)
+    
+def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, colour_b, *args):
+    """ This function sets of snakes of different colours moving in opposite directions
+        and combines them where they overlap"""
+        
+    if not args:
+        return
+        
+        
+    snake_length = 10
+    mid_chain_gap = 15
+    chain_gap = 40
+    
+    snake_chain_length = snake_length*3 + mid_chain_gap*2
+    single_colour_cycle_length = snake_chain_length + chain_gap
+    
+        
+    current_speed = args[0].get_speed()
+
+    if print_debug: 
+        print("----------------------------")
+        print("ColourSnakesCombine")
+        print(current_speed)
+        
+    # Calculate total number of LEDs
+    total_num_leds = 0
+    for block in args:
+        block_num_leds = block.get_end_index() - block.get_start_index()
+        total_num_leds += block_num_leds
+        
+    
+    # Pattern specific behaviour
+    pattern_speed_factor = 1
+    num_steps_per_pattern_step = enums.speedDi[current_speed]*pattern_speed_factor
+
+    # The index of the LED within the current blocks.
+    local_led_index = 0
+    
+    
+    # First colour the snakes moving in one direction.
+    for block in args:
+        for led in range(block.get_start_index(), block.get_end_index()):
+            
+            current_pattern_index = (local_led_index + args[0].get_pattern_index()) % single_colour_cycle_length
+            
+            current_colour = block.get_colour()
+            
+
+            if  current_pattern_index < snake_chain_length \
+                and current_pattern_index % (snake_length + mid_chain_gap) < snake_length:
+                    
+                # Paint snake LEDS with given colour
+                strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
+                           math.floor(enums.colourDi[current_colour][1]*255),
+                           math.floor(enums.colourDi[current_colour][2]*255), 
+                           config.current_brightness)
+            else:
+                # Paint gap LED black.
+                strip.set_pixel(led, 0.0, 0.0, 0.0)
+                
+            local_led_index += 1
+            
+            
+    # Add the snakes moving in the other direction.
+    for block in args:
+        for led in range(block.get_start_index(), block.get_end_index()):
+            
+            current_pattern_index = (local_led_index - args[0].get_pattern_index()) % single_colour_cycle_length
+            
+            current_colour = colour_b
+            
+            if  current_pattern_index < snake_chain_length \
+                and current_pattern_index % (snake_length + mid_chain_gap) < snake_length:
+                    
+                # Paint snake LEDS with given colour
+                
+                red, blue, green = strip.get_pixel(led)
+                red = red + (math.floor(enums.colourDi[current_colour][0]*255)) % 256
+                blue = blue + (math.floor(enums.colourDi[current_colour][1]*255)) % 256
+                green = green + (math.floor(enums.colourDi[current_colour][2]*255)) % 256
+                
+                strip.set_pixel(led, red, blue, green, config.current_brightness)
+
+            local_led_index += 1
+            
+    
+    if(current_step % num_steps_per_pattern_step == 0):
+        args[0].increment_pattern_index(1)
+
+
+    info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
+                  + str(current_speed)
+    wlogger.log_info(info_string)
+    wlogger.log_info(strip.leds)

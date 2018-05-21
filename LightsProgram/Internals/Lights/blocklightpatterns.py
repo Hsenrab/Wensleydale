@@ -39,10 +39,7 @@ class BlockLightPattern(ColorCycleTemplate):
         
         # Set up pins
         wevents.set_up_pins() 
-        
-        
-        # Call sub initialiser.
-        self.sub_init()
+
 
         
     def set_blocks_to_current_global(self, *args):
@@ -73,21 +70,25 @@ class BlockLightPattern(ColorCycleTemplate):
             patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, *args)
         elif args[0].get_pattern()  == enums.WPattern.AllOn:
             patterns.all_on(strip, *args)
-        elif args[0].get_pattern()  == enums.WPattern.Slide:
+        elif args[0].get_pattern()  == enums.WPattern.Slide and hasattr(self, 'slide_speed'):
             patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, *args)
-        elif args[0].get_pattern()  == enums.WPattern.BlockedSlide:
+        elif args[0].get_pattern()  == enums.WPattern.BlockedSlide and hasattr(self, 'slide_speed'):
             for block in args:
                 patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, block)
         elif args[0].get_pattern()  == enums.WPattern.Snakes:
             patterns.snakes(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        elif args[0].get_pattern()  == enums.WPattern.RenishawMorse:
+        elif args[0].get_pattern()  == enums.WPattern.RenishawMorse and hasattr(self, 'morse'):
             patterns.moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, *args)
-        elif args[0].get_pattern()  == enums.WPattern.RainbowSlide:
+        elif args[0].get_pattern()  == enums.WPattern.RainbowSlide and hasattr(self, 'slide_speed'):
             patterns.rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, *args)
         elif args[0].get_pattern()  == enums.WPattern.Twinkle:
             patterns.twinkle(strip, num_steps_per_cycle, current_step, current_cycle, *args)
         elif args[0].get_pattern()  == enums.WPattern.RandomInOut:
             patterns.random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args)
+        elif args[0].get_pattern()  == enums.WPattern.ColourSnakesCombine:
+            patterns.colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, *args)
+        elif args[0].get_pattern()  == enums.WPattern.BiColourSnakesCombine and hasattr(self, 'colour_b'):
+            patterns.bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, self.colour_b, *args)
         else:  #(to catch anything dodgy)
             patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, *args)
         
@@ -95,14 +96,15 @@ class BlockLightPattern(ColorCycleTemplate):
 class ChangingBlockLightPattern(BlockLightPattern):
     """Paints a pattern on the strip based on the status of global variables."""
     
-    def sub_init(self):
+    def init(self, strip, num_led):
+        super(ChangingBlockLightPattern, self).init(strip, num_led)
+        
         # Set up pattern list.
-        #config.patternList = [  enums.WPattern.RandomInOut]
-        config.patternList = [  enums.WPattern.Singles,
+        config.patternList = [  enums.WPattern.Snakes,
+                                enums.WPattern.Twinkle,
                                 enums.WPattern.BlockedSlide,
-                                enums.WPattern.Snakes,
-                                enums.WPattern.RenishawMorse,
-                                enums.WPattern.Twinkle]
+                                enums.WPattern.Singles,
+                                enums.WPattern.RandomInOut]
                                 
         # Set up colour list.
         config.colourList = [   enums.WColour.Orange,
@@ -114,7 +116,7 @@ class ChangingBlockLightPattern(BlockLightPattern):
                                 enums.WColour.Yellow]
                                 
         # Set up speed list.
-        config.speedList = [   enums.WSpeed.Sloth,
+        config.speedList = [    enums.WSpeed.Sloth,
                                 enums.WSpeed.Hare,
                                 enums.WSpeed.Cheetah]
                                 
@@ -171,14 +173,32 @@ class ChangingBlockLightPattern(BlockLightPattern):
 
         return 1 # Always update as globals may have changed the pattern.
         
-class AllWhitePattern(BlockLightPattern):
-    """Paints a pattern on the strip based on the status of global variables."""
+class GlobalPattern(BlockLightPattern):
+    """Paints a pattern on all the strips."""
     
-    def sub_init(self):
+    def __init__(self, num_led, pause_value=0, num_steps_per_cycle=100,
+                 num_cycles=-1, global_brightness=255, order='rbg',
+                 colour=enums.WColour.White, speed=enums.WSpeed.Hare,
+                 pattern=enums.WPattern.Singles):
+                     
+        super(GlobalPattern, self).__init__(num_led,
+                                            pause_value,
+                                            num_steps_per_cycle,
+                                            num_cycles,
+                                            global_brightness,
+                                            order)
+                                            
+        self.colour = colour
+        self.speed = speed
+        self.pattern = pattern
+    
+    def init(self, strip, num_led):
+        super(GlobalPattern, self).init(strip, num_led)
+        
         #Set block pattern.
-        self.set_blocks(enums.WColour.White,
-                        enums.WSpeed.Sloth,
-                        enums.WPattern.AllOn,
+        self.set_blocks(self.colour,
+                        self.speed,
+                        self.pattern,
                         self.LegBackLeft, 
                         self.LegFrontRight,
                         self.BodyUpperLeft,
@@ -192,13 +212,10 @@ class AllWhitePattern(BlockLightPattern):
                         self.EarFrontLeft,
                         self.EarFrontRight)
                         
-    def sub_cleanup(self):
-        pass
-        
-    
+
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
                current_cycle):    
-
+            
         self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
                         self.BodyLowerRight,
                         self.BodyLowerLeft,
@@ -215,104 +232,46 @@ class AllWhitePattern(BlockLightPattern):
 
         return 1 # Always update as globals may have changed the pattern.
 
-
-class RainbowSlidePattern(BlockLightPattern):
-    """Paints a pattern on the strip based on the status of global variables."""
-    
-    def sub_init(self):
-        #Set block pattern.
-        self.set_blocks(enums.WColour.White,
-                        enums.WSpeed.Cheetah,
-                        enums.WPattern.RainbowSlide,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.BodyUpperLeft,
-                        self.BodyUpperRight,
-                        self.BodyLowerLeft,
-                        self.BodyLowerRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
-                        
-        # Calibrate on dog.
-        self.slide_speed = 100
-                        
-        
     def sub_cleanup(self):
         pass
-    
-    def update(self, strip, num_led, num_steps_per_cycle, current_step,
-               current_cycle):    
 
-        self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                        self.BodyLowerRight,
-                        self.BodyLowerLeft,
-                        self.BodyUpperRight,
-                        self.BodyUpperLeft,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
 
-        return 1 # Always update as globals may have changed the pattern.
+
+class Slide(GlobalPattern):
+    def __init__(self, num_led, pause_value=0, num_steps_per_cycle=100,
+                 num_cycles=-1, global_brightness=255, order='rbg',
+                 colour=enums.WColour.White, speed=enums.WSpeed.Hare,
+                 pattern=enums.WPattern.Slide, slide_speed=100):
         
         
-class StationaryMorsePattern(BlockLightPattern):
-    """Paints a pattern on the strip based on the status of global variables."""
-    
-    def sub_init(self):
-        #Set block pattern.
-        self.set_blocks(enums.WColour.Orange,
-                        enums.WSpeed.Cheetah,
-                        enums.WPattern.MorseFixed,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.BodyUpperLeft,
-                        self.BodyUpperRight,
-                        self.BodyLowerLeft,
-                        self.BodyLowerRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
-                        
-        # Renishaw Morse as default.
-        self.morse  = morse.renishaw
+        super(Slide, self).__init__(num_led,
+                                            pause_value=pause_value,
+                                            num_steps_per_cycle=num_steps_per_cycle,
+                                            num_cycles=num_cycles,
+                                            global_brightness=global_brightness,
+                                            order=order,
+                                            colour=colour,
+                                            speed=speed,
+                                            pattern=pattern)
+                                            
+        self.slide_speed = slide_speed
         
-    def sub_cleanup(self):
-        pass
-                        
+class BiColour(GlobalPattern):
+    def __init__(self, num_led, pause_value=0, num_steps_per_cycle=100,
+                 num_cycles=-1, global_brightness=255, order='rbg',
+                 colour=enums.WColour.White, speed=enums.WSpeed.Hare,
+                 pattern=enums.WPattern.Slide, colour_b = enums.WColour.Red):
         
-    def set_morse(morse):
-        self.morse = morse
-    
-    def update(self, strip, num_led, num_steps_per_cycle, current_step,
-               current_cycle):    
-
-        self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                        self.BodyLowerRight,
-                        self.BodyLowerLeft,
-                        self.BodyUpperRight,
-                        self.BodyUpperLeft,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
-
-        return 1 # Always update as globals may have changed the pattern.
-
-
+        
+        super(BiColour, self).__init__(num_led,
+                                            pause_value=pause_value,
+                                            num_steps_per_cycle=num_steps_per_cycle,
+                                            num_cycles=num_cycles,
+                                            global_brightness=global_brightness,
+                                            order=order,
+                                            colour=colour,
+                                            speed=speed,
+                                            pattern=pattern)
+                                            
+        self.colour_b = colour_b
 
