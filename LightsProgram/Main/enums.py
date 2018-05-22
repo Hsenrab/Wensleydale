@@ -45,16 +45,18 @@ class WPattern(enum.Enum):
     Snakes = 1
     Singles = 2
     Slide = 3
-    Rainbow = 4
-    AllOn = 5
-    BlockedSlide = 6
-    RenishawMorse = 7
-    RainbowSlide = 8
-    Twinkle = 9
-    RandomInOut = 10
-    ColourSnakesCombine = 11
-    BiColourSnakesCombine = 12
-    MAX = 13
+    BlockedSlide = 4
+    RainbowSlide = 5
+    Rainbow = 6
+    AllOn = 7
+    AllOff = 8
+    MovingMorse = 9
+    FixedMorse = 10
+    Twinkle = 11
+    RandomInOut = 12
+    ColourSnakesCombine = 13
+    BiColourSnakesCombine = 14
+    MAX = 15 
 
 
 # Enum holding the direction options.

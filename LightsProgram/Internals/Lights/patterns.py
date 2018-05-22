@@ -282,10 +282,48 @@ def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse,
                   + str(current_speed)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
+    
+    
+def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, *args):
+    """ This function moves Renishaw in morse code along the LED strip indices given"""
+        
+    if not args:
+        return
+
+
+    current_colour = args[0].get_colour()
+
+        
+    if print_debug: 
+        print("----------------------------")
+        print("Fixed Morse")
+        print(current_colour)
+
+
+    # The index of the LED within the current blocks.
+    local_led_index = 0
+    
+    for block in args:
+        for led in range(block.get_start_index(), block.get_end_index()):
+
+            if local_led_index < len(morse) and morse[local_led_index]:
+                # Paint snake LEDS with given colour
+                strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
+                           math.floor(enums.colourDi[current_colour][1]*255),
+                           math.floor(enums.colourDi[current_colour][2]*255), 
+                           config.current_brightness)
+            else:
+                # Paint gap LED black.
+                strip.set_pixel(led, 0.0, 0.0, 0.0)
+                
+            local_led_index += 1
+
+    info_string = "Pattern: Fixed Morse. Colour: " + str(current_colour)
+    wlogger.log_info(info_string)
+    wlogger.log_info(strip.leds)
 
 def all_on(strip, *args):
-    """ This function turns the LEDs on one at a time until all in the given
-    block are done."""
+    """ This function turns the LEDs in the given blocks on."""
         
     if not args:
         return
@@ -314,6 +352,32 @@ def all_on(strip, *args):
             local_led_index += 1
 
     info_string = "Pattern: All On. Colour: " + str(current_colour)
+    wlogger.log_info(info_string)
+    wlogger.log_info(strip.leds)
+    
+def all_off(strip, *args):
+    """ This function turns all LEDs in the blocks given off."""
+        
+    if not args:
+        return
+
+    
+    if print_debug: 
+        print("----------------------------")
+        print("All Off")
+
+
+    # The index of the LED within the current blocks.
+    local_led_index = 0
+    
+    for block in args:
+        for led in range(block.get_start_index(), block.get_end_index()):
+            
+            # Paint LED black.
+            strip.set_pixel(led, 0.0, 0.0, 0.0)
+            local_led_index += 1
+
+    info_string = "Pattern: All Off."
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
 
@@ -404,7 +468,8 @@ def twinkle(strip, num_steps_per_cycle, current_step, current_cycle, *args):
     
 
 def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args):
-    """ This function randomly fills the LED strip between the indices given"""
+    """ This function randomly fills the LED strip between the indices given and 
+    then randomly turns them off"""
         
     if not args:
         return
@@ -539,10 +604,7 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
     snake_chain_length = snake_length*3 + mid_chain_gap*2
     single_colour_cycle_length = snake_chain_length + chain_gap
     full_cycle_length = single_colour_cycle_length*3
-    
-    print(snake_chain_length)
-    print(single_colour_cycle_length)
-    print(full_cycle_length)
+
         
     current_speed = args[0].get_speed()
 
@@ -574,22 +636,15 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
             
             if current_pattern_index < single_colour_cycle_length:
                 current_colour = enums.WColour.Blue
-                print("Blue: " + str(current_pattern_index))
             elif current_pattern_index < 2*single_colour_cycle_length:
                 current_colour = enums.WColour.Red
-                print("Red: " + str(current_pattern_index))
             else:
                 current_colour = enums.WColour.Green
-                print("Green: " + str(current_pattern_index))
-            
-            print(current_pattern_index % single_colour_cycle_length)
-            print(current_pattern_index % (snake_length + mid_chain_gap))
             
             sub_pattern_index = current_pattern_index % single_colour_cycle_length
             if  sub_pattern_index < snake_chain_length \
                 and sub_pattern_index % (snake_length + mid_chain_gap) < snake_length:
                     
-                print("Painted")
                 # Paint snake LEDS with given colour
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
                            math.floor(enums.colourDi[current_colour][1]*255),
@@ -610,22 +665,19 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
             
             if current_pattern_index < single_colour_cycle_length:
                 current_colour = enums.WColour.Blue
-                print("Blue: " + str(current_pattern_index))
+            
             elif current_pattern_index < 2*single_colour_cycle_length:
                 current_colour = enums.WColour.Red
-                print("Red: " + str(current_pattern_index))
+
             else:
                 current_colour = enums.WColour.Green
-                print("Green: " + str(current_pattern_index))
-            
-            print(current_pattern_index % single_colour_cycle_length)
-            print(current_pattern_index % (snake_length + mid_chain_gap))
+
+        
             
             sub_pattern_index = current_pattern_index % single_colour_cycle_length
             if  sub_pattern_index < snake_chain_length \
                 and sub_pattern_index % (snake_length + mid_chain_gap) < snake_length:
                     
-                print("Painted 2nd")
                 # Paint snake LEDS with given colour
                 
                 red, blue, green = strip.get_pixel(led)
