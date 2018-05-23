@@ -152,16 +152,24 @@ class Controller:
         
     def calculate_StepSizes(self, stepSize, bigChange, change2, change3, change4):
         
+        # Set biggest change as the the wanted step size, all other steps will be smaller.
         if(bigChange < 0):
             bigStep = -stepSize
-        
         else:
             bigStep = stepSize
         
-        steps = abs(math.floor(bigChange/stepSize))
-        step2 = change2/steps
-        step3 = change3/steps
-        step4 = change4/steps
+        # Calculate the number of steps needed. Make sure this is greater than
+        # or equal to zero.
+        steps = math.ceil(abs(bigChange/stepSize))
+        
+        if steps != 0:
+            step2 = change2/steps
+            step3 = change3/steps
+            step4 = change4/steps
+        else:
+            step2 = 0
+            step3 = 0
+            step4 = 0
         
         return steps, bigStep, step2, step3, step4
 
@@ -190,16 +198,18 @@ class Controller:
         rightVertChange = REY - self.RightEye.eye_vert_angle
         rightHorizChange = REX - self.RightEye.eye_horiz_angle
         
-        if (abs(leftVertChange) == max(abs(leftVertChange), abs(leftHorizChange), abs(rightVertChange), abs(rightHorizChange))):            
+        max_change = max(abs(leftVertChange), abs(leftHorizChange), abs(rightVertChange), abs(rightHorizChange))
+        
+        if (abs(leftVertChange) == max_change):            
             steps, LVStepSize, LHStepSize, RVStepSize, RHStepSize = self.calculate_StepSizes(stepSize,leftVertChange, leftHorizChange, rightVertChange, rightHorizChange)
         
-        elif (abs(leftHorizChange) == max(abs(leftVertChange), abs(leftHorizChange), abs(rightVertChange), abs(rightHorizChange))):
+        elif (abs(leftHorizChange) == max_change):
             steps, LHStepSize, LVStepSize, RVStepSize, RHStepSize = self.calculate_StepSizes(stepSize,leftHorizChange, leftVertChange, rightVertChange, rightHorizChange)
         
-        elif (abs(rightVertChange) == max(abs(leftVertChange), abs(leftHorizChange), abs(rightVertChange), abs(rightHorizChange))):
+        elif (abs(rightVertChange) == max_change):
             steps, RVStepSize, LHStepSize, LVStepSize, RHStepSize = self.calculate_StepSizes(stepSize,rightVertChange, leftHorizChange, leftVertChange, rightHorizChange)
             
-        elif (abs(rightHorizChange) == max(abs(leftVertChange), abs(leftHorizChange), abs(rightVertChange), abs(rightHorizChange))):
+        elif (abs(rightHorizChange) == max_change):
             steps, RHStepSize, LHStepSize, RVStepSize, LVStepSize = self.calculate_StepSizes(stepSize,rightHorizChange, leftHorizChange, rightVertChange, leftVertChange)
             
         if(debug):

@@ -40,5 +40,9 @@ try:
         time.sleep(random.randint(2, 8))
         
 except Exception as e:
+    # Just print(e) is cleaner and more likely what you want,
+    # but if you insist on printing message specifically whenever possible...
+    print(e.message)
     wlogger.log_error(e.message)
+
     raise
