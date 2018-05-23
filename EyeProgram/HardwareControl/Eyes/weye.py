@@ -19,7 +19,7 @@ class Eye:
         self.eye                = PCA9685(0x40) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
         self.vert_ch            = vertical_channel
         self.horiz_ch           = horizontal_channel
-        self.pwm_freq = 50.0 
+        self.pwm_freq = 50.0 # Fixed by servos used.
         
         self.eye.set_pwm_freq(int(self.pwm_freq))
 
@@ -30,8 +30,10 @@ class Eye:
         self.pwm_period_zero  = 15e-4 * self.pwm_scaler # This angle is the middle of the servo range (1.5ms)
         self.pwm_period_max   = 20e-4 * self.pwm_scaler # This is the maximum angle (2ms)
         self.pwm_period_range = self.pwm_period_max - self.pwm_period_min
-        self.servo_angle_max  = 90 # This is the range of the unrestricted servo movement
-        self.servo_angle_min  = -90 # This is the range of the unrestricted servo movement and will need to be calibrated.
+        self.servo_angle_max  = 90 # This is the range of the unrestricted servo movement- use max as servos have been calibrated to
+                                    # the max physical range.
+        self.servo_angle_min  = -90 # This is the range of the unrestricted servo movement- use max as servos have been calibrated to
+                                    # the max physical range.
         self.servo_angle_range = self.servo_angle_max - self.servo_angle_min
         self.eye_movement_max_radius = 90
         self.eye_movement_corner_angle = math.sqrt((self.eye_movement_max_radius**2)/2)
@@ -192,8 +194,8 @@ class Eye:
         vert_angle_proportion = abs(vert_angle/self.eye_movement_max_radius)
         horiz_angle_proportion = abs(horiz_angle/self.eye_movement_max_radius)
         
-        print(vert_angle_proportion)
-        print(horiz_angle_proportion)
+        print("Vert Prop :" + str(vert_angle_proportion))
+        print("Horiz Prop :" + str(horiz_angle_proportion))
         
         if horiz_angle > 0 and vert_angle > 0:
             
@@ -215,9 +217,17 @@ class Eye:
             horiz_up_component = vert_angle_proportion*self.extreme_up_horiz
             vert_up_component = vert_angle_proportion*self.extreme_up_vert
             
+            print(horiz_up_component)
+            print(vert_up_component)
+            
             # Components from right.
-            horiz_right_component = horiz_angle*self.extreme_right_horiz
-            vert_right_component = horiz_angle*self.extreme_right_vert
+            horiz_right_component = horiz_angle_proportion*self.extreme_right_horiz
+            vert_right_component = horiz_angle_proportion*self.extreme_right_vert
+            
+            print(horiz_angle)
+            print(self.extreme_right_horiz)
+            print(horiz_right_component)
+            print(vert_right_component)
             
             mapped_horiz_angle = horiz_up_component + horiz_right_component
             mapped_vert_angle = vert_up_component + vert_right_component
@@ -254,7 +264,7 @@ class Eye:
         print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
         
         # Add zero shift - this should have no effect close to the edge.
-        dist_from_centre_proportion = math.sqrt(horiz_angle**2 + vert_angle**2)/self.eye_movement_max_radius
+        dist_from_centre_proportion = min(1, math.sqrt(horiz_angle**2 + vert_angle**2)/self.eye_movement_max_radius)
         
         mapped_horiz_angle += self.zero_position_horiz*(1 - dist_from_centre_proportion)
         mapped_vert_angle += self.zero_position_vert*(1 - dist_from_centre_proportion)

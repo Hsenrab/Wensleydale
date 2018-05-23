@@ -11,15 +11,13 @@ wlogger.setup_loggers(config.log_directory)
 
 myController = wcontroller.Controller()
 
-#myController.LeftEye.use_mapping = False
-#myController.RightEye.use_mapping = False
 
 print("EyeRoll")
 wlogger.log_info("Commencing Eye Roll Movement")
 for i in range(3):
-    myController.Eye_Roll()
-    
-myController.re_centre(1)
+    myController.Eye_Roll(0, 360, 120)
+
+print("Done eye roll")
 wlogger.log_info("Ended Eye Roll Movement")
 
 

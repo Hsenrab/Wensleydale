@@ -344,88 +344,53 @@ class Controller:
                    self.RightEye.step_horiz_angle(-stepSize)
                    
             
-    def Eye_Roll(self):
+    def Eye_Roll(self, start_angle, end_angle, num_steps):
         """Performs a full circle of the eyes."""
+        
+        # Convert cartesian step size to an angle step. 
+        interval = (end_angle - start_angle)/num_steps
+        rad_interval = interval*math.pi/180
+        angle_rad = start_angle*math.pi/180
+        end_angle_rad = end_angle*math.pi/180
+        
+        # If the distance is 0 just stay in one place
+        if interval == 0:
+            for i in range(0, num_steps):
+                horiz_angle = self.LeftEye.eye_movement_max_radius * math.cos(start_angle)
+                vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(start_angle)
+                
+                print(vert_angle)
+                print(horiz_angle)
+                
+                
+                self.move_to(horiz_angle, vert_angle)
+                time.sleep(0.01)
+                
+                    
         wlogger.log_info("Performing Eye Roll")
-        for i in range(0, 360):  
-            angle_rad = (i*math.pi)/180
+        
+        while angle_rad < end_angle_rad:
             horiz_angle = self.LeftEye.eye_movement_max_radius * math.cos(angle_rad)
             vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(angle_rad)
+            angle_rad += rad_interval
+            
+            print(horiz_angle)
+            print(vert_angle)
             
             self.move_to(horiz_angle, vert_angle)
             time.sleep(0.01)
             
-            
+        
+        horiz_angle = self.LeftEye.eye_movement_max_radius * math.cos(end_angle_rad)
+        vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(end_angle_rad)
+        angle_rad += rad_interval
+        
+        print(horiz_angle)
+        print(vert_angle)
+        
+        self.move_to(horiz_angle, vert_angle)
+        time.sleep(0.01)
 
-    def draw_circle(self, radius, side_num):
-        if not config.real_hardware:
-            glBegin(GL_POLYGON)
-            for vertex in range(0, side_num):
-                angle = float(vertex) * 2.0 * numpy.pi / side_num
-                glVertex3f(numpy.cos(angle) * radius,  numpy.sin(angle) * radius, 0.0)
-            glEnd()
 
-    def test_move(self):
-        for i in range(0, 4):
-            self.LeftEye.step_vert_angle(0.05)
-            self.redraw()
 
-        for i in range(0, 4):
-            self.LeftEye.step_horiz_angle(0.05)
-            self.redraw()
-
-        for i in range(0, 4):
-            self.RightEye.step_vert_angle(0.05)
-            self.redraw()
-
-        for i in range(0, 4):
-            self.RightEye.step_horiz_angle(0.05)
-            self.redraw()
-
-    def continue_game(self):
-        if not config.real_hardware:
-            accum = Quaternion(axis=[1.0, 0.0, 0.0], angle=1)
-
-            while True:
-                for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        quit()
-
-                    if event.type == pygame.KEYDOWN:
-
-                        glMatrixMode(GL_PROJECTION)
-                        if event.key == pygame.K_LEFT:
-                            glTranslatef(-1, 0, 0)
-                        if event.key == pygame.K_RIGHT:
-                            glTranslatef(1, 0, 0)
-
-                        if event.key == pygame.K_UP:
-                            glTranslatef(0, 1, 0)
-                        if event.key == pygame.K_DOWN:
-                            glTranslatef(0, -1, 0)
-
-                        if event.key == pygame.K_w:
-                            glRotatef(3, 1.0, 0.0, 0.0)
-                        if event.key == pygame.K_a:
-                            glRotatef(3, 0.0, 1.0, 0.0)
-                        if event.key == pygame.K_s:
-                            glRotatef(-3, 1.0, 0.0, 0.0)
-                        if event.key == pygame.K_d:
-                            glRotatef(-3, 0.0, 1.0, 0.0)
-
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        if event.button == 4:
-                            glTranslatef(0, 0, 1.0)
-
-                        if event.button == 5:
-                            glTranslatef(0, 0, -1.0)
-
-                self.redraw()
-
-                # Refresh display
-                pygame.display.flip()
-
-                # Wait
-                pygame.time.wait(10)
 
