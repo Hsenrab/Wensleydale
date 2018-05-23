@@ -2,13 +2,14 @@ import ScriptSetup
 
 import Main.config as config
 import Internals.Utils.wlogger as wlogger
-import HardwareControl.wcontroller as wcontroller
-import time
+import HardwareControl.Eyes.wcontroller as wcontroller
 
 # Set the logger up.
 wlogger.setup_loggers(config.log_directory)
 
 myController = wcontroller.Controller()
+
+print("Life Test")
 
 while(True):
     wlogger.log_info("Begin Cycle")
@@ -44,20 +45,4 @@ while(True):
     myController.re_centre(1)
     wlogger.log_info("Ended Eye Roll Movement")
     
-    wlogger.log_info("Commencing Straight To Point Sequence")
-    myController.straight_to_point(1, 0, 0)
-    myController.straight_to_point(1, 50, 0)
-    myController.straight_to_point(1, -30, 40)
-    myController.straight_to_point(1, 0, 0)
-    wlogger.log_info("Ended Straight To Point Sequence")
-    
-    wlogger.log_info("Commencing combined sequences")
-    myController.Eye_Roll()
-    myController.straight_to_point(1, 0, 0)
-    myController.cross_eyes(1)
-    myController.straight_to_point(1, 40, 40)
-    myController.straight_to_point(1, 0, 0)
-    myController.Low_Cross_Eyes(1)
-    #time.sleep(3)
-    myController.straight_to_point(1, 0, 0)
-    wlogger.log_info("Ended combined sequence")
+

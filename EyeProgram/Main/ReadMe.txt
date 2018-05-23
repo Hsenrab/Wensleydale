@@ -1,1 +1,0 @@
-This folder is to store the main program that will be run on the pi.

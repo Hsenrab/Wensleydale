@@ -2,10 +2,12 @@ import ScriptSetup
 
 import Main.config as config
 import Internals.Utils.wlogger as wlogger
-import HardwareControl.wcontroller as wcontroller
+import HardwareControl.Eyes.wcontroller as wcontroller
 import time
 import random
 # Set the logger up.
+
+print("Gromit Routine")
 wlogger.setup_loggers(config.log_directory)
 
 myController = wcontroller.Controller()

@@ -2,8 +2,8 @@ import ScriptSetup
 import time
 import Main.config as config
 import Internals.Utils.wlogger as wlogger    
-import HardwareControl.Eyes.Physical.weye as weye
-import HardwareControl.wcontroller as wcontroller
+import HardwareControl.Eyes.weye as weye
+import HardwareControl.Eyes.wcontroller as wcontroller
 
 # Set the logger up.
 wlogger.setup_loggers(config.log_directory)

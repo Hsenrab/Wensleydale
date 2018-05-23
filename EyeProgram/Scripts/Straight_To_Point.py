@@ -2,7 +2,7 @@ import ScriptSetup
 
 import Main.config as config
 import Internals.Utils.wlogger as wlogger
-import HardwareControl.wcontroller as wcontroller
+import HardwareControl.Eyes.wcontroller as wcontroller
 import time
 
 # Set the logger up.

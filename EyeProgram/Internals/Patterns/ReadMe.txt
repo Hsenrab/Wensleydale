@@ -1,1 +1,0 @@
-This folder is to store the internal pattern routines.

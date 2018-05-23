@@ -4,18 +4,7 @@ from pyquaternion import *
 import numpy
 import time
 import Main.config as config
-
-
-if not config.real_hardware:
-    import HardwareControl.Environment.Virtual.wenvironment as wenvironment
-    import HardwareControl.Eyes.Virtual.weye as weye
-    import pygame
-    from pygame.locals import *
-    from OpenGL.GL import *
-    from OpenGL.GLU import *
-
-else:
-    import HardwareControl.Eyes.Physical.weye as weye
+import HardwareControl.Eyes.weye as weye
 
 
 class Controller:
