@@ -20,7 +20,7 @@ import os
 
 
 _script_dir = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
-_Wensleydale_parentdir = os.path.normpath(os.path.join(_script_dir, '../../'))
+_Wensleydale_parentdir = os.path.normpath(os.path.join(_script_dir, '../../')) 
 if _Wensleydale_parentdir not in sys.path:  # add parent dir to paths
     sys.path.append(_Wensleydale_parentdir)
     
