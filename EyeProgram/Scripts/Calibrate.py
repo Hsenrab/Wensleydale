@@ -16,7 +16,10 @@ myController = wcontroller.Controller()
 # Do not worry about the path the eyes take to get to the new position.
 # Each servo is moving straight to its new position so a straight line between two points is not expected.
 
-for_calibration = False
+# Note if the calibration numbers get too high it affects the eye roll to a degree that is noticable. So a compromise is
+# needed. 
+
+for_calibration = True
 
 if for_calibration:
     myController.LeftEye.use_mapping = False

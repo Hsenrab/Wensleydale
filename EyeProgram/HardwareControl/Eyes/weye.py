@@ -201,12 +201,12 @@ class Eye:
             
             print("Up Left")
             # Components from up.
-            horiz_up_component = vert_angle_proportion*self.extreme_up_horiz
+            horiz_up_component = (vert_angle_proportion**2)*self.extreme_up_horiz
             vert_up_component = vert_angle_proportion*self.extreme_up_vert
             
             # Components from left.
             horiz_left_component = horiz_angle_proportion*self.extreme_left_horiz
-            vert_left_component = horiz_angle_proportion*self.extreme_left_vert
+            vert_left_component = (horiz_angle_proportion**2)*self.extreme_left_vert
             
             mapped_horiz_angle = horiz_up_component + horiz_left_component
             mapped_vert_angle = vert_up_component + vert_left_component
@@ -214,7 +214,7 @@ class Eye:
         elif horiz_angle <= 0 and vert_angle > 0:
             print("Up Right")
             # Components from up.
-            horiz_up_component = vert_angle_proportion*self.extreme_up_horiz
+            horiz_up_component = (vert_angle_proportion**2)*self.extreme_up_horiz
             vert_up_component = vert_angle_proportion*self.extreme_up_vert
             
             print(horiz_up_component)
@@ -236,12 +236,12 @@ class Eye:
             print("Down Right")
             
             # Components from down.
-            horiz_down_component = vert_angle_proportion*self.extreme_down_horiz
+            horiz_down_component = (vert_angle_proportion**2)*self.extreme_down_horiz
             vert_down_component = vert_angle_proportion*self.extreme_down_vert
             
             # Components from right.
             horiz_right_component = horiz_angle_proportion*self.extreme_right_horiz
-            vert_right_component = horiz_angle_proportion*self.extreme_right_vert
+            vert_right_component = (horiz_angle_proportion**2)*self.extreme_right_vert
             
             mapped_horiz_angle = horiz_down_component + horiz_right_component
             mapped_vert_angle = vert_down_component + vert_right_component
@@ -250,12 +250,12 @@ class Eye:
             print("Down left")
 
             # Components from down.
-            horiz_down_component = vert_angle_proportion*self.extreme_down_horiz
+            horiz_down_component = (vert_angle_proportion**2)*self.extreme_down_horiz
             vert_down_component = vert_angle_proportion*self.extreme_down_vert
             
             # Components from right.
             horiz_left_component = horiz_angle_proportion*self.extreme_left_horiz
-            vert_left_component = horiz_angle_proportion*self.extreme_left_vert
+            vert_left_component = (horiz_angle_proportion**2)*self.extreme_left_vert
             
             mapped_horiz_angle = horiz_down_component + horiz_left_component
             mapped_vert_angle = vert_down_component + vert_left_component
@@ -271,6 +271,17 @@ class Eye:
         
         print("Mapped Vertical Angle: " + str(mapped_vert_angle))
         print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
+        
+        # Ensure the values remain in the 
+        if mapped_horiz_angle < -self.eye_movement_max_radius:
+            mapped_horiz_angle = -self.eye_movement_max_radius
+        elif mapped_horiz_angle > self.eye_movement_max_radius:
+            mapped_horiz_angle = self.eye_movement_max_radius
+            
+        if mapped_vert_angle < -self.eye_movement_max_radius:
+            mapped_vert_angle = -self.eye_movement_max_radius
+        elif mapped_vert_angle > self.eye_movement_max_radius:
+            mapped_vert_angle = self.eye_movement_max_radius
             
         return mapped_horiz_angle, mapped_vert_angle
 
