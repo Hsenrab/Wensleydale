@@ -46,6 +46,10 @@ class Controller:
     def move_to(self, horiz_angle, vert_angle):
             self.LeftEye.move_to(horiz_angle, vert_angle)
             self.RightEye.move_to(horiz_angle, vert_angle)
+            
+    def unsafe_move_to(self, horiz_angle, vert_angle):
+        self.LeftEye.unsafe_move_to_mapped_position(horiz_angle, vert_angle)
+        self.RightEye.unsafe_move_to_mapped_position(horiz_angle, vert_angle)
 
 
     def extreme_left(self, stepSize):
@@ -58,7 +62,8 @@ class Controller:
             self.redraw()
 
     def extreme_right(self, stepSize):
-        """ This function moves the eyes to the extreme right position. It only affects the Y Axis (left to right)"""
+        """ This function moves the eyes to the extreme right position. It only affects the Y Axis (left to right)
+        This assumes that the eye is starting at the centre and is a test routine"""
         wlogger.log_info("Performing Extreme Right")
 
         while (self.LeftEye.eye_horiz_angle + stepSize) < self.LeftEye.eye_movement_max_radius and (self.RightEye.eye_horiz_angle + stepSize) < self.RightEye.eye_movement_max_radius:
@@ -67,7 +72,8 @@ class Controller:
             self.redraw()
 
     def extreme_up(self, stepSize):
-        """ This function moves the eyes to the extreme up position. It only affects the X Axis (up and down)"""
+        """ This function moves the eyes to the extreme up position. It only affects the X Axis (up and down)
+        This assumes that the eye is starting at the centre and is a test routine"""
         wlogger.log_info("Performing Extreme Up")
 
         while (self.LeftEye.eye_vert_angle + stepSize) < self.LeftEye.eye_movement_max_radius and (self.RightEye.eye_vert_angle + stepSize) < self.RightEye.eye_movement_max_radius:
@@ -76,7 +82,8 @@ class Controller:
             self.redraw()
 
     def extreme_down(self, stepSize):
-        """ This function moves the eyes to the extreme down position. It only affects the X Axis (up and down)"""
+        """ This function moves the eyes to the extreme down position. It only affects the X Axis (up and down)
+        This assumes that the eye is starting at the centre and is a test routine"""
         wlogger.log_info("Performing Extreme Down")
 
         while (self.LeftEye.eye_vert_angle - stepSize) > -self.LeftEye.eye_movement_max_radius and (self.RightEye.eye_vert_angle - stepSize) > -self.RightEye.eye_movement_max_radius:

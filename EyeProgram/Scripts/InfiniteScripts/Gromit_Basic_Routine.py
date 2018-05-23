@@ -44,7 +44,7 @@ try:
 except Exception as e:
     # Just print(e) is cleaner and more likely what you want,
     # but if you insist on printing message specifically whenever possible...
-    print(e.message)
-    wlogger.log_error(e.message)
+    print(e)
+    wlogger.log_error(e)
 
     raise

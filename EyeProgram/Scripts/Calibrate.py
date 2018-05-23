@@ -15,36 +15,67 @@ myController = wcontroller.Controller()
 # Turn current calibration off before calibrating.
 # Do not worry about the path the eyes take to get to the new position.
 # Each servo is moving straight to its new position so a straight line between two points is not expected.
-myController.LeftEye.use_mapping = False
-myController.RightEye.use_mapping = False
+
+for_calibration = False
+
+if for_calibration:
+    myController.LeftEye.use_mapping = False
+    myController.RightEye.use_mapping = False
+    use_calibrate_moves = True
+else: # For demonstrating the results of the calibration. Should be the same once the calibrated results 
+        # have been put on the weye class.
+    myController.LeftEye.use_mapping = True
+    myController.RightEye.use_mapping = True
+    use_calibrate_moves = False
+    
+
+# Centre
+# The centre should already have been calibrated.
+
+myController.unsafe_move_to(0, 0) # Uncalibrated Move
+
+
+time.sleep(5)
 
 # Extreme Left
 # Manually change results in here until extreme position looks correct 
-# myController.move(-myController.LeftEye.eye_movement_max_radius, 0) # Uncalibrated Move
-myController.move_to(-myController.LeftEye.eye_movement_max_radius, 0) 
+if use_calibrate_moves:
+    myController.unsafe_move_to(-myController.LeftEye.eye_movement_max_radius, -15)
+else:
+    myController.unsafe_move_to(-myController.LeftEye.eye_movement_max_radius, 0) # Uncalibrated Move
 
-time.sleep(20)
+time.sleep(5)
 
 # Extreme Right
 # Manually change results in here until extreme position looks correct 
-# myController.move(myController.LeftEye.eye_movement_max_radius, 0) # Uncalibrated Move
+if use_calibrate_moves:
+    myController.unsafe_move_to(myController.LeftEye.eye_movement_max_radius, 0)
+else:
+    myController.unsafe_move_to(myController.LeftEye.eye_movement_max_radius, 0) # Uncalibrated Move
 
-myController.move_to(myController.LeftEye.eye_movement_max_radius, -15) 
+time.sleep(5)
 
-time.sleep(20)
 
+
+myController.unsafe_move_to(0, 0) # Uncalibrated Move
+
+
+time.sleep(5)
 # Extreme Up
 # Manually change results in here until extreme position looks correct 
-# myController.move(0, myController.LeftEye.eye_movement_max_radius) # Uncalibrated Move
+if use_calibrate_moves:
+    myController.unsafe_move_to(15, myController.LeftEye.eye_movement_max_radius)
+else:
+    myController.unsafe_move_to(0, myController.LeftEye.eye_movement_max_radius) # Uncalibrated Move
 
-myController.move_to(0, myController.LeftEye.eye_movement_max_radius)
-
-time.sleep(20)
+time.sleep(5)
 
 # Extreme Down
 # Manually change results in here until extreme position looks correct 
-# myController.move(0, -myController.LeftEye.eye_movement_max_radius) # Uncalibrated Move
-myController.move_to(25, -myController.LeftEye.eye_movement_max_radius)
+if use_calibrate_moves:
+    myController.unsafe_move_to(45 , -myController.LeftEye.eye_movement_max_radius)
+else:
+    myController.unsafe_move_to(0, -myController.LeftEye.eye_movement_max_radius) # Uncalibrated Move
 
 time.sleep(1)
 print("Done")

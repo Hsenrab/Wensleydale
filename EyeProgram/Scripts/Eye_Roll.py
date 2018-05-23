@@ -5,11 +5,14 @@ import Internals.Utils.wlogger as wlogger
 import HardwareControl.Eyes.weye as weye
 import HardwareControl.Eyes.wcontroller as wcontroller
 
+
 # Set the logger up.
 wlogger.setup_loggers(config.log_directory)
 
 myController = wcontroller.Controller()
 
+#myController.LeftEye.use_mapping = False
+#myController.RightEye.use_mapping = False
 
 print("EyeRoll")
 wlogger.log_info("Commencing Eye Roll Movement")

@@ -30,10 +30,10 @@ class Eye:
         self.pwm_period_zero  = 15e-4 * self.pwm_scaler # This angle is the middle of the servo range (1.5ms)
         self.pwm_period_max   = 20e-4 * self.pwm_scaler # This is the maximum angle (2ms)
         self.pwm_period_range = self.pwm_period_max - self.pwm_period_min
-        self.servo_angle_max  = 70 # This is the range of the unrestricted servo movement
-        self.servo_angle_min  = -70 # This is the range of the unrestricted servo movement and will need to be calibrated.
+        self.servo_angle_max  = 90 # This is the range of the unrestricted servo movement
+        self.servo_angle_min  = -90 # This is the range of the unrestricted servo movement and will need to be calibrated.
         self.servo_angle_range = self.servo_angle_max - self.servo_angle_min
-        self.eye_movement_max_radius = 70
+        self.eye_movement_max_radius = 90
         self.eye_movement_corner_angle = math.sqrt((self.eye_movement_max_radius**2)/2)
 
         # Servo Position Tracking Variables (degrees)
@@ -51,36 +51,23 @@ class Eye:
         self.centre = centre
         
         self.use_mapping = True
-        self.use_centring = True
         
         # Mapping up front calibration computations.
-        # Currently no mapping will be Calibrated values for v2 eyes
-        extreme_up_vert = self.eye_movement_max_radius #Calibrate
-        extreme_up_horiz = 0 #Calibrate
-        mag = math.sqrt(extreme_up_vert**2 + extreme_up_horiz**2)
-        self.normalised_extreme_up_vert = extreme_up_vert/mag
-        self.normalised_extreme_up_horiz = extreme_up_horiz/mag
+        # calibrated values for final eyes. 23/05/18
+        self.extreme_up_vert = self.eye_movement_max_radius #Calibrate
+        self.extreme_up_horiz = 15 #Calibrate
         
-        extreme_down_vert = -self.eye_movement_max_radius #Calibrate
-        extreme_down_horiz = 25 #Calibrate
-        mag = math.sqrt(extreme_down_vert**2 + extreme_down_horiz**2)
-        self.normalised_extreme_down_vert = extreme_down_vert/mag
-        self.normalised_extreme_down_horiz = extreme_down_horiz/mag
+        self.extreme_down_vert = -self.eye_movement_max_radius #Calibrate
+        self.extreme_down_horiz = 45 #Calibrate
         
-        extreme_left_vert = 0 #Calibrate
-        extreme_left_horiz = -self.eye_movement_max_radius #Calibrate
-        mag = math.sqrt(extreme_left_vert**2 + extreme_left_horiz**2)
-        self.normalised_extreme_left_vert = extreme_left_vert/mag
-        self.normalised_extreme_left_horiz = extreme_left_horiz/mag
+        self.extreme_left_vert = -15 #Calibrate
+        self.extreme_left_horiz = self.eye_movement_max_radius #Calibrate
+
+        self.extreme_right_vert = 0 #Calibrate
+        self.extreme_right_horiz = -self.eye_movement_max_radius #Calibrate
         
-        extreme_right_vert = -15 #Calibrate
-        extreme_right_horiz = self.eye_movement_max_radius #Calibrate
-        mag = math.sqrt(extreme_right_vert**2 + extreme_right_horiz**2)
-        self.normalised_extreme_right_vert = extreme_right_vert/mag
-        self.normalised_extreme_right_horiz = extreme_right_horiz/mag
-        
-        self.zero_position_vert = 15 #Calibrate
-        self.zero_position_horiz = 15 #Calibrate
+        self.zero_position_vert = 0 #Calibrate
+        self.zero_position_horiz = 25 #Calibrate
         
     def unsafe_move_to_mapped_position(self, horiz_angle, vert_angle):
         # Map the new angle against a correction matrix, which accounts for the mechanism of the eye.
@@ -147,9 +134,6 @@ class Eye:
         
         # Make the target position valid if needed
         target_horiz_angle, target_vert_angle = self.make_valid_position(self.eye_horiz_angle, target_vert_angle)
-        #print("Step to")
-        #print("Horiz: " + str(target_horiz_angle))
-        #print("Vert: " + str(target_vert_angle))
 
         # Now move to given angle
         self.unsafe_move_to_mapped_position(target_horiz_angle, target_vert_angle)
@@ -164,9 +148,6 @@ class Eye:
         
         # Make the target position valid if needed
         target_horiz_angle, target_vert_angle = self.make_valid_position(target_horiz_angle, self.eye_vert_angle)
-        #print("Step to")
-        #print("Horiz: " + str(target_horiz_angle))
-        #print("Vert: " + str(target_vert_angle))
 
         # Now move to given angle
         self.unsafe_move_to_mapped_position(target_horiz_angle, target_vert_angle)
@@ -199,32 +180,88 @@ class Eye:
         This is required because of the linkage to the eye itself, which creates a mapping between the servo and eye angles. 
         """
         
-        if self.use_centring == False:
-            return horiz_angle, vert_angle
-        
         if self.use_mapping == False:
-            mapped_horiz_angle = horiz_angle + self.zero_position_vert
-            mapped_vert_angle = vert_angle + self.zero_position_horiz
-            return mapped_horiz_angle, mapped_vert_angle
-        
+            return horiz_angle, vert_angle
 
         # Currently linearly interpolating results based on the quadrant
         # the target co ordinate lies in.
         
-        #TODO finish this.
+        print("Vertical Angle: " + str(vert_angle))
+        print("Horizontal Angle: " + str(horiz_angle))
         
-        #if horiz_angle > 0 and vert_angle > 0:
-            #mapped_horiz_angle = horiz_angle*self.normalised_extreme_up_horiz
-            #mapped_horiz_angle = horiz_angle*self.normalised_extreme_up_horiz
-        #elif horiz_angle < 0 and vert_angle > 0:
+        vert_angle_proportion = abs(vert_angle/self.eye_movement_max_radius)
+        horiz_angle_proportion = abs(horiz_angle/self.eye_movement_max_radius)
+        
+        print(vert_angle_proportion)
+        print(horiz_angle_proportion)
+        
+        if horiz_angle > 0 and vert_angle > 0:
             
-        #elif horiz_angle < 0 and vert_angle < 0:
+            print("Up Left")
+            # Components from up.
+            horiz_up_component = vert_angle_proportion*self.extreme_up_horiz
+            vert_up_component = vert_angle_proportion*self.extreme_up_vert
+            
+            # Components from left.
+            horiz_left_component = horiz_angle_proportion*self.extreme_left_horiz
+            vert_left_component = horiz_angle_proportion*self.extreme_left_vert
+            
+            mapped_horiz_angle = horiz_up_component + horiz_left_component
+            mapped_vert_angle = vert_up_component + vert_left_component
+            
+        elif horiz_angle <= 0 and vert_angle > 0:
+            print("Up Right")
+            # Components from up.
+            horiz_up_component = vert_angle_proportion*self.extreme_up_horiz
+            vert_up_component = vert_angle_proportion*self.extreme_up_vert
+            
+            # Components from right.
+            horiz_right_component = horiz_angle*self.extreme_right_horiz
+            vert_right_component = horiz_angle*self.extreme_right_vert
+            
+            mapped_horiz_angle = horiz_up_component + horiz_right_component
+            mapped_vert_angle = vert_up_component + vert_right_component
+            
+        elif horiz_angle <= 0 and vert_angle <= 0:
+            print("Down Right")
+            
+            # Components from down.
+            horiz_down_component = vert_angle_proportion*self.extreme_down_horiz
+            vert_down_component = vert_angle_proportion*self.extreme_down_vert
+            
+            # Components from right.
+            horiz_right_component = horiz_angle_proportion*self.extreme_right_horiz
+            vert_right_component = horiz_angle_proportion*self.extreme_right_vert
+            
+            mapped_horiz_angle = horiz_down_component + horiz_right_component
+            mapped_vert_angle = vert_down_component + vert_right_component
         
-        #else:
+        else: #horiz_angle > 0 and vert_angle <= 0:
+            print("Down left")
+
+            # Components from down.
+            horiz_down_component = vert_angle_proportion*self.extreme_down_horiz
+            vert_down_component = vert_angle_proportion*self.extreme_down_vert
+            
+            # Components from right.
+            horiz_left_component = horiz_angle_proportion*self.extreme_left_horiz
+            vert_left_component = horiz_angle_proportion*self.extreme_left_vert
+            
+            mapped_horiz_angle = horiz_down_component + horiz_left_component
+            mapped_vert_angle = vert_down_component + vert_left_component
+            
+        print("Mapped Vertical Angle: " + str(mapped_vert_angle))
+        print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
         
-        # Basic zero calibration for eyes v2
-        mapped_horiz_angle = horiz_angle + self.zero_position_vert
-        mapped_vert_angle = vert_angle + self.zero_position_horiz
+        # Add zero shift - this should have no effect close to the edge.
+        dist_from_centre_proportion = math.sqrt(horiz_angle**2 + vert_angle**2)/self.eye_movement_max_radius
+        
+        mapped_horiz_angle += self.zero_position_horiz*(1 - dist_from_centre_proportion)
+        mapped_vert_angle += self.zero_position_vert*(1 - dist_from_centre_proportion)
+        
+        print("Mapped Vertical Angle: " + str(mapped_vert_angle))
+        print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
+            
         return mapped_horiz_angle, mapped_vert_angle
 
 
