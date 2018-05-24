@@ -53,8 +53,8 @@ def set_leds_off():
 
 def record_button_press():
     if config.button_press_count % 1000 == 0:
-        with open('BigLEDsButtonCount.log') as f:
-            f.write(config.button_press_count)
+        with open('BigLEDsButtonCount.log', 'w+') as f:
+            f.write(str(config.button_press_count))
         
 
 

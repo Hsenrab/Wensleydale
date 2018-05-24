@@ -1,7 +1,8 @@
 import ScriptSetup
 import Internals.Utils.wlogger as wlogger
-import HardwareControl.wlights as wlights
+import HardwareControl.wtail as wtail
 import Main.config as config
+import RPi.GPIO as GPIO
 
 # Set the logger up.
 wlogger.setup_loggers(config.log_directory)
@@ -13,7 +14,8 @@ while keep_running:
     try:
         # Cycle of light pattern
         print('Run Tail')
-        wlights.control_tail()
+        aTail = wtail.Tail()
+        aTail.control_tail()
         
     except KeyboardInterrupt:  # Ctrl-C can halt the light program
         keep_running = False
