@@ -6,6 +6,8 @@ import RPi.GPIO as GPIO
 import Internals.Utils.wlogger as wlogger
 import Main.config as config
 import Main.enums as enums
+import itertools
+from random import randint
 
 import termios
 import sys
@@ -14,16 +16,18 @@ import tty
 
 print_debug = True
 
-GPIO.setwarnings(False)
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(config.colourInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(config.speedInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-GPIO.setup(config.patternInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-
-GPIO.setup(config.colourOutputPin, GPIO.OUT)
-GPIO.setup(config.speedOutputPin, GPIO.OUT)
-GPIO.setup(config.patternOutputPin, GPIO.OUT)
+def set_up_pins():
+    GPIO.setwarnings(False)
+    
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(config.colourInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(config.speedInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(config.patternInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    
+    GPIO.setup(config.colourOutputPin, GPIO.OUT)
+    GPIO.setup(config.speedOutputPin, GPIO.OUT)
+    GPIO.setup(config.patternOutputPin, GPIO.OUT)
 
 
 
@@ -40,7 +44,60 @@ def getkey():
     ch = sys.stdin.read(1)
     termios.tcsetattr(fd, termios.TCSADRAIN, old)
     return ch
+    
+    
+def randomly_change_pattern(lock, colour_cycle, speed_cycle, pattern_cycle):
+    # Randomly change colour, speed or pattern.
+    variable_to_change = randint(0, 2)
+    
+    if variable_to_change == 0:
+        # Cycle a random number of times.
+        number_of_cycles = randint(1, len(config.speedList)-1)
+        
+        for cycle in range(0, number_of_cycles):
+            with lock:
+                config.wlight_speed = next(speed_cycle)
+                
+        if print_debug:
+            print("Auto Change - Speed", flush=True)
+            print(config.wlight_speed, flush=True)
+            
+    elif variable_to_change == 1:
+        # Cycle a random number of times.
+        number_of_cycles = randint(1, len(config.patternList)-1)
+        
+        for cycle in range(0, number_of_cycles):
+            with lock:
+                config.wlight_pattern = next(pattern_cycle)
+                
+        if print_debug:
+            print("Auto Change - Pattern", flush=True)
+            print(config.wlight_pattern, flush=True)
+            
+    elif variable_to_change == 2:
+        # Cycle a random number of times.
+        number_of_cycles = randint(1, len(config.colourList)-1)
+        
+        for cycle in range(0, number_of_cycles):
+            with lock:
+                config.wlight_colour = next(colour_cycle)
+                
+        if print_debug:
+            print("Auto Change - Colour", flush=True)
+            print(config.wlight_colour, flush=True)
 
+def set_leds(canColourChange, canPatternChange, canSpeedChange, count):
+    # Turn LEDs off if the buttons are available
+    
+    # + 10 is untested as LEDs not currently responsive. 
+    if canColourChange < count  + 10:
+        GPIO.output(config.colourOutputPin, GPIO.LOW)
+        
+    if canSpeedChange < count  + 10:
+        GPIO.output(config.speedOutputPin, GPIO.LOW)
+        
+    if canPatternChange < count + 10:
+        GPIO.output(config.patternOutputPin, GPIO.LOW)
 
 
 # This thread listens to the buttons and changes the global variables 
@@ -54,11 +111,8 @@ def getkey():
 # main thread. This is also why all buttons are on the same thread. This
 # is a candidate for further investigation if there is time. 
 def buttonThread():
-    config.wlight_colour
-    config.wlight_speed
-    config.wlight_pattern
     global button_press_count
-    
+    input_thread = threading.currentThread()
 
     lock = threading.Lock()
 
@@ -70,16 +124,121 @@ def buttonThread():
     
     count = 0
     
-    # This changes the length of time the buttons are paused for. This 
-    # will need to be calibrated.
-    num_pause_steps = config.pause_cycles
+    pattern_cycle = itertools.cycle(config.patternList)
+    colour_cycle = itertools.cycle(config.colourList)
+    speed_cycle = itertools.cycle(config.speedList)
+    
+    with lock:
+        config.wlight_pattern = next(pattern_cycle)
+        config.wlight_colour = next(colour_cycle)
+        config.wlight_speed = next(speed_cycle)
     
     
-    while continue_thread:
+    while not input_thread.stopped():
+        # Increment the cycle count.
         count+=1
         
+        # Determine if the brightness needs changing by looking at the number
+        # of cycles there has been without a button press.
+        if config.cycles_without_button_press == config.num_cycles_before_dimming:
+            with lock:
+                config.current_brightness = config.NIGHT_BRIGHTNESS
+                if print_debug:
+                    print("Night Brightness: " + str(count))
+        elif config.cycles_without_button_press == 0:
+            with lock:
+                if print_debug:
+                    print("Day Brightness: " + str(count))
+                config.current_brightness = config.MAX_BRIGHTNESS
         
-        #Temp taking keyboard input.
+        # Assume this cycles has no button press. This will be reset to
+        # zero if a button is pressed.
+        config.cycles_without_button_press += 1
+        
+        
+        # Determine whether a random change is needed. 
+        
+        if config.cycles_without_button_press > config.num_cycles_before_random_changes \
+            and config.cycles_without_button_press % config.random_change_frequency == 0:
+            
+            if print_debug:
+                    print("Random Change: " + str(count))
+            randomly_change_pattern(lock, colour_cycle, speed_cycle, pattern_cycle)
+                
+
+        ## Gather button inputs
+        inputColourButton = GPIO.input(config.colourInputPin)
+        inputSpeedValueButton = GPIO.input(config.speedInputPin)
+        inputPatternValueButton = GPIO.input(config.patternInputPin)
+        
+        # Check which buttons are available.
+        colourButtonAvailable = canColourChange < count
+        speedButtonAvailable = canSpeedChange < count
+        patternButtonAvailable = canPatternChange < count
+        
+        # Set LEDs correctly
+        set_leds(canColourChange, canPatternChange, canSpeedChange, count)
+        
+        
+        # For each button cycle the corresponding variable if the button
+        # has been pressed and it has not been pressed "recently"
+        if inputColourButton and colourButtonAvailable:
+            config.cycles_without_button_press = 0
+            button_press_count += 1
+            canColourChange= count + config.pause_cycles
+            
+            with lock:
+                config.wlight_colour = next(colour_cycle)
+                wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
+                
+                if print_debug:
+                    print("Button press - Colour", flush=True)
+                    print(config.wlight_colour)
+                    print("Count: " + str(count))
+                
+            GPIO.output(config.colourOutputPin, GPIO.HIGH)
+        
+
+        elif inputSpeedValueButton and speedButtonAvailable:
+            config.cycles_without_button_press = 0
+            button_press_count += 1
+            canSpeedChange= count + config.pause_cycles
+            
+            with lock:
+                config.wlight_speed = next(speed_cycle)
+            
+                if print_debug:
+                    print("Button press - Speed", flush=True)
+                    print(config.wlight_speed)
+                
+            GPIO.output(config.speedOutputPin, GPIO.HIGH)
+            
+        
+
+        elif inputPatternValueButton and patternButtonAvailable:
+            config.cycles_without_button_press = 0
+            button_press_count += 1
+            canPatternChange = count + config.pause_cycles
+            
+            with lock:
+                config.wlight_pattern = next(pattern_cycle)
+                config.pattern_position_index = 0
+                if print_debug:
+                    print("Button press - Pattern", flush=True)
+                    print(config.wlight_pattern)
+                
+            GPIO.output(config.patternOutputPin, GPIO.HIGH)
+
+        
+        # Small time delay between each run through. This does not
+        # change the speed of the other thread as it is happens on
+        # every loop.
+        
+        time.sleep(0.1)
+        
+
+#
+#Temp taking keyboard input.
         #key = getkey()
         #print("Key: " + str(key))
 
@@ -105,86 +264,4 @@ def buttonThread():
             #raise KeyboardInterrupt
                 
         #End of temp
-        
-        ## Gather button inputs
-        inputColourButton = GPIO.input(config.colourInputPin)
-        inputSpeedValueButton = GPIO.input(config.speedInputPin)
-        inputPatternValueButton = GPIO.input(config.patternInputPin)
-        
-        # Check which buttons are available.
-        colourButtonAvailable = canColourChange < count
-        speedButtonAvailable = canSpeedChange < count
-        patternButtonAvailable = canPatternChange < count
-        
-        # Turn LEDs off if the buttons are available.
-        if colourButtonAvailable:
-            x=0 # Temp
-            GPIO.output(config.colourOutputPin, GPIO.LOW)
-            
-        if speedButtonAvailable:
-            x=0 # Temp
-            GPIO.output(config.speedOutputPin, GPIO.LOW)
-            
-        if patternButtonAvailable:
-            x=0 # Temp
-            GPIO.output(config.patternOutputPin, GPIO.LOW)
-        
-        # For each button cycle the corresponding variable if the button
-        # has been pressed and it has not been pressed "recently"
-        if inputColourButton and colourButtonAvailable:
-            button_press_count += 1
-            canColourChange= count + num_pause_steps
-            
-            with lock:
-                new_colour_int = (config.wlight_colour.value + 1) % enums.WColour.MAX.value
-                config.wlight_colour = enums.WColour(new_colour_int)
-                #wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
-                
-            if print_debug:
-                print("Button press - Colour", flush=True)
-                print(config.wlight_colour)
-                
-            GPIO.output(config.colourOutputPin, GPIO.HIGH)
-        
-
-        elif inputSpeedValueButton and speedButtonAvailable:
-            button_press_count += 1
-            canSpeedChange= count + num_pause_steps
-            
-            with lock:
-                new_speed_int = (config.wlight_speed.value + 1) % enums.WSpeed.MAX.value
-                config.wlight_speed = enums.WSpeed(new_speed_int)
-            
-            if print_debug:
-                print("Button press - Speed", flush=True)
-                print(config.wlight_speed)
-                
-            GPIO.output(config.speedOutputPin, GPIO.HIGH)
-            
-        
-
-        elif inputPatternValueButton and patternButtonAvailable:
-            button_press_count += 1
-            canPatternChange = count + num_pause_steps
-            
-            with lock:
-                new_pattern_int = (config.wlight_pattern.value + 1) % enums.WPattern.MAX.value
-                config.wlight_pattern = enums.WPattern(new_pattern_int)
-            if print_debug:
-                print("Button press - Pattern", flush=True)
-                print(config.wlight_pattern)
-                
-            GPIO.output(config.patternOutputPin, GPIO.HIGH)
-
-        
-        # Small time delay between each run through. This does not
-        # change the speed of the other thread as it is happens on
-        # every loop.
-        
-        time.sleep(0.1)
-        
-
-input_thread = threading.Thread(target=buttonThread).start()
-
-
 
