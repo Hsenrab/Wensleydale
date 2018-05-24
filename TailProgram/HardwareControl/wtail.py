@@ -4,28 +4,25 @@ import Internals.Utils.wlogger as wlogger
 
 print_debug = True
 
-BigLEDinputPin = 0
-BigLEDOutputPinRed = 1
-BigLEDOutputPinBlue = 1
-BigLEDOutputPinGreen = 1
+
+touchInputPin = 0
+touchOutputPin = 0
+
 
 def set_up_pins():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(BigLEDinputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(BigLEDOutputPinRed, GPIO.OUT)
-    GPIO.setup(BigLEDOutputPinBlue, GPIO.OUT)
-    GPIO.setup(BigLEDOutputPinGreen, GPIO.OUT)
+    GPIO.setup(touchInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(touchOutputPin, GPIO.OUT)
+    
 
 def set_tail_on():
-    GPIO.output(BigLEDOutputPinRed, GPIO.HIGH)
-    GPIO.output(BigLEDOutputPinBlue, GPIO.HIGH)
-    GPIO.output(BigLEDOutputPinGreen, GPIO.HIGH)
+    # TODO - add tail move
+    GPIO.output(touchOutputPin, GPIO.HIGH)
 
 def set_tail_off():
-    GPIO.output(BigLEDOutputPinRed, GPIO.LOW)
-    GPIO.output(BigLEDOutputPinBlue, GPIO.LOW)
-    GPIO.output(BigLEDOutputPinGreen, GPIO.LOW)
+    # TODO - add tail move
+    GPIO.output(touchOutputPin, GPIO.LOW)
     
 
 def record_button_press():
@@ -43,7 +40,7 @@ def control_tail():
     
     # Set tail off to start.
     set_tail_off()
-    is_LEDs_on = True
+    is_tail_on = True
     
     continue_control = True
     
@@ -55,19 +52,23 @@ def control_tail():
         if inputButton:
             config.button_press_count += 1
             
-            if is_LEDs_on: 
-                set_leds_off()
-                wlogger.log_info("Button press -> LEDs Off, No. Presses: " + str(button_press_count))
+            if is_tail_on: 
+                set_tail_off()
+                wlogger.log_info("Button press -> Tail Off, No. Presses: " + str(button_press_count))
                 
                 if print_debug:
-                    print("Button press -> LEDs Off", flush=True)
+                    print("Button press -> Tail Off", flush=True)
+                    
+                is_tail_on = False
                 
             else:
-                set_leds_on()
-                wlogger.log_info("Button press -> LEDs On, No. Presses: " + str(button_press_count))
+                set_tail_on()
+                wlogger.log_info("Button press -> Tail On, No. Presses: " + str(button_press_count))
                 
                 if print_debug:
-                    print("Button press -> LEDs On", flush=True)
+                    print("Button press -> Tail On", flush=True)
+                    
+                is_tail_on = True
             
             record_button_press()
         

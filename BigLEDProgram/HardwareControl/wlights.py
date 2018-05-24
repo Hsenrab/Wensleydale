@@ -4,28 +4,51 @@ import Internals.Utils.wlogger as wlogger
 
 print_debug = True
 
-BigLEDinputPin = 0
-BigLEDOutputPinRed = 1
-BigLEDOutputPinBlue = 1
-BigLEDOutputPinGreen = 1
+touchInputPin = 0
+touchOutputPin = 0
+
+BigLEDAOutputPinRed = 17
+BigLEDAOutputPinBlue = 27
+BigLEDAOutputPinGreen = 22
+BigLEDBOutputPinRed = 10
+BigLEDBOutputPinBlue = 9
+BigLEDBOutputPinGreen = 11
+
 
 def set_up_pins():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(BigLEDinputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-    GPIO.setup(BigLEDOutputPinRed, GPIO.OUT)
-    GPIO.setup(BigLEDOutputPinBlue, GPIO.OUT)
-    GPIO.setup(BigLEDOutputPinGreen, GPIO.OUT)
+    GPIO.setup(touchInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+    GPIO.setup(touchOutputPin, GPIO.OUT)
+    
+    GPIO.setup(BigLEDAOutputPinRed, GPIO.OUT)
+    GPIO.setup(BigLEDAOutputPinBlue, GPIO.OUT)
+    GPIO.setup(BigLEDAOutputPinGreen, GPIO.OUT)
+    GPIO.setup(BigLEDBOutputPinRed, GPIO.OUT)
+    GPIO.setup(BigLEDBOutputPinBlue, GPIO.OUT)
+    GPIO.setup(BigLEDBOutputPinGreen, GPIO.OUT)
+    
+
 
 def set_leds_on():
-    GPIO.output(BigLEDOutputPinRed, GPIO.HIGH)
-    GPIO.output(BigLEDOutputPinBlue, GPIO.HIGH)
-    GPIO.output(BigLEDOutputPinGreen, GPIO.HIGH)
+    GPIO.output(BigLEDAOutputPinRed, GPIO.HIGH)
+    GPIO.output(BigLEDAOutputPinBlue, GPIO.HIGH)
+    GPIO.output(BigLEDAOutputPinGreen, GPIO.HIGH)
+    GPIO.output(BigLEDBOutputPinRed, GPIO.HIGH)
+    GPIO.output(BigLEDBOutputPinBlue, GPIO.HIGH)
+    GPIO.output(BigLEDBOutputPinGreen, GPIO.HIGH)
+    
+    GPIO.output(touchOutputPin, GPIO.HIGH)
 
 def set_leds_off():
-    GPIO.output(BigLEDOutputPinRed, GPIO.LOW)
-    GPIO.output(BigLEDOutputPinBlue, GPIO.LOW)
-    GPIO.output(BigLEDOutputPinGreen, GPIO.LOW)
+    GPIO.output(BigLEDAOutputPinRed, GPIO.LOW)
+    GPIO.output(BigLEDAOutputPinBlue, GPIO.LOW)
+    GPIO.output(BigLEDAOutputPinGreen, GPIO.LOW)
+    GPIO.output(BigLEDBOutputPinRed, GPIO.LOW)
+    GPIO.output(BigLEDBOutputPinBlue, GPIO.LOW)
+    GPIO.output(BigLEDBOutputPinGreen, GPIO.LOW)
+    
+    GPIO.output(touchOutputPin, GPIO.LOW)
     
 
 def record_button_press():
@@ -61,13 +84,16 @@ def control_big_leds():
                 
                 if print_debug:
                     print("Button press -> LEDs Off", flush=True)
-                
+                    
+                is_LEDs_on = False
             else:
                 set_leds_on()
                 wlogger.log_info("Button press -> LEDs On, No. Presses: " + str(button_press_count))
                 
                 if print_debug:
                     print("Button press -> LEDs On", flush=True)
+                    
+                is_LEDs_on = True
             
             record_button_press()
         
