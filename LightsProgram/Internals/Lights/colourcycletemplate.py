@@ -61,7 +61,9 @@ class ColorCycleTemplate:
             By default this does nothing
         """
         pass
-        
+    
+    def sub_cleanup(self):
+        pass
 
     def cleanup(self, strip):
         """Cleanup method."""

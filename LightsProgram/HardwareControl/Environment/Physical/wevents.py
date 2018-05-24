@@ -137,15 +137,18 @@ def buttonThread():
     while not input_thread.stopped():
         # Increment the cycle count.
         count+=1
-        print(count)
         
         # Determine if the brightness needs changing by looking at the number
         # of cycles there has been without a button press.
         if config.cycles_without_button_press == config.num_cycles_before_dimming:
             with lock:
                 config.current_brightness = config.NIGHT_BRIGHTNESS
+                if print_debug:
+                    print("Night Brightness: " + str(count))
         elif config.cycles_without_button_press == 0:
             with lock:
+                if print_debug:
+                    print("Day Brightness: " + str(count))
                 config.current_brightness = config.MAX_BRIGHTNESS
         
         # Assume this cycles has no button press. This will be reset to
@@ -158,6 +161,8 @@ def buttonThread():
         if config.cycles_without_button_press > config.num_cycles_before_random_changes \
             and config.cycles_without_button_press % config.random_change_frequency == 0:
             
+            if print_debug:
+                    print("Random Change: " + str(count))
             randomly_change_pattern(lock, colour_cycle, speed_cycle, pattern_cycle)
                 
 
@@ -184,7 +189,7 @@ def buttonThread():
             
             with lock:
                 config.wlight_colour = next(colour_cycle)
-                #wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
+                wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
                 
                 if print_debug:
                     print("Button press - Colour", flush=True)

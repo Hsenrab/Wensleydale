@@ -21,7 +21,7 @@ colourDi[WColour.Blue] = (0.0, 1.0, 0.0)
 colourDi[WColour.Cyan] = (0.0, 0.8, 1.0)
 colourDi[WColour.Yellow] = (1.0, 0.0, 0.5)
 colourDi[WColour.Pink] = (1.0, 0.8, 0.0)
-colourDi[WColour.White] = (1.0, 0.8, 1.0)
+colourDi[WColour.White] = (1.0, 0.5, 0.8)
 colourDi[WColour.Orange] = (1.0, 0.0, 0.1)
 
 

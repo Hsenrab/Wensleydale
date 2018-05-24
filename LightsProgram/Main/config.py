@@ -22,13 +22,13 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 20
-NIGHT_BRIGHTNESS = 0.5
+MAX_BRIGHTNESS = 10
+NIGHT_BRIGHTNESS = 0.1
 current_brightness = MAX_BRIGHTNESS
 cycles_without_button_press = 0
 
 # There are approx 9.5 cycles per second.
-num_cycles_before_dimming = 200
+num_cycles_before_dimming = 500
 num_cycles_before_random_changes = 100
 random_change_frequency = 100
 
@@ -59,6 +59,8 @@ wlight_direction = enums.WDirection.Forwards
 
 patternList = []
 colourList = []
+speedList = []
+
 
 
 

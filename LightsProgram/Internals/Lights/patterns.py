@@ -5,7 +5,7 @@ from Internals.Lights.colourcycletemplate import ColorCycleTemplate
 import Internals.Utils.wlogger as wlogger
 import math
 import numpy as np
-print_debug = True
+print_debug = False
 
 
 def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, *args):
@@ -24,6 +24,7 @@ def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, 
         print("Slide")
         print(current_colour)
         print(current_speed)
+        print(config.current_brightness)
 
     
     # Calculate total number of LEDs
@@ -89,6 +90,7 @@ def rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, slide
     if print_debug: 
         print("----------------------------")
         print("Rainbow Slide")
+        print(config.current_brightness)
         
     pixel_color = strip.wheel(math.floor(current_step/2 % 255))
     current_speed = args[0].get_speed()
@@ -158,6 +160,7 @@ def singles(strip, num_steps_per_cycle, current_step, current_cycle, *args):
         print("Singles")
         print(current_speed)
         print(current_colour)
+        print(config.current_brightness)
 
     # Pattern specific behaviour
     pattern_speed_factor = 1
@@ -184,7 +187,7 @@ def singles(strip, num_steps_per_cycle, current_step, current_cycle, *args):
         args[0].increment_pattern_index(1)
 
     info_string = "Pattern: Singles. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -206,6 +209,7 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, *args):
         print("Snakes")
         print(current_speed)
         print(current_colour)
+        print(config.current_brightness)
 
     # Pattern specific behaviour
     pattern_speed_factor = 1
@@ -232,7 +236,7 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, *args):
         args[0].increment_pattern_index(1)
 
     info_string = "Pattern: Snakes. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -252,6 +256,7 @@ def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse,
         print("Moving Morse")
         print(current_speed)
         print(current_colour)
+        print(config.current_brightness)
 
     # Pattern specific behaviour
     pattern_speed_factor = 2
@@ -279,7 +284,7 @@ def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse,
         args[0].increment_pattern_index(1)
 
     info_string = "Pattern: Renishaw Morse. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -298,6 +303,7 @@ def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, 
         print("----------------------------")
         print("Fixed Morse")
         print(current_colour)
+        print(config.current_brightness)
 
 
     # The index of the LED within the current blocks.
@@ -318,7 +324,8 @@ def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, 
                 
             local_led_index += 1
 
-    info_string = "Pattern: Fixed Morse. Colour: " + str(current_colour)
+    info_string = "Pattern: Fixed Morse. Colour: " + str(current_colour) \
+                    + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
 
@@ -334,6 +341,7 @@ def all_on(strip, *args):
         print("----------------------------")
         print("All On")
         print(current_colour)
+        print(config.current_brightness)
 
 
     # The index of the LED within the current blocks.
@@ -351,7 +359,8 @@ def all_on(strip, *args):
 
             local_led_index += 1
 
-    info_string = "Pattern: All On. Colour: " + str(current_colour)
+    info_string = "Pattern: All On. Colour: " + str(current_colour) \
+                    + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -365,7 +374,7 @@ def all_off(strip, *args):
     if print_debug: 
         print("----------------------------")
         print("All Off")
-
+        print(config.current_brightness)
 
     # The index of the LED within the current blocks.
     local_led_index = 0
@@ -428,6 +437,7 @@ def twinkle(strip, num_steps_per_cycle, current_step, current_cycle, *args):
         print("Twinkling")
         print(current_speed)
         print(current_colour)
+        print(config.current_brightness)
         
     # Calculate total number of LEDs
     total_num_leds = 0
@@ -462,7 +472,7 @@ def twinkle(strip, num_steps_per_cycle, current_step, current_cycle, *args):
     
 
     info_string = "Pattern: Twinkling. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -502,6 +512,7 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args
         print("RandomInOut")
         print(current_speed)
         print(current_colour)
+        print(config.current_brightness)
         
     # Calculate total number of LEDs
     total_num_leds = 0
@@ -571,11 +582,6 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args
                     
                 local_led_index += 1
                 
-                
-    print("Num steps in pattern: " + str(num_steps_in_pattern))
-    print("Current Step: " + str(current_step))
-    print("pattern step: " + str(current_step % (num_steps_between_changes*num_steps_in_pattern)))
-    
 
     args[0].increment_pattern_index(1/num_steps_in_pattern)
     
@@ -584,7 +590,7 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args
 
 
     info_string = "Pattern: RandomInOut. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -612,6 +618,7 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
         print("----------------------------")
         print("ColourSnakesCombine")
         print(current_speed)
+        print(config.current_brightness)
         
     # Calculate total number of LEDs
     total_num_leds = 0
@@ -695,7 +702,7 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
 
 
     info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
     
@@ -721,6 +728,7 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
         print("----------------------------")
         print("ColourSnakesCombine")
         print(current_speed)
+        print(config.current_brightness)
         
     # Calculate total number of LEDs
     total_num_leds = 0
@@ -789,6 +797,6 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
 
 
     info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
-                  + str(current_speed)
+                  + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)
