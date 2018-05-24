@@ -16,14 +16,24 @@ import Main.enums as enums
 log_directory = os.path.join(wensleydale_directory, 'Logs')
 
 
+
 ######################
 # Hardware set up
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 5
+MAX_BRIGHTNESS = 10
+NIGHT_BRIGHTNESS = 0.1
+current_brightness = MAX_BRIGHTNESS
+cycles_without_button_press = 0
+
+# There are approx 9.5 cycles per second.
+num_cycles_before_dimming = 500
+num_cycles_before_random_changes = 100
+random_change_frequency = 100
 
 # Delay before button can be pressed again. (Cycles not seconds)
+# There are approx 9.5 cycles per second.
 pause_cycles = 30
 
 # Pin set up.
@@ -35,14 +45,22 @@ colourOutputPin = 13
 speedOutputPin = 16
 patternOutputPin = 12
 
+# Number of active leds - this needs to be calibrated once on the dog.
+num_active_leds = 204
+
 ############################
 # Initial configuration on startup
 ############################
-# Set up initial 
-wlight_colour = enums.WColour.Blue
-wlight_speed = enums.WSpeed.Hare
+
+wlight_colour = enums.WColour.White
+wlight_speed = enums.WSpeed.Cheetah
 wlight_pattern = enums.WPattern.Singles
 wlight_direction = enums.WDirection.Forwards
+
+patternList = []
+colourList = []
+speedList = []
+
 
 
 

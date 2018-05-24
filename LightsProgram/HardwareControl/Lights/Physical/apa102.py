@@ -186,6 +186,30 @@ class APA102:
         self.set_pixel(led_num, (rgb_color & 0xFF0000) >> 16,
                        (rgb_color & 0x00FF00) >> 8, rgb_color & 0x0000FF,
                         bright_percent)
+                        
+    def get_pixel(self, led_num):
+        """Gets the color of one pixel in the LED stripe.
+        """
+        
+
+        start_index = int(4 * led_num)
+
+        return self.leds[start_index + self.rgb[0]], self.leds[start_index + self.rgb[1]], self.leds[start_index + self.rgb[2]]
+                
+                
+    def is_led_on(self, led_num):
+    
+        if led_num < 0:
+            return  False # Pixel is invisible, so ignore
+        if led_num >= self.num_led:
+            return  False # again, invisible
+            
+        current_colour = self.get_pixel(led_num)
+        
+        if current_colour[0] != 0 or current_colour[1] != 0 or current_colour[2] != 0:
+            return True
+        else:
+            return False
 
 
     def rotate(self, positions=1):

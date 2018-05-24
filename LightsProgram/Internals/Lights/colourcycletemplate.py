@@ -1,11 +1,6 @@
 """The module contains templates for colour cycles"""
 import time
-
-# THis needs to be dependent on environment
-#import HardwareControl.Lights.Virtual.wlightstrip as apa102
 import HardwareControl.Lights.Physical.apa102 as apa102
-import time
-
 
 
 class ColorCycleTemplate:
@@ -26,6 +21,8 @@ class ColorCycleTemplate:
         self.num_cycles = num_cycles  # How many times will the program run
         self.global_brightness = global_brightness  # Brightness of the strip
         self.order = order  # Strip colour ordering
+        
+        
 
     def init(self, strip, num_led):
         """This method is called to initialize a color program.
@@ -56,10 +53,22 @@ class ColorCycleTemplate:
         """
 
         raise NotImplementedError("Please implement the update() method")
+        
+        
+    def sub_init(self, strip, num_led, num_steps_per_cycle, current_step,
+               current_cycle):
+        """This method does any sub initialisation needed in the submethods.
+            By default this does nothing
+        """
+        pass
+    
+    def sub_cleanup(self):
+        pass
 
     def cleanup(self, strip):
         """Cleanup method."""
         print("Cleanup")
+        self.sub_cleanup()
         self.shutdown(strip, self.num_led)
         strip.clear_strip()
         strip.cleanup()

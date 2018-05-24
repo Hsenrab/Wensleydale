@@ -133,7 +133,7 @@ def buttonThread():
         config.wlight_colour = next(colour_cycle)
         config.wlight_speed = next(speed_cycle)
     
-    
+
     while not input_thread.stopped():
         # Increment the cycle count.
         count+=1
@@ -154,8 +154,7 @@ def buttonThread():
         # Assume this cycles has no button press. This will be reset to
         # zero if a button is pressed.
         config.cycles_without_button_press += 1
-        
-        
+
         # Determine whether a random change is needed. 
         
         if config.cycles_without_button_press > config.num_cycles_before_random_changes \

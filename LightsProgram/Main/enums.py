@@ -20,8 +20,8 @@ colourDi[WColour.Green] = (0.0, 0.0, 1.0)
 colourDi[WColour.Blue] = (0.0, 1.0, 0.0)
 colourDi[WColour.Cyan] = (0.0, 0.8, 1.0)
 colourDi[WColour.Yellow] = (1.0, 0.0, 0.5)
-colourDi[WColour.Pink] = (1.0, 1.0, 0.0)
-colourDi[WColour.White] = (1.0, 0.8, 1.0)
+colourDi[WColour.Pink] = (1.0, 0.8, 0.0)
+colourDi[WColour.White] = (1.0, 0.5, 0.8)
 colourDi[WColour.Orange] = (1.0, 0.0, 0.1)
 
 
@@ -45,8 +45,18 @@ class WPattern(enum.Enum):
     Snakes = 1
     Singles = 2
     Slide = 3
-    Rainbow = 4
-    MAX = 5
+    BlockedSlide = 4
+    RainbowSlide = 5
+    Rainbow = 6
+    AllOn = 7
+    AllOff = 8
+    MovingMorse = 9
+    FixedMorse = 10
+    Twinkle = 11
+    RandomInOut = 12
+    ColourSnakesCombine = 13
+    BiColourSnakesCombine = 14
+    MAX = 15 
 
 
 # Enum holding the direction options.
