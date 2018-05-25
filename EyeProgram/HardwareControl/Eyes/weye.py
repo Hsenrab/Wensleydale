@@ -188,18 +188,18 @@ class Eye:
         # Currently linearly interpolating results based on the quadrant
         # the target co ordinate lies in.
         
-        print("Vertical Angle: " + str(vert_angle))
-        print("Horizontal Angle: " + str(horiz_angle))
+        #print("Vertical Angle: " + str(vert_angle))
+        #print("Horizontal Angle: " + str(horiz_angle))
         
         vert_angle_proportion = abs(vert_angle/self.eye_movement_max_radius)
         horiz_angle_proportion = abs(horiz_angle/self.eye_movement_max_radius)
         
-        print("Vert Prop :" + str(vert_angle_proportion))
-        print("Horiz Prop :" + str(horiz_angle_proportion))
+        #print("Vert Prop :" + str(vert_angle_proportion))
+        #print("Horiz Prop :" + str(horiz_angle_proportion))
         
         if horiz_angle > 0 and vert_angle > 0:
             
-            print("Up Left")
+            #print("Up Left")
             # Components from up.
             horiz_up_component = (vert_angle_proportion**2)*self.extreme_up_horiz
             vert_up_component = vert_angle_proportion*self.extreme_up_vert
@@ -212,28 +212,22 @@ class Eye:
             mapped_vert_angle = vert_up_component + vert_left_component
             
         elif horiz_angle <= 0 and vert_angle > 0:
-            print("Up Right")
+            #print("Up Right")
             # Components from up.
             horiz_up_component = (vert_angle_proportion**2)*self.extreme_up_horiz
             vert_up_component = vert_angle_proportion*self.extreme_up_vert
-            
-            print(horiz_up_component)
-            print(vert_up_component)
+
             
             # Components from right.
             horiz_right_component = horiz_angle_proportion*self.extreme_right_horiz
             vert_right_component = horiz_angle_proportion*self.extreme_right_vert
-            
-            print(horiz_angle)
-            print(self.extreme_right_horiz)
-            print(horiz_right_component)
-            print(vert_right_component)
+        
             
             mapped_horiz_angle = horiz_up_component + horiz_right_component
             mapped_vert_angle = vert_up_component + vert_right_component
             
         elif horiz_angle <= 0 and vert_angle <= 0:
-            print("Down Right")
+            #print("Down Right")
             
             # Components from down.
             horiz_down_component = (vert_angle_proportion**2)*self.extreme_down_horiz
@@ -247,7 +241,7 @@ class Eye:
             mapped_vert_angle = vert_down_component + vert_right_component
         
         else: #horiz_angle > 0 and vert_angle <= 0:
-            print("Down left")
+            #print("Down left")
 
             # Components from down.
             horiz_down_component = (vert_angle_proportion**2)*self.extreme_down_horiz
@@ -260,8 +254,8 @@ class Eye:
             mapped_horiz_angle = horiz_down_component + horiz_left_component
             mapped_vert_angle = vert_down_component + vert_left_component
             
-        print("Mapped Vertical Angle: " + str(mapped_vert_angle))
-        print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
+        #print("Mapped Vertical Angle: " + str(mapped_vert_angle))
+        #print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
         
         # Add zero shift - this should have no effect close to the edge.
         dist_from_centre_proportion = min(1, math.sqrt(horiz_angle**2 + vert_angle**2)/self.eye_movement_max_radius)
@@ -269,8 +263,8 @@ class Eye:
         mapped_horiz_angle += self.zero_position_horiz*(1 - dist_from_centre_proportion)
         mapped_vert_angle += self.zero_position_vert*(1 - dist_from_centre_proportion)
         
-        print("Mapped Vertical Angle: " + str(mapped_vert_angle))
-        print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
+        #print("Mapped Vertical Angle: " + str(mapped_vert_angle))
+        #print("Mapped Horizontal Angle: " + str(mapped_horiz_angle))
         
         # Ensure the values remain in the 
         if mapped_horiz_angle < -self.eye_movement_max_radius:

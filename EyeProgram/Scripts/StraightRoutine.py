@@ -10,7 +10,7 @@ wlogger.setup_loggers(config.log_directory)
 
 myController = wcontroller.Controller()
 
-stepSize = 4
+stepSize = 20
 
 coordinates = [
 [0,90, 0, 90],
