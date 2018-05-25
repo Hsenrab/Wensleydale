@@ -5,6 +5,7 @@ import numpy
 import time
 import Main.config as config
 import HardwareControl.Eyes.weye as weye
+from operator import add
 
 
 class Controller:
@@ -25,6 +26,14 @@ class Controller:
         self.LeftEye.move_to(0, 0)
         self.RightEye.move_to(0, 0)
         self.redraw()
+        
+        # Calibrate
+        self.sloth_step_size = 0.5
+        self.tortoise_step_size = 3
+        self.hare_step_size = 6
+        self.cheetah_step_size = 10
+        
+        self.resting = [20, 0, -20, 0]
 
     def redraw(self):
         if not config.real_hardware:
@@ -229,9 +238,9 @@ class Controller:
             print(rightHorizAngle)
             print(rightVertAngle)
             
-            
-        #self.LeftEye.move_to(LEhoriz, LEvert)
-        #self.RightEye.move_to(REhoriz, REvert)
+        # Final adjustment to correct position
+        self.LeftEye.move_to(LEhoriz, LEvert)
+        self.RightEye.move_to(REhoriz, REvert)
             
             
 
@@ -372,4 +381,41 @@ class Controller:
 
 
 
-
+    def Gromit_Eye_Roll(self):
+        
+        # Slow move to starting position
+        self.straight_to_point(self.sloth_step_size, [20, -30, -20, -30])
+        
+        time.sleep(5)
+        
+        self.straight_to_point(self.hare_step_size, [25, 0])
+        
+        self.straight_to_point(self.hare_step_size, [30, 10])
+        
+        self.straight_to_point(self.tortoise_step_size, [35, 25])
+        
+        self.straight_to_point(self.tortoise_step_size, [30, 50])
+        
+        self.straight_to_point(self.tortoise_step_size, [15, 65])
+        
+        self.straight_to_point(self.sloth_step_size, [0 , 70])
+        
+        self.straight_to_point(0.5, [-20, 65])
+        
+        self.straight_to_point(self.sloth_step_size, [-30, 55])
+        
+        self.straight_to_point(self.tortoise_step_size, [-30, 45])
+        
+        self.straight_to_point(self.tortoise_step_size, [-25, 35, -30, 35])
+        
+        self.straight_to_point(self.tortoise_step_size, [-15, 20, -30, 20])
+        
+        self.straight_to_point(self.hare_step_size, [0, 10, -25, 10])
+        
+        self.straight_to_point(self.hare_step_size, self.resting)
+        
+        
+        
+        
+        
+        
