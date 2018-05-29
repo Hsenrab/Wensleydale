@@ -85,7 +85,8 @@ class APA102:
         else:
             self.global_brightness = global_brightness
 
-        self.leds = [self.LED_START,0,0,0] * (self.num_led + self.num_led//32) # Pixel buffer
+                        # Temp set to all on as default.
+        self.leds = [self.LED_START,255,255,255] * (self.num_led + self.num_led//32) # Pixel buffer
         
         # MOSI 10 and SCLK 11 is hardware SPI, which needs to be set-up differently
         if mosi == 10 and sclk == 11:
