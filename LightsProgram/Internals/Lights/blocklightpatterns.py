@@ -24,79 +24,127 @@ class BlockLightPattern(ColorCycleTemplate):
         #Set up different blocks on the dog. Current number relate to
         # Screen set up..
 
-        self.LegBackLeft = wblock.WBlock(0, 0)
-        self.LegFrontRight = wblock.WBlock(0, 0)
-        self.CollarFront = wblock.WBlock(0, 0)
-        self.CollarBack = wblock.WBlock(0, 0)
-        self.BodyLowerRight = wblock.WBlock(0, 0)
-        self.BodyLowerLeft = wblock.WBlock(100, 203)
-        self.BodyUpperRight = wblock.WBlock(0,0)
-        self.BodyUpperLeft = wblock.WBlock(0, 96)
-        self.EarLeft = wblock.WBlock(0, 0)
-        self.EarRight = wblock.WBlock(0, 0)
-        self.EarFrontLeft = wblock.WBlock(0, 0)
-        self.EarFrontRight = wblock.WBlock(0, 0)
+        ##################################
+        # Development Comments
+
+        # Alternate Strip Naming Scheme
+        # Stips ABCDEFGHIJKL (See drawing for reference to position on dog)
+        #
+        #   : Holes    : Length : Connection Order
+        # A :  1 ->  2 : 170+4  :  1
+        # B :  4 ->  3 : 169+4  :  2
+        # C : 12 -> 10 :  94+4  :  3
+        # D : 13 -> 11 : 102+4  :  4
+        # E : 14 ->  5 : 148+4  :  5
+        # F : 15 ->  6 : 161+4  :  6
+        # G :  8 ->  7 : 172+4  :  7
+        # H :  9 ->  8 : 169+4  :  8 
+        # I : 17 -> 18 : 176+4  :  9
+        # J : 18 -> 17 : 178+4  : 10
+        # K : ##################### TODO
+        # L : ##################### TODO
+
+        ##################################
+        
+        self.blockList = []
+        
+        self.A_01_02_EarLeft = wblock.WBlock(0, 170)
+        self.blockList.append(self.A_01_02_EarLeft)
+        
+        self.B_04_03_EarRight = wblock.WBlock(174, 343)
+        self.blockList.append(self.B_04_03_EarRight)
+        
+        self.C_12_10_BodyUpperLeft = wblock.WBlock(347, 441)
+        self.blockList.append(self.C_12_10_BodyUpperLeft)
+        
+        self.D_13_11_BodyLowerLeft = wblock.WBlock(445, 547)
+        self.blockList.append(self.D_13_11_BodyLowerLeft)
+        
+        self.E_14_05_BodyUpperRight = wblock.WBlock(551, 699)
+        self.blockList.append(self.E_14_05_BodyUpperRight)
+        
+        self.F_15_06_BodyLowerRight = wblock.WBlock(703, 864)
+        self.blockList.append(self.F_15_06_BodyLowerRight)
+        
+        self.G_08_07_LegUpperFront = wblock.WBlock(868, 1040)
+        self.blockList.append(self.G_08_07_LegUpperFront)
+        
+        self.H_09_08_LegLowerFront = wblock.WBlock(1044, 1213)
+        self.blockList.append(self.H_09_08_LegLowerFront)
+        
+        self.I_17_16_LegUpperBack = wblock.WBlock(1217, 1393)
+        self.blockList.append(self.I_17_16_LegUpperBack)
+        
+        self.J_18_17_LegLowerBack = wblock.WBlock(1397, 1575)
+        self.blockList.append(self.J_18_17_LegLowerBack)
+        
+        self.K_U_U_EarFrontLeft = wblock.WBlock(0, 0)
+        self.blockList.append(self.K_U_U_EarFrontLeft)
+        
+        self.L_U_U_EarFrontRight = wblock.WBlock(0, 0)
+        self.blockList.append(self.L_U_U_EarFrontRight)
+
         
         # Set up pins
         wevents.set_up_pins() 
 
 
         
-    def set_blocks_to_current_global(self, *args):
+    def set_blocks_to_current_global(self, blockList):
         
         with threading.Lock():
             current_pattern = config.wlight_pattern
             current_speed = config.wlight_speed
             current_colour = config.wlight_colour
 
-        for block in args:
+        for block in blockList:
             block.set_variables(current_colour, current_speed, current_pattern)
             
 
-    def set_blocks(self, colour, speed, pattern, *args):
-        for block in args:
+    def set_blocks(self, colour, speed, pattern, blockList):
+        for block in blockList:
             block.set_variables(colour, speed, pattern)
             
             
         
-    def update_blocks(self, strip, num_steps_per_cycle, current_step, current_cycle,*args):
+    def update_blocks(self, strip, num_steps_per_cycle, current_step, current_cycle, blockList):
         
         # Return early if no blocks are given.
-        if not args:
+        if not blockList:
             return
 
         # Assume all blocks given in update blocks have the same local pattern/colour/speed.
         # Call the pattern function corresponding to the pattern enum stored on the first block.
         
-        if args[0].get_pattern() == enums.WPattern.Singles:
-            patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        elif args[0].get_pattern() == enums.WPattern.AllOn:
-            patterns.all_on(strip, *args)
-        elif args[0].get_pattern() == enums.WPattern.AllOff:
-            patterns.all_off(strip, *args)
-        elif args[0].get_pattern() == enums.WPattern.Slide and hasattr(self, 'slide_speed'):
-            patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, *args)
-        elif args[0].get_pattern() == enums.WPattern.BlockedSlide and hasattr(self, 'slide_speed'):
-            for block in args:
+        if blockList[0].get_pattern() == enums.WPattern.Singles:
+            patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.Snakes:
+            patterns.snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.AllOff:
+            patterns.all_off(strip, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.Slide and hasattr(self, 'slide_speed'):
+            patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.BlockedSlide and hasattr(self, 'slide_speed'):
+            for block in blockList:
                 patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, block)
-        elif args[0].get_pattern() == enums.WPattern.Snakes:
-            patterns.snakes(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        elif args[0].get_pattern() == enums.WPattern.MovingMorse and hasattr(self, 'morse'):
-            patterns.moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, *args)
-        elif args[0].get_pattern() == enums.WPattern.RainbowSlide and hasattr(self, 'slide_speed'):
-            patterns.rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, *args)
-        elif args[0].get_pattern() == enums.WPattern.Twinkle:
-            patterns.twinkle(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        elif args[0].get_pattern() == enums.WPattern.RandomInOut:
-            patterns.random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        elif args[0].get_pattern() == enums.WPattern.ColourSnakesCombine:
-            patterns.colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, *args)
-        elif args[0].get_pattern() == enums.WPattern.BiColourSnakesCombine and hasattr(self, 'colour_b'):
-            patterns.bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, self.colour_b, *args)
-        elif args[0].get_pattern() == enums.WPattern.FixedMorse and hasattr(self, 'morse') and hasattr(self, 'colour_b'):
-            patterns.fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, *args)
+        elif blockList[0].get_pattern() == enums.WPattern.Snakes:
+            patterns.snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.MovingMorse and hasattr(self, 'morse'):
+            patterns.moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.RainbowSlide and hasattr(self, 'slide_speed'):
+            patterns.rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.Twinkle:
+            patterns.twinkle(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.RandomInOut:
+            patterns.random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.ColourSnakesCombine:
+            patterns.colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.BiColourSnakesCombine and hasattr(self, 'colour_b'):
+            patterns.bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, self.colour_b, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.FixedMorse and hasattr(self, 'morse') and hasattr(self, 'colour_b'):
+            patterns.fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, blockList)
         else:  #(to catch anything dodgy)
-            patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, *args)
+            patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
         
         
 class ChangingBlockLightPattern(BlockLightPattern):
@@ -145,34 +193,12 @@ class ChangingBlockLightPattern(BlockLightPattern):
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
                current_cycle):    
             
-        self.set_blocks_to_current_global(  self.LegBackLeft, 
-                                            self.LegFrontRight,
-                                            self.BodyUpperLeft,
-                                            self.BodyUpperRight,
-                                            self.BodyLowerLeft,
-                                            self.BodyLowerRight,
-                                            self.CollarFront,
-                                            self.CollarBack,
-                                            self.EarLeft,
-                                            self.EarRight,
-                                            self.EarFrontLeft,
-                                            self.EarFrontRight)
+        self.set_blocks_to_current_global(self.blockList)
                                                                 
         
 
         self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                        self.BodyLowerRight,
-                        self.BodyLowerLeft,
-                        self.BodyUpperRight,
-                        self.BodyUpperLeft,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
+                            self.blockList)
 
         return 1 # Always update as globals may have changed the pattern.
         
@@ -202,36 +228,14 @@ class GlobalPattern(BlockLightPattern):
         self.set_blocks(self.colour,
                         self.speed,
                         self.pattern,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.BodyUpperLeft,
-                        self.BodyUpperRight,
-                        self.BodyLowerLeft,
-                        self.BodyLowerRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
+                        self.blockList)
                         
 
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
                current_cycle):    
             
         self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                        self.BodyLowerRight,
-                        self.BodyLowerLeft,
-                        self.BodyUpperRight,
-                        self.BodyUpperLeft,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
+                        self.blockList)
 
         return 1 # Always update as globals may have changed the pattern.
 
@@ -300,41 +304,43 @@ class FixedMorse(BlockLightPattern):
     def init(self, strip, num_led):
         
         super(FixedMorse, self).init(strip, num_led)
+        
+        self.whiteBlocks = [self.A_01_02_EarLeft, 
+                            self.B_04_03_EarRight,
+                            self.K_U_U_EarFrontLeft,
+                            self.L_U_U_EarFrontRight,
+                            self.G_08_07_LegUpperFront,
+                            self.H_09_08_LegLowerFront,
+                            self.I_17_16_LegUpperBack,
+                            self.J_18_17_LegLowerBack]
 
         #Set most of the dog to white.
         self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.AllOn,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.CollarFront,
-                        self.CollarBack,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
+                        self.whiteBlocks)
                         
         ##Set the back lights to display the morse code.
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.BodyLowerRight)
+                        self.E_14_05_BodyUpperRight)
                         
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.BodyLowerLeft)
+                        self.F_15_06_BodyLowerRight)
                         
                         
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.BodyUpperRight)
+                        self.C_12_10_BodyUpperLeft)
                         
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.BodyUpperLeft) 
+                        self.D_13_11_BodyLowerLeft) 
                         
 
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
@@ -345,27 +351,20 @@ class FixedMorse(BlockLightPattern):
            return 0
         else:
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                            self.LegBackLeft, 
-                            self.LegFrontRight,
-                            self.CollarFront,
-                            self.CollarBack,
-                            self.EarLeft,
-                            self.EarRight,
-                            self.EarFrontLeft,
-                            self.EarFrontRight)
+                            self.whiteBlocks)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.BodyLowerRight)
+                                self.E_14_05_BodyUpperRight)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.BodyLowerLeft)
+                                self.F_15_06_BodyLowerRight)
                             
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.BodyUpperRight)
+                                self.C_12_10_BodyUpperLeft)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.BodyUpperLeft) 
+                                self.D_13_11_BodyLowerLeft) 
 
 
             return 1
@@ -389,33 +388,33 @@ class GromitColours(BlockLightPattern):
     def init(self, strip, num_led):
         
         super(GromitColours, self).init(strip, num_led)
+        
+        self.greenBlocks = [self.C_12_10_BodyUpperLeft, 
+                        self.D_13_11_BodyLowerLeft,
+                        self.E_14_05_BodyUpperRight,
+                        self.F_15_06_BodyLowerRight,
+                        self.G_08_07_LegUpperFront,
+                        self.H_09_08_LegLowerFront,
+                        self.I_17_16_LegUpperBack,
+                        self.J_18_17_LegLowerBack]
 
         #Set legs and body of the dog to Green.
         self.set_blocks(enums.WColour.Green,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.AllOn,
-                        self.LegBackLeft, 
-                        self.LegFrontRight,
-                        self.BodyLowerRight,
-                        self.BodyLowerLeft,
-                        self.BodyUpperRight,
-                        self.BodyUpperLeft)
+                        self.greenBlocks)
+                        
+        self.yellowBlocks = [   self.A_01_02_EarLeft,
+                                self.B_04_03_EarRight,
+                                self.K_U_U_EarFrontLeft,
+                                self.L_U_U_EarFrontRight]
                         
         # Set ears to yellow.
         self.set_blocks(enums.WColour.Yellow,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.AllOn,
-                        self.EarLeft,
-                        self.EarRight,
-                        self.EarFrontLeft,
-                        self.EarFrontRight)
-        
-        # Set collar to white.
-        self.set_blocks(enums.WColour.White,
-                        enums.WSpeed.Cheetah, # This will be ignored
-                        enums.WPattern.AllOn,
-                        self.CollarFront,
-                        self.CollarBack)
+                        self.yellowBlocks)
+
                         
 
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
@@ -426,24 +425,10 @@ class GromitColours(BlockLightPattern):
            return 0
         else:
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.LegBackLeft, 
-                                self.LegFrontRight,
-                                self.BodyLowerRight,
-                                self.BodyLowerLeft,
-                                self.BodyUpperRight,
-                                self.BodyUpperLeft)
+                                self.greenBlocks)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.EarLeft,
-                                self.EarRight,
-                                self.EarFrontLeft,
-                                self.EarFrontRight)
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.CollarFront,
-                                self.CollarBack)
-                            
-                            
+                                self.yellowBlocks)
 
             return 1
 
