@@ -24,18 +24,18 @@ class BlockLightPattern(ColorCycleTemplate):
         #Set up different blocks on the dog. Current number relate to
         # Screen set up..
 
-        self.LegBackLeft = wblock.WBlock(106, 127)
-        self.LegFrontRight = wblock.WBlock(133, 144)
-        self.CollarFront = wblock.WBlock(170, 195)
-        self.CollarBack = wblock.WBlock(200, 219)
-        self.BodyLowerRight = wblock.WBlock(0, 18)
-        self.BodyLowerLeft = wblock.WBlock(24, 42)
-        self.BodyUpperRight = wblock.WBlock(48, 70)
-        self.BodyUpperLeft = wblock.WBlock(75, 100)
-        self.EarLeft = wblock.WBlock(225, 239)
-        self.EarRight = wblock.WBlock(245, 257)
-        self.EarFrontLeft = wblock.WBlock(263, 272)
-        self.EarFrontRight = wblock.WBlock(278, 288)
+        self.LegBackLeft = wblock.WBlock(0, 0)
+        self.LegFrontRight = wblock.WBlock(0, 0)
+        self.CollarFront = wblock.WBlock(0, 0)
+        self.CollarBack = wblock.WBlock(0, 0)
+        self.BodyLowerRight = wblock.WBlock(0, 0)
+        self.BodyLowerLeft = wblock.WBlock(100, 203)
+        self.BodyUpperRight = wblock.WBlock(0,0)
+        self.BodyUpperLeft = wblock.WBlock(0, 96)
+        self.EarLeft = wblock.WBlock(0, 0)
+        self.EarRight = wblock.WBlock(0, 0)
+        self.EarFrontLeft = wblock.WBlock(0, 0)
+        self.EarFrontRight = wblock.WBlock(0, 0)
         
         # Set up pins
         wevents.set_up_pins() 

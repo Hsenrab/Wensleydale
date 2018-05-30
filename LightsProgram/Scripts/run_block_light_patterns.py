@@ -31,8 +31,6 @@ while keep_running:
         keep_running = False
         GPIO.cleanup()
         raise KeyboardInterrupt
-        
-    keep_running = False
 
 GPIO.cleanup()
 print('Finished the test')
