@@ -3,6 +3,7 @@ import math
 from pyquaternion import *
 import numpy
 import time
+import random
 import Main.config as config
 import HardwareControl.Eyes.weye as weye
 from operator import add
@@ -462,6 +463,15 @@ class Controller:
         self.straight_to_point(self.ostrich_step_size, [0, 10, -25, 10])
         
         self.straight_to_point(self.ostrich_step_size, self.resting)
+        
+    def randomSleep(self):
+    
+        rand = random.randint(0,6)
+    
+        if rand == 0:
+            rand = 0.5
+    
+        time.sleep(rand)
         
         
         
