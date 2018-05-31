@@ -28,12 +28,27 @@ class Controller:
         self.redraw()
         
         # Calibrate
+        #Speeds
         self.sloth_step_size = 0.5
-        self.tortoise_step_size = 3
-        self.hare_step_size = 6
+        self.tortoise_step_size = 1
+        self.hare_step_size = 3
+        self.ostrich_step_size = 6
         self.cheetah_step_size = 10
+        self.speeds = [self.sloth_step_size, self.tortoise_step_size, self.hare_step_size, self.ostrich_step_size, self.cheetah_step_size]
         
+        #Positions
         self.resting = [20, 0, -20, 0]
+        self.extremeLeft = [-60, 0]
+        self.extremeRight = [60, 0]
+        self.extremeUp = [0, 60]
+        self.extremeDown = [0, -60]
+        self.crossEyes = [60, 0, -60, 0]
+        self.upLeft = [-48, 48]
+        self.upRight = [48, 48]
+        self.downLeft = [-48, -48]
+        self.downRight = [48, -48]
+        
+        self.positions = [self.resting, self.extremeLeft, self.extremeRight, self.extremeUp, self.extremeDown, self.crossEyes, self.upLeft, self.upRight, self.downLeft, self.downRight]
 
     def redraw(self):
         if not config.real_hardware:
@@ -216,31 +231,32 @@ class Controller:
         max_change = max(leftChange, rightChange)
         num_steps = math.ceil(max_change/stepSize)
         
-        LEVertStep = leftVertChange/num_steps
-        LEHorizStep = leftHorizChange/num_steps
-        REVertStep = rightVertChange/num_steps
-        REHorizStep = rightHorizChange/num_steps
-          
+        if num_steps > 0:
+        
+            LEVertStep = leftVertChange/num_steps
+            LEHorizStep = leftHorizChange/num_steps
+            REVertStep = rightVertChange/num_steps
+            REHorizStep = rightHorizChange/num_steps
         
         
-        for i in range(num_steps):
-            leftHorizAngle = self.LeftEye.eye_horiz_angle + LEHorizStep
-            leftVertAngle = self.LeftEye.eye_vert_angle + LEVertStep
-            rightHorizAngle = self.RightEye.eye_horiz_angle + REHorizStep
-            rightVertAngle = self.RightEye.eye_vert_angle + REVertStep
+            for i in range(num_steps):
+                leftHorizAngle = self.LeftEye.eye_horiz_angle + LEHorizStep
+                leftVertAngle = self.LeftEye.eye_vert_angle + LEVertStep
+                rightHorizAngle = self.RightEye.eye_horiz_angle + REHorizStep
+                rightVertAngle = self.RightEye.eye_vert_angle + REVertStep
             
-            self.LeftEye.move_to(leftHorizAngle, leftVertAngle)
-            self.RightEye.move_to(rightHorizAngle, rightVertAngle)
+                self.LeftEye.move_to(leftHorizAngle, leftVertAngle)
+                self.RightEye.move_to(rightHorizAngle, rightVertAngle)
             
-            print("Step :" + str(i))
-            print(leftHorizAngle)
-            print(leftVertAngle)
-            print(rightHorizAngle)
-            print(rightVertAngle)
+                print("Step :" + str(i))
+                print(leftHorizAngle)
+                print(leftVertAngle)
+                print(rightHorizAngle)
+                print(rightVertAngle)
             
-        # Final adjustment to correct position
-        self.LeftEye.move_to(LEhoriz, LEvert)
-        self.RightEye.move_to(REhoriz, REvert)
+            # Final adjustment to correct position
+            self.LeftEye.move_to(LEhoriz, LEvert)
+            self.RightEye.move_to(REhoriz, REvert)
             
             
 
@@ -384,7 +400,7 @@ class Controller:
     def Gromit_Eye_Roll(self):
         
         # Slow move to starting position
-        self.straight_to_point(self.sloth_step_size, [20, -30, -20, -30])
+        self.straight_to_point(self.sloth_step_size, [20, -50, -20, -50])
         
         time.sleep(5)
         
@@ -400,7 +416,7 @@ class Controller:
         
         self.straight_to_point(self.sloth_step_size, [0 , 70])
         
-        self.straight_to_point(0.5, [-20, 65])
+        self.straight_to_point(self.sloth_step_size, [-20, 65])
         
         self.straight_to_point(self.sloth_step_size, [-30, 55])
         
@@ -414,7 +430,38 @@ class Controller:
         
         self.straight_to_point(self.hare_step_size, self.resting)
         
+    def Gromit_Fast_Eye_Roll(self):
         
+        # Slow move to starting position
+        self.straight_to_point(self.sloth_step_size, [20, -50, -20, -50])
+        
+        time.sleep(5)
+        
+        self.straight_to_point(self.ostrich_step_size, [25, 0])
+        
+        self.straight_to_point(self.ostrich_step_size, [30, 10])
+        
+        self.straight_to_point(self.hare_step_size, [35, 25])
+        
+        self.straight_to_point(self.hare_step_size, [30, 50])
+        
+        self.straight_to_point(self.hare_step_size, [15, 65])
+        
+        self.straight_to_point(self.tortoise_step_size, [0 , 70])
+        
+        self.straight_to_point(self.sloth_step_size, [-20, 65])
+        
+        self.straight_to_point(self.tortoise_step_size, [-30, 55])
+        
+        self.straight_to_point(self.hare_step_size, [-30, 45])
+        
+        self.straight_to_point(self.hare_step_size, [-25, 35, -30, 35])
+        
+        self.straight_to_point(self.hare_step_size, [-15, 20, -30, 20])
+        
+        self.straight_to_point(self.ostrich_step_size, [0, 10, -25, 10])
+        
+        self.straight_to_point(self.ostrich_step_size, self.resting)
         
         
         

@@ -15,6 +15,7 @@ stepSize = 1
 sleepTime = 6
 resting = [20, 0, -20, 0]
 centre = [0,0]
+myController.zero_angles()
 myController.straight_to_point(stepSize, resting)
 
 try:
@@ -37,7 +38,9 @@ try:
         time.sleep(random.randint(2, 8))
         myController.straight_to_point(stepSize, resting)
         time.sleep(random.randint(2, 8))
-        myController.Straight_Eye_Roll(stepSize)
+        #myController.Straight_Eye_Roll(stepSize)
+        myController.straight_to_point(stepSize, [60, 0, -60, 0])
+        time.sleep(random.randint(2, 8))
         myController.straight_to_point(stepSize, resting)
         time.sleep(random.randint(2, 8))
         
