@@ -89,15 +89,21 @@ def randomly_change_pattern(lock, colour_cycle, speed_cycle, pattern_cycle):
 def set_leds(canColourChange, canPatternChange, canSpeedChange, count):
     # Turn LEDs off if the buttons are available
     
-    # + 10 is untested as LEDs not currently responsive. 
-    if canColourChange < count  + 10:
+    # + 5 has been tested and decided as a good length of time.
+    if canColourChange < count  + 5:
         GPIO.output(config.colourOutputPin, GPIO.LOW)
+    else:
+        GPIO.output(config.colourOutputPin, GPIO.HIGH)
         
-    if canSpeedChange < count  + 10:
+    if canSpeedChange < count  + 5:
         GPIO.output(config.speedOutputPin, GPIO.LOW)
+    else:
+        GPIO.output(config.speedOutputPin, GPIO.HIGH)
         
-    if canPatternChange < count + 10:
+    if canPatternChange < count + 5:
         GPIO.output(config.patternOutputPin, GPIO.LOW)
+    else:
+        GPIO.output(config.patternOutputPin, GPIO.HIGH)
 
 
 # This thread listens to the buttons and changes the global variables 

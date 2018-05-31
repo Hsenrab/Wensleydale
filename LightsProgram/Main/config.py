@@ -22,8 +22,8 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 10
-NIGHT_BRIGHTNESS = 0.1
+MAX_BRIGHTNESS = 5
+NIGHT_BRIGHTNESS = 1
 current_brightness = MAX_BRIGHTNESS
 cycles_without_button_press = 0
 
@@ -41,9 +41,9 @@ colourInputPin = 24
 speedInputPin = 25
 patternInputPin = 8
 
-colourOutputPin = 13
-speedOutputPin = 16
-patternOutputPin = 12
+colourOutputPin = 14
+speedOutputPin = 15
+patternOutputPin = 18
 
 # Number of active leds - this needs to be calibrated once on the dog.
 num_active_leds = 204

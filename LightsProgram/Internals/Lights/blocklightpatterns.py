@@ -21,8 +21,8 @@ class BlockLightPattern(ColorCycleTemplate):
     that can have different patterns"""
     
     def init(self, strip, num_led):
-        #Set up different blocks on the dog. Current number relate to
-        # Screen set up..
+        #Set up different blocks on the dog. Currently calibrated 
+        #before plastic strips.
 
         ##################################
         # Development Comments
@@ -41,48 +41,48 @@ class BlockLightPattern(ColorCycleTemplate):
         # H :  9 ->  8 : 169+4  :  8 
         # I : 17 -> 18 : 176+4  :  9
         # J : 18 -> 17 : 178+4  : 10
-        # K : ##################### TODO
-        # L : ##################### TODO
+        # K : 19 -> 19 : 67     : 11
+        # L : 20 -> 20 : 74     : 12
 
         ##################################
         
         self.blockList = []
         
-        self.A_01_02_EarLeft = wblock.WBlock(0, 170)
-        self.blockList.append(self.A_01_02_EarLeft)
+        self.A_01_02_EarRight = wblock.WBlock(1, 171)
+        self.blockList.append(self.A_01_02_EarRight)
         
-        self.B_04_03_EarRight = wblock.WBlock(174, 343)
-        self.blockList.append(self.B_04_03_EarRight)
+        self.B_04_03_EarLeft = wblock.WBlock(174, 345)
+        self.blockList.append(self.B_04_03_EarLeft)
         
-        self.C_12_10_BodyUpperLeft = wblock.WBlock(347, 441)
+        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 442)
         self.blockList.append(self.C_12_10_BodyUpperLeft)
         
-        self.D_13_11_BodyLowerLeft = wblock.WBlock(445, 547)
+        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 548)
         self.blockList.append(self.D_13_11_BodyLowerLeft)
         
-        self.E_14_05_BodyUpperRight = wblock.WBlock(551, 699)
+        self.E_14_05_BodyUpperRight = wblock.WBlock(549, 699)
         self.blockList.append(self.E_14_05_BodyUpperRight)
         
-        self.F_15_06_BodyLowerRight = wblock.WBlock(703, 864)
+        self.F_15_06_BodyLowerRight = wblock.WBlock(692, 866)
         self.blockList.append(self.F_15_06_BodyLowerRight)
         
-        self.G_08_07_LegUpperFront = wblock.WBlock(868, 1040)
+        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1043)
         self.blockList.append(self.G_08_07_LegUpperFront)
         
-        self.H_09_08_LegLowerFront = wblock.WBlock(1044, 1213)
+        self.H_09_08_LegLowerFront = wblock.WBlock(1042, 1212)
         self.blockList.append(self.H_09_08_LegLowerFront)
         
-        self.I_17_16_LegUpperBack = wblock.WBlock(1217, 1393)
+        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1394)
         self.blockList.append(self.I_17_16_LegUpperBack)
         
-        self.J_18_17_LegLowerBack = wblock.WBlock(1397, 1575)
+        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1576)
         self.blockList.append(self.J_18_17_LegLowerBack)
         
-        self.K_U_U_EarFrontLeft = wblock.WBlock(0, 0)
-        self.blockList.append(self.K_U_U_EarFrontLeft)
+        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1653) 
+        self.blockList.append(self.K_20_20_EarFrontLeft)
         
-        self.L_U_U_EarFrontRight = wblock.WBlock(0, 0)
-        self.blockList.append(self.L_U_U_EarFrontRight)
+        self.L_19_19_EarFrontRight = wblock.WBlock(1653, 1720)
+        self.blockList.append(self.L_19_19_EarFrontRight)
 
         
         # Set up pins
@@ -118,15 +118,16 @@ class BlockLightPattern(ColorCycleTemplate):
         
         if blockList[0].get_pattern() == enums.WPattern.Singles:
             patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
-        elif blockList[0].get_pattern() == enums.WPattern.Snakes:
-            patterns.snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.AllOn:
+            patterns.all_on(strip, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.AllOff:
             patterns.all_off(strip, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.Slide and hasattr(self, 'slide_speed'):
             patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.BlockedSlide and hasattr(self, 'slide_speed'):
             for block in blockList:
-                patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, block)
+                miniBlockList = [block]
+                patterns.slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, miniBlockList)
         elif blockList[0].get_pattern() == enums.WPattern.Snakes:
             patterns.snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.MovingMorse and hasattr(self, 'morse'):
@@ -305,10 +306,10 @@ class FixedMorse(BlockLightPattern):
         
         super(FixedMorse, self).init(strip, num_led)
         
-        self.whiteBlocks = [self.A_01_02_EarLeft, 
-                            self.B_04_03_EarRight,
-                            self.K_U_U_EarFrontLeft,
-                            self.L_U_U_EarFrontRight,
+        self.whiteBlocks = [self.A_01_02_EarRight, 
+                            self.B_04_03_EarLeft,
+                            self.K_20_20_EarFrontLeft,
+                            self.L_19_19_EarFrontRight,
                             self.G_08_07_LegUpperFront,
                             self.H_09_08_LegLowerFront,
                             self.I_17_16_LegUpperBack,
@@ -404,10 +405,10 @@ class GromitColours(BlockLightPattern):
                         enums.WPattern.AllOn,
                         self.greenBlocks)
                         
-        self.yellowBlocks = [   self.A_01_02_EarLeft,
-                                self.B_04_03_EarRight,
-                                self.K_U_U_EarFrontLeft,
-                                self.L_U_U_EarFrontRight]
+        self.yellowBlocks = [   self.A_01_02_EarRight,
+                                self.B_04_03_EarLeft,
+                                self.K_20_20_EarFrontLeft,
+                                self.L_19_19_EarFrontRight]
                         
         # Set ears to yellow.
         self.set_blocks(enums.WColour.Yellow,

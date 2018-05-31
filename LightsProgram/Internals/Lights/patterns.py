@@ -8,7 +8,7 @@ import numpy as np
 print_debug = False
 
 
-def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, *blockList):
+def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, blockList):
     """ This function turns the LEDs on one at a time until all in the given
     block are done."""
         
