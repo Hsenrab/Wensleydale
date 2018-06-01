@@ -18,10 +18,10 @@ colourDi = {}
 colourDi[WColour.Red] = (1.0, 0.0, 0.0)
 colourDi[WColour.Green] = (0.0, 0.0, 1.0)
 colourDi[WColour.Blue] = (0.0, 1.0, 0.0)
-colourDi[WColour.Cyan] = (0.0, 0.8, 1.0)
+colourDi[WColour.Cyan] = (0.0, 0.6, 0.8)
 colourDi[WColour.Yellow] = (1.0, 0.0, 0.4)
-colourDi[WColour.Pink] = (1.0, 0.8, 0.0)
-colourDi[WColour.White] = (0.8, 0.4, 0.5)
+colourDi[WColour.Pink] = (0.8, 0.6, 0.0)
+colourDi[WColour.White] = (0.7, 0.3, 0.4)
 colourDi[WColour.Orange] = (1.0, 0.0, 0.1)
 
 
@@ -56,7 +56,8 @@ class WPattern(enum.Enum):
     RandomInOut = 12
     ColourSnakesCombine = 13
     BiColourSnakesCombine = 14
-    MAX = 15 
+    EndTest = 15
+    MAX = 16
 
 
 # Enum holding the direction options.

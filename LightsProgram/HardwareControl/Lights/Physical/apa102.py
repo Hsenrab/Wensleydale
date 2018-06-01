@@ -241,8 +241,8 @@ class APA102:
 
 
         for x in range(0,transfernum):
-            print(len(list(self.leds)[x*transfersize:(x+1)*transfersize]))
-            print(list(self.leds)[x*transfersize:(x+1)*transfersize])
+            #print(len(list(self.leds)[x*transfersize:(x+1)*transfersize]))
+            #print(list(self.leds)[x*transfersize:(x+1)*transfersize])
             self.spi.write(list(self.leds)[x*transfersize:(x+1)*transfersize])
 
         self.spi.write(list(self.leds)[(transfernum*transfersize):packetnum])

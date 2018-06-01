@@ -28,19 +28,19 @@ while keep_running:
         # Cycle of bespoke light pattern
         
         print('Run Ear Slide Pattern')
-        MY_CYCLE = partslidepatterns.EarSlide(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=10, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=10)
+        MY_CYCLE = partslidepatterns.EarSlide(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=170, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=170, colour=enums.WColour.Green)
         MY_CYCLE.start()
         
         print('Run Back Slide Pattern')
-        MY_CYCLE = partslidepatterns.BackSlide(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=10, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=10)
+        MY_CYCLE = partslidepatterns.BackSlide(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=170, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=170, colour=enums.WColour.Green)
         MY_CYCLE.start()
         
         print('Run Leg Slide Pattern')
-        MY_CYCLE = partslidepatterns.LegSlide(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=10, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=10)
+        MY_CYCLE = partslidepatterns.LegSlide(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=170, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=170, colour=enums.WColour.Green)
         MY_CYCLE.start()
         
         print('Run GromitSlide')
-        MY_CYCLE = partslidepatterns.GromitSlide(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=30, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=10)
+        MY_CYCLE = partslidepatterns.GromitSlide(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=707, num_cycles=1, speed=enums.WSpeed.Cheetah, slide_speed=707, colour=enums.WColour.Green)
         MY_CYCLE.start()
         
 

@@ -45,7 +45,7 @@ def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, 
     elif current_speed == enums.WSpeed.Hare:
         num_steps_per_slide = slide_speed*2
     else: #enums.WSpeed.Cheetah:
-        num_steps_per_slide = slide_0speed
+        num_steps_per_slide = slide_speed
 
     # The index of the LED within the current blocks.
     local_led_index = 0
@@ -91,7 +91,6 @@ def rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, slide
         
     if len(blockList) == 0:
         return
-        
         
     if print_debug: 
         print("----------------------------")
@@ -255,7 +254,7 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
             local_led_index += 1
     
     if(current_step % num_steps_per_pattern_step == 0):
-        print(current_step)
+        #print(current_step)
         blockList[0].increment_pattern_index(1)
 
     info_string = "Pattern: Snakes. Colour: " + str(current_colour) + ". Speed: " \
@@ -881,5 +880,59 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
 
     info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
+    wlogger.log_info(info_string)
+    wlogger.log_info(strip.leds)
+    
+    
+    
+def end_test(strip, blockList):
+    """ This function turns the LEDs in the given blocks on."""
+        
+    if not blockList:
+        return
+
+    current_colour = blockList[0].get_colour()
+    
+    if print_debug: 
+        print("----------------------------")
+        print("End Test")
+
+    
+    for block in blockList:
+        # Paint single LEDS with given colour
+        strip.set_pixel(block.get_start_index(), math.floor(enums.colourDi[enums.WColour.Blue][0]*255),
+                       math.floor(enums.colourDi[enums.WColour.Blue][1]*255),
+                       math.floor(enums.colourDi[enums.WColour.Blue][2]*255),
+                       config.current_brightness)
+                       
+        strip.set_pixel(block.get_start_index()+1, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][1]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][2]*255),
+                       config.current_brightness)
+                       
+        strip.set_pixel(block.get_start_index()+2, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][1]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][2]*255),
+                       config.current_brightness)
+                       
+        strip.set_pixel(block.get_end_index(), math.floor(enums.colourDi[enums.WColour.Blue][0]*255),
+                       math.floor(enums.colourDi[enums.WColour.Blue][1]*255),
+                       math.floor(enums.colourDi[enums.WColour.Blue][2]*255),
+                       config.current_brightness)
+                       
+        strip.set_pixel(block.get_end_index()-1, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][1]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][2]*255),
+                       config.current_brightness)
+                       
+        strip.set_pixel(block.get_end_index()-2, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][1]*255),
+                       math.floor(enums.colourDi[enums.WColour.Red][2]*255),
+                       config.current_brightness)
+
+
+
+    info_string = "Pattern: End Test. Colour: " + str(current_colour) \
+                    + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
     wlogger.log_info(strip.leds)

@@ -48,40 +48,40 @@ class BlockLightPattern(ColorCycleTemplate):
         
         self.blockList = []
         
-        self.A_01_02_EarRight = wblock.WBlock(1, 171)
+        self.A_01_02_EarRight = wblock.WBlock(2, 170) #168
         self.blockList.append(self.A_01_02_EarRight)
         
-        self.B_04_03_EarLeft = wblock.WBlock(174, 345)
+        self.B_04_03_EarLeft = wblock.WBlock(174, 344) #170
         self.blockList.append(self.B_04_03_EarLeft)
         
-        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 442, True)
+        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 441, True) #96
         self.blockList.append(self.C_12_10_BodyUpperLeft)
         
-        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 548, True)
+        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 547, True) #104
         self.blockList.append(self.D_13_11_BodyLowerLeft)
         
-        self.E_14_05_BodyUpperRight = wblock.WBlock(549, 699, True)
+        self.E_14_05_BodyUpperRight = wblock.WBlock(548, 699, True) #150
         self.blockList.append(self.E_14_05_BodyUpperRight)
         
-        self.F_15_06_BodyLowerRight = wblock.WBlock(692, 866, True)
+        self.F_15_06_BodyLowerRight = wblock.WBlock(701, 865, True) #174
         self.blockList.append(self.F_15_06_BodyLowerRight)
         
-        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1043, True)
+        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1043, True) #176
         self.blockList.append(self.G_08_07_LegUpperFront)
         
-        self.H_09_08_LegLowerFront = wblock.WBlock(1042, 1212, True)
+        self.H_09_08_LegLowerFront = wblock.WBlock(1043, 1211, True) #170
         self.blockList.append(self.H_09_08_LegLowerFront)
         
-        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1394, True)
+        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1394, True) #180
         self.blockList.append(self.I_17_16_LegUpperBack)
         
-        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1576, True)
+        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1576, True) #182
         self.blockList.append(self.J_18_17_LegLowerBack)
         
-        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1653, True)
+        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1645, True) #67
         self.blockList.append(self.K_20_20_EarFrontLeft)
         
-        self.L_19_19_EarFrontRight = wblock.WBlock(1653, 1720, True)
+        self.L_19_19_EarFrontRight = wblock.WBlock(1646, 1719, True) #74
         self.blockList.append(self.L_19_19_EarFrontRight)
 
         
@@ -144,6 +144,8 @@ class BlockLightPattern(ColorCycleTemplate):
             patterns.bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, self.colour_b, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.FixedMorse and hasattr(self, 'morse') and hasattr(self, 'colour_b'):
             patterns.fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.EndTest:
+            patterns.end_test(strip, blockList)
         else:  #(to catch anything dodgy)
             patterns.singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
         

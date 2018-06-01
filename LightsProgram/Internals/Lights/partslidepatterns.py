@@ -65,7 +65,7 @@ class EarSlide(PartSlide):
                         self.H_09_08_LegLowerFront]
                         
         self.set_blocks(self.colour,
-                        self.speed, # will be ignored
+                        self.speed,
                         enums.WPattern.AllOff,
                         self.offBlocks)
                         
@@ -353,11 +353,13 @@ class GromitSlide(PartSlide):
 
     def update(self, strip, num_led, num_steps_per_cycle, current_step, current_cycle):
         
-        if current_step < num_steps_per_cycle/3:
+        
+        
+        if current_step < num_steps_per_cycle/4:
             self.update_earslide(strip, num_led, num_steps_per_cycle, current_step,
                                     current_cycle)
                    
-        elif current_step < 2*num_steps_per_cycle/3:
+        elif current_step < num_steps_per_cycle/2:
             self.update_bodyslide_ears_on(strip, num_led, num_steps_per_cycle, current_step,
                                                     current_cycle)
                

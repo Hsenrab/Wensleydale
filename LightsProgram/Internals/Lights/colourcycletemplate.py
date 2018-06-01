@@ -91,7 +91,7 @@ class ColorCycleTemplate:
 
             while True:  # Loop forever
                 for current_step in range(self.num_steps_per_cycle):
-                    print("Time:" + str(time.time() - start_time))
+                    #print("Time:" + str(time.time() - start_time))
                     start_time = time.time()
                     need_repaint = self.update(strip, self.num_led,
                                                self.num_steps_per_cycle,
@@ -99,11 +99,11 @@ class ColorCycleTemplate:
                     if need_repaint:
                         show_time = time.time()
                         strip.show()  # repaint if required
-                        print("ShowTime!:" + str(time.time() - show_time))
+                        #print("ShowTime!:" + str(time.time() - show_time))
                         
                     time.sleep(self.pause_value)
                     
-                    print("Sleep" + str(self.pause_value)) # Pause until the next step
+                    #print("Sleep" + str(self.pause_value)) # Pause until the next step
                     #print(current_step)
                     
                     
