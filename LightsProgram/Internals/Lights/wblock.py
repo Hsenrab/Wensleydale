@@ -4,14 +4,14 @@ import Main.enums as enums
 
 class WBlock:
     """ Holds information for each sub block of LEDs """
-    def __init__(self, start_index, end_index):
+    def __init__(self, start_index, end_index, invert_direction = False):
         
         self._start_index = start_index
         self._end_index = end_index
         self._colour = enums.WColour.Blue
         self._speed = enums.WSpeed.Hare
         self._pattern = enums.WPattern.Singles
-        self._invert_direction = False
+        self._invert_direction = invert_direction
         self._pattern_index = 0
         
     def get_start_index(self):
@@ -56,6 +56,9 @@ class WBlock:
         
     def get_pattern_index(self):
         return self._pattern_index
+        
+    def get_direction(self):
+        return self._invert_direction
 
     def invert_direction(self):
         self._invert_direction = True

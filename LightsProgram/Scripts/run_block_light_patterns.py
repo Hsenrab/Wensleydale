@@ -24,15 +24,13 @@ while keep_running:
     try:
         # Cycle of light pattern
         print('Run Block Light Patterns')
-        MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=1200, num_cycles=1) 
+        MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=1200, num_cycles=1) 
         MY_CYCLE.start()
         
     except KeyboardInterrupt:  # Ctrl-C can halt the light program
         keep_running = False
         GPIO.cleanup()
         raise KeyboardInterrupt
-        
-    keep_running = False
 
 GPIO.cleanup()
 print('Finished the test')
