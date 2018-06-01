@@ -579,7 +579,7 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, block
     
     # Paint all LEDs black.
     if blockList[0].get_pattern_index() == 0:
-        
+        ledList = np.arange(block.get_start_index(), block.get_end_index())
             
         for led in ledList:
                 # Paint gap LED black.
@@ -733,7 +733,13 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
             
     # Add the snakes moving in the other direction.
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             
             current_pattern_index = (local_led_index - blockList[0].get_pattern_index()) % full_cycle_length
             
@@ -843,7 +849,12 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
             
     # Add the snakes moving in the other direction.
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             
             current_pattern_index = (local_led_index - blockList[0].get_pattern_index()) % single_colour_cycle_length
             
