@@ -12,7 +12,7 @@ while True:
     print('Three Seconds of white light')
     MY_CYCLE = colorschemes.Solid(num_led=NUM_LED, pause_value=1,
                                   num_steps_per_cycle=255, num_cycles=1, global_brightness=1)
-    MY_CYCLE.start()
+    #MY_CYCLE.start()
 
     # Go twice around the clock
     print('Go twice around the clock')
@@ -30,7 +30,7 @@ while True:
     print('One slow trip through the rainbow')
     MY_CYCLE = colorschemes.Rainbow(num_led=NUM_LED, pause_value=0.05,
                                         num_steps_per_cycle=255, num_cycles=1, global_brightness=1)
-    #MY_CYCLE.start()
+    MY_CYCLE.start()
 
     # Five quick trips through the rainbow
     print('Five quick trips through the rainbow')

@@ -4,6 +4,7 @@ import Adafruit_GPIO.SPI as SPI
 from math import ceil
 import Main.config as config
 
+
 RGB_MAP = { 'rgb': [3, 2, 1], 'rbg': [3, 1, 2], 'grb': [2, 3, 1],
             'gbr': [2, 1, 3], 'brg': [1, 3, 2], 'bgr': [1, 2, 3] }
 
@@ -86,7 +87,7 @@ class APA102:
             self.global_brightness = global_brightness
 
 
-        self.leds = [self.LED_START,0,0,0] * (self.num_led + self.num_led) # Pixel buffer
+        self.leds = [self.LED_START,0,0,0] * (self.num_led + self.num_led//32) # Pixel buffer
         
         # MOSI 10 and SCLK 11 is hardware SPI, which needs to be set-up differently
         if mosi == 10 and sclk == 11:
@@ -160,12 +161,11 @@ class APA102:
         # as we expect some brightness unless set to 0
         brightness = ceil(bright_percent*self.global_brightness/100.0)
         brightness = int(brightness)
-        # print(brightness)
+        
 
         # LED startframe is three "1" bits, followed by 5 brightness bits
         # LED_START = 0b11100000 
         ledstart = (brightness & 0b00011111) | self.LED_START
-        print(ledstart)
         
         
         start_index = int(4 * led_num)

@@ -104,7 +104,7 @@ class ColorCycleTemplate:
                     time.sleep(self.pause_value)
                     
                     print("Sleep" + str(self.pause_value)) # Pause until the next step
-                    print(current_step)
+                    #print(current_step)
                     
                     
                 current_cycle += 1

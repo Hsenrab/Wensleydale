@@ -45,13 +45,19 @@ def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, 
     elif current_speed == enums.WSpeed.Hare:
         num_steps_per_slide = slide_speed*2
     else: #enums.WSpeed.Cheetah:
-        num_steps_per_slide = slide_speed
+        num_steps_per_slide = slide_0speed
 
     # The index of the LED within the current blocks.
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
 
             if local_led_index <= num_leds_on:
                 # Paint single LEDS with given colour
@@ -119,7 +125,13 @@ def rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, slide
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+                
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
 
             if local_led_index <= num_leds_on:
                 # Paint single LEDS with given colour
@@ -170,7 +182,12 @@ def singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             if (local_led_index + blockList[0].get_pattern_index()) % (single_gap + 1) == 0:
                 # Paint single LEDS with given colour
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
@@ -219,7 +236,12 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             if (local_led_index + blockList[0].get_pattern_index()) % (snake_length + snake_gap) < snake_length:
                 # Paint snake LEDS with given colour
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
@@ -233,6 +255,7 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
             local_led_index += 1
     
     if(current_step % num_steps_per_pattern_step == 0):
+        print(current_step)
         blockList[0].increment_pattern_index(1)
 
     info_string = "Pattern: Snakes. Colour: " + str(current_colour) + ". Speed: " \
@@ -266,7 +289,12 @@ def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse,
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
 
             if morse[(local_led_index + blockList[0].get_pattern_index()) % len(morse)]:
                 # Paint snake LEDS with given colour
@@ -310,8 +338,13 @@ def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, 
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
-
+        
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             if local_led_index < len(morse) and morse[local_led_index]:
                 # Paint snake LEDS with given colour
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
@@ -320,7 +353,10 @@ def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, 
                            config.current_brightness)
             else:
                 # Paint gap LED black.
-                strip.set_pixel(led, 0.0, 0.0, 0.0)
+                strip.set_pixel(led, math.floor(enums.colourDi[enums.WColour.White][0]*255),
+                           math.floor(enums.colourDi[enums.WColour.White][1]*255),
+                           math.floor(enums.colourDi[enums.WColour.White][2]*255), 
+                           config.current_brightness)
                 
             local_led_index += 1
 
@@ -348,7 +384,12 @@ def all_on(strip, blockList):
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             
             # Paint single LEDS with given colour
             strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
@@ -380,7 +421,12 @@ def all_off(strip, blockList):
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             
             # Paint LED black.
             strip.set_pixel(led, 0.0, 0.0, 0.0)
@@ -392,13 +438,18 @@ def all_off(strip, blockList):
 
 def change_colour_of_on_leds(strip, blockList):
         
-        if not blockList:
-            return
+    if not blockList:
+        return
         
-        current_colour = blockList[0].get_colour()
+    current_colour = blockList[0].get_colour()
     
-        for block in blockList:
-            for led in range(block.get_start_index(), block.get_end_index()):
+    for block in blockList:
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+            for led in ledList:
     
                 # Only turn LEDs that is already on.
                 if strip.is_led_on(led):
@@ -456,7 +507,12 @@ def twinkle(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     local_led_index = 0
     
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
 
             if change_array[local_led_index] and twinkle_array[local_led_index]:
                 # Paint twinkle if led "on"
@@ -523,14 +579,20 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, block
     
     # Paint all LEDs black.
     if blockList[0].get_pattern_index() == 0:
-        for block in blockList:
-            for led in range(block.get_start_index(), block.get_end_index()):
+        
+            
+        for led in ledList:
                 # Paint gap LED black.
                 strip.set_pixel(led, 0.0, 0.0, 0.0)
                 
     # Paint all LEDs coloured. This is toleranced.
     elif abs(blockList[0].get_pattern_index() - 1) < 0.001:
         for block in blockList:
+            if block.get_direction():
+                ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            else:
+                ledList = np.arange(block.get_start_index(), block.get_end_index())
+                
             for led in range(block.get_start_index(), block.get_end_index()):
                 strip.set_pixel(led, math.floor(enums.colourDi[current_colour][0]*255),
                                     math.floor(enums.colourDi[current_colour][1]*255),
@@ -637,7 +699,12 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
     
     # First colour the snakes moving in one direction.
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             
             current_pattern_index = (local_led_index + blockList[0].get_pattern_index()) % full_cycle_length
             
@@ -747,7 +814,12 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
     
     # First colour the snakes moving in one direction.
     for block in blockList:
-        for led in range(block.get_start_index(), block.get_end_index()):
+        if block.get_direction():
+            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+        else:
+            ledList = np.arange(block.get_start_index(), block.get_end_index())
+            
+        for led in ledList:
             
             current_pattern_index = (local_led_index + blockList[0].get_pattern_index()) % single_colour_cycle_length
             

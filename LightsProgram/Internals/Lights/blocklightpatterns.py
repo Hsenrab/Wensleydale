@@ -54,34 +54,34 @@ class BlockLightPattern(ColorCycleTemplate):
         self.B_04_03_EarLeft = wblock.WBlock(174, 345)
         self.blockList.append(self.B_04_03_EarLeft)
         
-        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 442)
+        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 442, True)
         self.blockList.append(self.C_12_10_BodyUpperLeft)
         
-        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 548)
+        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 548, True)
         self.blockList.append(self.D_13_11_BodyLowerLeft)
         
-        self.E_14_05_BodyUpperRight = wblock.WBlock(549, 699)
+        self.E_14_05_BodyUpperRight = wblock.WBlock(549, 699, True)
         self.blockList.append(self.E_14_05_BodyUpperRight)
         
-        self.F_15_06_BodyLowerRight = wblock.WBlock(692, 866)
+        self.F_15_06_BodyLowerRight = wblock.WBlock(692, 866, True)
         self.blockList.append(self.F_15_06_BodyLowerRight)
         
-        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1043)
+        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1043, True)
         self.blockList.append(self.G_08_07_LegUpperFront)
         
-        self.H_09_08_LegLowerFront = wblock.WBlock(1042, 1212)
+        self.H_09_08_LegLowerFront = wblock.WBlock(1042, 1212, True)
         self.blockList.append(self.H_09_08_LegLowerFront)
         
-        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1394)
+        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1394, True)
         self.blockList.append(self.I_17_16_LegUpperBack)
         
-        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1576)
+        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1576, True)
         self.blockList.append(self.J_18_17_LegLowerBack)
         
-        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1653) 
+        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1653, True)
         self.blockList.append(self.K_20_20_EarFrontLeft)
         
-        self.L_19_19_EarFrontRight = wblock.WBlock(1653, 1720)
+        self.L_19_19_EarFrontRight = wblock.WBlock(1653, 1720, True)
         self.blockList.append(self.L_19_19_EarFrontRight)
 
         
@@ -325,23 +325,23 @@ class FixedMorse(BlockLightPattern):
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.E_14_05_BodyUpperRight)
+                        [self.E_14_05_BodyUpperRight])
                         
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.F_15_06_BodyLowerRight)
+                        [self.F_15_06_BodyLowerRight])
                         
                         
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.C_12_10_BodyUpperLeft)
+                        [self.C_12_10_BodyUpperLeft])
                         
         self.set_blocks(self.colour_b,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
-                        self.D_13_11_BodyLowerLeft) 
+                        [self.D_13_11_BodyLowerLeft]) 
                         
 
     def update(self, strip, num_led, num_steps_per_cycle, current_step,
@@ -355,17 +355,17 @@ class FixedMorse(BlockLightPattern):
                             self.whiteBlocks)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.E_14_05_BodyUpperRight)
+                                [self.E_14_05_BodyUpperRight])
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.F_15_06_BodyLowerRight)
+                                [self.F_15_06_BodyLowerRight])
                             
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.C_12_10_BodyUpperLeft)
+                                [self.C_12_10_BodyUpperLeft])
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.D_13_11_BodyLowerLeft) 
+                                [self.D_13_11_BodyLowerLeft]) 
 
 
             return 1
