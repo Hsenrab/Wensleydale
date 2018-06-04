@@ -17,3 +17,7 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 
 # Button press count
 button_press_count = 0
+
+
+touchInputPin = 15
+touchOutputPin = 0

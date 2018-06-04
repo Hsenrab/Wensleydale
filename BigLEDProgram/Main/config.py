@@ -17,3 +17,15 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 
 # Button press count
 button_press_count = 0
+
+
+# Pins
+touchInputPin = 14
+touchOutputPin = 6
+
+BigLEDAOutputPinRed = 17
+BigLEDAOutputPinBlue = 27
+BigLEDAOutputPinGreen = 22
+BigLEDBOutputPinRed = 10
+BigLEDBOutputPinBlue = 9
+BigLEDBOutputPinGreen = 11
