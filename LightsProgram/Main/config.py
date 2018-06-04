@@ -22,8 +22,8 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 5
-NIGHT_BRIGHTNESS = 1
+MAX_BRIGHTNESS = 15
+NIGHT_BRIGHTNESS = 5 # 1 eventually
 current_brightness = MAX_BRIGHTNESS
 cycles_without_button_press = 0
 

@@ -48,40 +48,40 @@ class BlockLightPattern(ColorCycleTemplate):
         
         self.blockList = []
         
-        self.A_01_02_EarRight = wblock.WBlock(2, 170) #168
+        self.A_01_02_EarRight = wblock.WBlock(2, 171) #168
         self.blockList.append(self.A_01_02_EarRight)
         
-        self.B_04_03_EarLeft = wblock.WBlock(174, 344) #170
+        self.B_04_03_EarLeft = wblock.WBlock(174, 345) #170
         self.blockList.append(self.B_04_03_EarLeft)
         
-        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 441, True) #96
+        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 442, True) #96
         self.blockList.append(self.C_12_10_BodyUpperLeft)
         
-        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 547, True) #104
+        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 548, True) #104
         self.blockList.append(self.D_13_11_BodyLowerLeft)
         
-        self.E_14_05_BodyUpperRight = wblock.WBlock(548, 699, True) #150
+        self.E_14_05_BodyUpperRight = wblock.WBlock(548, 700, True) #150
         self.blockList.append(self.E_14_05_BodyUpperRight)
         
-        self.F_15_06_BodyLowerRight = wblock.WBlock(701, 865, True) #174
+        self.F_15_06_BodyLowerRight = wblock.WBlock(701, 866, True) #174
         self.blockList.append(self.F_15_06_BodyLowerRight)
         
-        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1043, True) #176
+        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1044, True) #176
         self.blockList.append(self.G_08_07_LegUpperFront)
         
-        self.H_09_08_LegLowerFront = wblock.WBlock(1043, 1211, True) #170
+        self.H_09_08_LegLowerFront = wblock.WBlock(1043, 1212, True) #170
         self.blockList.append(self.H_09_08_LegLowerFront)
         
-        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1394, True) #180
+        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1395, True) #180
         self.blockList.append(self.I_17_16_LegUpperBack)
         
-        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1576, True) #182
+        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1577, True) #182
         self.blockList.append(self.J_18_17_LegLowerBack)
         
-        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1645, True) #67
+        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1646, True) #67
         self.blockList.append(self.K_20_20_EarFrontLeft)
         
-        self.L_19_19_EarFrontRight = wblock.WBlock(1646, 1719, True) #74
+        self.L_19_19_EarFrontRight = wblock.WBlock(1646, 1720, True) #74
         self.blockList.append(self.L_19_19_EarFrontRight)
 
         
@@ -157,9 +157,9 @@ class ChangingBlockLightPattern(BlockLightPattern):
         super(ChangingBlockLightPattern, self).init(strip, num_led)
         
         # Set up pattern list, these are the patterns that will cycle when the buttons are pressed.
-        config.patternList = [  enums.WPattern.Snakes,
+        config.patternList = [  enums.WPattern.BlockedSlide,
+                                enums.WPattern.Snakes,
                                 enums.WPattern.Twinkle,
-                                enums.WPattern.BlockedSlide,
                                 enums.WPattern.Singles,
                                 enums.WPattern.RandomInOut]
                                 

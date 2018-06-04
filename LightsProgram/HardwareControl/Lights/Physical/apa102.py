@@ -3,6 +3,8 @@ import Adafruit_GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 from math import ceil
 import Main.config as config
+import numpy as np
+import Internals.Utils.wlogger as wlogger
 
 
 RGB_MAP = { 'rgb': [3, 2, 1], 'rbg': [3, 1, 2], 'grb': [2, 3, 1],
@@ -73,7 +75,7 @@ class APA102:
     LED_START = 0b11100000 # Three "1" bits, followed by 5 brightness bits
 
     def __init__(self, num_led, global_brightness=MAX_BRIGHTNESS,
-                 order='rgb', mosi=10, sclk=11, max_speed_hz=2000000):
+                 order='rgb', mosi=10, sclk=11, max_speed_hz=4000000):
         """Initializes the library.
         
         """
@@ -86,8 +88,7 @@ class APA102:
         else:
             self.global_brightness = global_brightness
 
-
-        self.leds = [self.LED_START,0,0,0] * (self.num_led + self.num_led//32) # Pixel buffer
+        self.leds = np.tile([self.LED_START,0,0,0], (self.num_led + 10)) # Pixel buffer number of LEDs plus 10 buffer
         
         # MOSI 10 and SCLK 11 is hardware SPI, which needs to be set-up differently
         if mosi == 10 and sclk == 11:
@@ -102,6 +103,7 @@ class APA102:
         that it must update its own color now.
         """
         self.spi.write([0] * 4)  # Start frame, 32 zero bits
+        wlogger.log_info("Clock Start Frame" + str([0] * 4))
 
 
     def clock_end_frame(self):
@@ -131,17 +133,28 @@ class APA102:
         of the driver could omit the "clockStartFrame" method if enough zeroes have
         been sent as part of "clockEndFrame".
         """
-        # Round up num_led/2 bits (or num_led/16 bytes)
-        for _ in range((self.num_led + 15) // 16):
-            x=0
-            #self.spi.write([0x00])
+        # Reset frame:
+        reset_frame = [0] * 4
+        self.spi.write(reset_frame)
+        wlogger.log_info("Reset Frame" + str(reset_frame)) 
+        
+        dummy_data = [0] *(self.num_led//4)
+        self.spi.write(dummy_data)  # num_leds bits sent (n/2 minimum)
+        wlogger.log_info("Clock End Frame" + str(dummy_data)
+
 
 
     def clear_strip(self):
         """ Turns off the strip and shows the result right away."""
-        for led in range(self.num_led):
-            self.set_pixel(led, 0, 0, 0)
+        self.leds = np.tile([self.LED_START,0,0,0], (self.num_led + 10))
         self.show()
+        
+    def clear_strip_no_refresh(self, start_index, end_index):
+        """ Turns off the strip and shows the result right away."""
+        buffer_start_index = int(4 * start_index)
+        buffer_end_index = int(4 * start_index)
+        self.leds[buffer_start_index:buffer_end_index] = np.tile([self.LED_START,0,0,0], end_index - start_index)
+        print("Clear Strip")
 
 
     def set_pixel(self, led_num, red, green, blue, bright_percent=100):
@@ -238,14 +251,21 @@ class APA102:
         packetnum = len(list(self.leds))
         transfersize = 4096
         transfernum = int(packetnum/transfersize)
-
+        print(len(self.leds))
 
         for x in range(0,transfernum):
-            #print(len(list(self.leds)[x*transfersize:(x+1)*transfersize]))
-            #print(list(self.leds)[x*transfersize:(x+1)*transfersize])
-            self.spi.write(list(self.leds)[x*transfersize:(x+1)*transfersize])
+            
+            out_array = self.leds[x*transfersize:(x+1)*transfersize]
+            outArrayAsList = out_array.tolist()
+            wlogger.log_info(outArrayAsList)
+            print(len(outArrayAsList))
+            print(outArrayAsList)
+            self.spi.write(outArrayAsList)
 
-        self.spi.write(list(self.leds)[(transfernum*transfersize):packetnum])
+        out_array = self.leds[(transfernum*transfersize):packetnum]
+        outArrayAsList = out_array.tolist()
+        wlogger.log_info(outArrayAsList)
+        self.spi.write(outArrayAsList)
         self.clock_end_frame()
 
     def cleanup(self):

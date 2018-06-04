@@ -84,6 +84,8 @@ class ColorCycleTemplate:
             strip.clear_strip()
 
             self.init(strip, self.num_led)  # Call the subclasses init method
+            print("Start")
+            print(len(strip.leds))
             strip.show()
             current_cycle = 0
             

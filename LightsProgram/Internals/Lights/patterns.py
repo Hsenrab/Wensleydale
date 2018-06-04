@@ -83,7 +83,7 @@ def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, 
     info_string = "Pattern: Slide. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
 def rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, blockList):
     """ This function turns the LEDs on one at a time until all in the given
@@ -205,7 +205,7 @@ def singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     info_string = "Pattern: Singles. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
 def snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     """ This function moves single LEDs along the LED strip indices given"""
@@ -260,7 +260,7 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     info_string = "Pattern: Snakes. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
 def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, blockList):
     """ This function moves Renishaw in morse code along the LED strip indices given"""
@@ -313,7 +313,7 @@ def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse,
     info_string = "Pattern: Renishaw Morse. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
     
 def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, blockList):
@@ -362,7 +362,7 @@ def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, 
     info_string = "Pattern: Fixed Morse. Colour: " + str(current_colour) \
                     + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
 
 def all_on(strip, blockList):
     """ This function turns the LEDs in the given blocks on."""
@@ -402,7 +402,7 @@ def all_on(strip, blockList):
     info_string = "Pattern: All On. Colour: " + str(current_colour) \
                     + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
 def all_off(strip, blockList):
     """ This function turns all LEDs in the blocks given off."""
@@ -433,7 +433,7 @@ def all_off(strip, blockList):
 
     info_string = "Pattern: All Off."
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
 
 def change_colour_of_on_leds(strip, blockList):
         
@@ -529,7 +529,7 @@ def twinkle(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     info_string = "Pattern: Twinkling. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
 
 def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
@@ -653,7 +653,7 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, block
     info_string = "Pattern: RandomInOut. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
     
 def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
@@ -776,7 +776,7 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
     info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
 def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, colour_b, blockList):
     """ This function sets of snakes of different colours moving in opposite directions
@@ -881,7 +881,7 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
     info_string = "Pattern: Colour Snakes Combine. Colour: " + str(current_colour) + ". Speed: " \
                   + str(current_speed) + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
     
     
     
@@ -915,17 +915,17 @@ def end_test(strip, blockList):
                        math.floor(enums.colourDi[enums.WColour.Red][2]*255),
                        config.current_brightness)
                        
-        strip.set_pixel(block.get_end_index(), math.floor(enums.colourDi[enums.WColour.Blue][0]*255),
+        strip.set_pixel(block.get_end_index()-1, math.floor(enums.colourDi[enums.WColour.Blue][0]*255),
                        math.floor(enums.colourDi[enums.WColour.Blue][1]*255),
                        math.floor(enums.colourDi[enums.WColour.Blue][2]*255),
                        config.current_brightness)
                        
-        strip.set_pixel(block.get_end_index()-1, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
+        strip.set_pixel(block.get_end_index()-2, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
                        math.floor(enums.colourDi[enums.WColour.Red][1]*255),
                        math.floor(enums.colourDi[enums.WColour.Red][2]*255),
                        config.current_brightness)
                        
-        strip.set_pixel(block.get_end_index()-2, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
+        strip.set_pixel(block.get_end_index()-3, math.floor(enums.colourDi[enums.WColour.Red][0]*255),
                        math.floor(enums.colourDi[enums.WColour.Red][1]*255),
                        math.floor(enums.colourDi[enums.WColour.Red][2]*255),
                        config.current_brightness)
@@ -935,4 +935,4 @@ def end_test(strip, blockList):
     info_string = "Pattern: End Test. Colour: " + str(current_colour) \
                     + ". Brightness: " + str(config.current_brightness)
     wlogger.log_info(info_string)
-    wlogger.log_info(strip.leds)
+
