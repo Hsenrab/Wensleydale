@@ -24,7 +24,7 @@ class Tail:
         self.backwards_ch = 1
         
         # PWM Setup Variables
-        self.motor = PCA9685(0x40) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
+        self.motor = PCA9685(0x41) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
         self.pwm_freq = 5000
         self.motor.set_pwm_freq(self.pwm_freq)
     
@@ -36,7 +36,7 @@ class Tail:
         if print_debug:
             print("Tail On")
         GPIO.output(config.touchOutputPin, GPIO.HIGH)
-        self.motor.set_pwm(self.forward_ch, 0, 2000) # needs calibrating - changes speed of tail.
+        self.motor.set_pwm(self.forward_ch, 0, 2250) # needs calibrating - changes speed of tail.
         self.motor.set_pwm(self.backwards_ch, 0, 0)
     
     def set_tail_off(self):
@@ -62,8 +62,8 @@ class Tail:
         self.set_up_pins()
 
         # Set tail off to start.
-        self.set_tail_on() #TODO
-        is_tail_on = True
+        self.set_tail_off()
+        is_tail_on = False
         
         continue_control = True
         button_already_pressed = False

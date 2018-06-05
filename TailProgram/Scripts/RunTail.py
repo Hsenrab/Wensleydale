@@ -21,7 +21,7 @@ while keep_running:
     except KeyboardInterrupt:  # Ctrl-C can halt the light program
         keep_running = False
         print("Cleanup")
-        reset = PCA9685(0x40)
+        reset = PCA9685(0x41)
         GPIO.cleanup()
         raise KeyboardInterrupt
         
