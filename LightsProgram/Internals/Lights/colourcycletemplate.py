@@ -1,6 +1,7 @@
 """The module contains templates for colour cycles"""
 import time
 import HardwareControl.Lights.Physical.apa102 as apa102
+import Main.config as config
 
 
 class ColorCycleTemplate:
@@ -19,7 +20,7 @@ class ColorCycleTemplate:
         self.pause_value = pause_value  # How long to pause between two runs
         self.num_steps_per_cycle = num_steps_per_cycle  # Steps in one cycle.
         self.num_cycles = num_cycles  # How many times will the program run
-        self.global_brightness = global_brightness  # Brightness of the strip
+        self.global_brightness = config.global_brightness  # Brightness of the strip
         self.order = order  # Strip colour ordering
         
         
@@ -84,8 +85,6 @@ class ColorCycleTemplate:
             strip.clear_strip()
 
             self.init(strip, self.num_led)  # Call the subclasses init method
-            print("Start")
-            print(len(strip.leds))
             strip.show()
             current_cycle = 0
             

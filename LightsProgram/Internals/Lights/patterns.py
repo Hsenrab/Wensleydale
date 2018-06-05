@@ -53,7 +53,7 @@ def slide(strip, num_steps_per_cycle, current_step, current_cycle, slide_speed, 
     for block in blockList:
         
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+                        ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -126,7 +126,7 @@ def rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, slide
     for block in blockList:
                 
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -182,7 +182,7 @@ def singles(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+                        ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -236,7 +236,7 @@ def snakes(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+                        ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -289,7 +289,7 @@ def moving_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse,
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -339,7 +339,7 @@ def fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, morse, 
     for block in blockList:
         
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -384,7 +384,7 @@ def all_on(strip, blockList):
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -421,7 +421,7 @@ def all_off(strip, blockList):
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -444,7 +444,7 @@ def change_colour_of_on_leds(strip, blockList):
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -507,7 +507,7 @@ def twinkle(strip, num_steps_per_cycle, current_step, current_cycle, blockList):
     
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+                        ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -588,7 +588,7 @@ def random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, block
     elif abs(blockList[0].get_pattern_index() - 1) < 0.001:
         for block in blockList:
             if block.get_direction():
-                ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+                ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
             else:
                 ledList = np.arange(block.get_start_index(), block.get_end_index())
                 
@@ -699,7 +699,7 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
     # First colour the snakes moving in one direction.
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -734,7 +734,7 @@ def colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycl
     for block in blockList:
         
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -820,7 +820,7 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
     # First colour the snakes moving in one direction.
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             
@@ -849,7 +849,7 @@ def bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_c
     # Add the snakes moving in the other direction.
     for block in blockList:
         if block.get_direction():
-            ledList = np.arange(block.get_end_index(), block.get_start_index(), -1)
+            ledList = np.arange(block.get_end_index()-1, block.get_start_index()-1, -1)
         else:
             ledList = np.arange(block.get_start_index(), block.get_end_index())
             

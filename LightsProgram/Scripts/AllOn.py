@@ -11,7 +11,7 @@ print('All On')
 
 while True:
   MY_CYCLE = colorschemes.Solid(num_led=NUM_LED, pause_value=1,
-                             num_steps_per_cycle=1000, num_cycles=1, global_brightness=1)
+                             num_steps_per_cycle=1000, num_cycles=1, global_brightness=50)
                              
   MY_CYCLE.start()
 

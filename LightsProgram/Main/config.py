@@ -22,19 +22,20 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 ######################
 
 # Maximum brightness of LEDs
-MAX_BRIGHTNESS = 15
+MAX_BRIGHTNESS = 10
+global_brightness = 20
 NIGHT_BRIGHTNESS = 5 # 1 eventually
 current_brightness = MAX_BRIGHTNESS
 cycles_without_button_press = 0
 
 # There are approx 9.5 cycles per second.
-num_cycles_before_dimming = 500
-num_cycles_before_random_changes = 100
-random_change_frequency = 100
+num_cycles_before_dimming = 300000
+num_cycles_before_random_changes = 300
+random_change_frequency = 200
 
 # Delay before button can be pressed again. (Cycles not seconds)
 # There are approx 9.5 cycles per second.
-pause_cycles = 30
+pause_cycles = 80
 
 # Pin set up.
 colourInputPin = 24

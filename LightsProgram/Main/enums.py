@@ -1,5 +1,6 @@
 # Enums and colour/pattern settings.
 import enum
+import numpy as np
 
 # Enum holding the different colour options.
 class WColour(enum.Enum):
@@ -14,15 +15,16 @@ class WColour(enum.Enum):
     MAX = 8
 
 # RBG
+dimmming_factor = 1
 colourDi = {}
-colourDi[WColour.Red] = (1.0, 0.0, 0.0)
-colourDi[WColour.Green] = (0.0, 0.0, 1.0)
-colourDi[WColour.Blue] = (0.0, 1.0, 0.0)
-colourDi[WColour.Cyan] = (0.0, 0.6, 0.8)
-colourDi[WColour.Yellow] = (1.0, 0.0, 0.4)
-colourDi[WColour.Pink] = (0.8, 0.6, 0.0)
-colourDi[WColour.White] = (0.7, 0.3, 0.4)
-colourDi[WColour.Orange] = (1.0, 0.0, 0.1)
+colourDi[WColour.Red] = np.array([1.0, 0.0, 0.0])*dimmming_factor
+colourDi[WColour.Green] = np.array([0.0, 0.0, 1.0])*dimmming_factor
+colourDi[WColour.Blue] = np.array([0.0, 1.0, 0.0])*dimmming_factor
+colourDi[WColour.Cyan] = np.array([0.0, 0.6, 0.8])*dimmming_factor
+colourDi[WColour.Yellow] = np.array([1.0, 0.0, 0.4])*dimmming_factor
+colourDi[WColour.Pink] = np.array([0.8, 0.6, 0.0])*dimmming_factor
+colourDi[WColour.White] = np.array([0.7, 0.3, 0.4])*dimmming_factor
+colourDi[WColour.Orange] = np.array([1.0, 0.0, 0.1])*dimmming_factor
 
 
 # Enum holding the different speed options.

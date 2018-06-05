@@ -6,6 +6,8 @@ import Main.config as config
 import numpy as np
 import Internals.Utils.wlogger as wlogger
 
+log_buffer = True
+
 
 RGB_MAP = { 'rgb': [3, 2, 1], 'rbg': [3, 1, 2], 'grb': [2, 3, 1],
             'gbr': [2, 1, 3], 'brg': [1, 3, 2], 'bgr': [1, 2, 3] }
@@ -75,7 +77,7 @@ class APA102:
     LED_START = 0b11100000 # Three "1" bits, followed by 5 brightness bits
 
     def __init__(self, num_led, global_brightness=MAX_BRIGHTNESS,
-                 order='rgb', mosi=10, sclk=11, max_speed_hz=4000000):
+                 order='rgb', mosi=10, sclk=11, max_speed_hz=8000000):
         """Initializes the library.
         
         """
@@ -87,6 +89,8 @@ class APA102:
             self.global_brightness = self.MAX_BRIGHTNESS
         else:
             self.global_brightness = global_brightness
+            
+        print(self.global_brightness)
 
         self.leds = np.tile([self.LED_START,0,0,0], (self.num_led + 10)) # Pixel buffer number of LEDs plus 10 buffer
         
@@ -103,7 +107,8 @@ class APA102:
         that it must update its own color now.
         """
         self.spi.write([0] * 4)  # Start frame, 32 zero bits
-        wlogger.log_info("Clock Start Frame" + str([0] * 4))
+        if log_buffer:
+            wlogger.log_info("Clock Start Frame" + str([0] * 4))
 
 
     def clock_end_frame(self):
@@ -136,12 +141,13 @@ class APA102:
         # Reset frame:
         reset_frame = [0] * 4
         self.spi.write(reset_frame)
-        wlogger.log_info("Reset Frame" + str(reset_frame)) 
+        if log_buffer:
+            wlogger.log_info("Reset Frame" + str(reset_frame)) 
         
         dummy_data = [0] *(self.num_led//4)
         self.spi.write(dummy_data)  # num_leds bits sent (n/2 minimum)
-        wlogger.log_info("Clock End Frame" + str(dummy_data)
-
+        if log_buffer:
+            wlogger.log_info("Clock End Frame" + str(dummy_data))
 
 
     def clear_strip(self):
@@ -174,6 +180,7 @@ class APA102:
         # as we expect some brightness unless set to 0
         brightness = ceil(bright_percent*self.global_brightness/100.0)
         brightness = int(brightness)
+        brightness = min(self.global_brightness, brightness)
         
 
         # LED startframe is three "1" bits, followed by 5 brightness bits
@@ -251,20 +258,22 @@ class APA102:
         packetnum = len(list(self.leds))
         transfersize = 4096
         transfernum = int(packetnum/transfersize)
-        print(len(self.leds))
 
         for x in range(0,transfernum):
             
             out_array = self.leds[x*transfersize:(x+1)*transfersize]
             outArrayAsList = out_array.tolist()
-            wlogger.log_info(outArrayAsList)
-            print(len(outArrayAsList))
-            print(outArrayAsList)
+            
+            if log_buffer:
+                wlogger.log_info(outArrayAsList)
+
             self.spi.write(outArrayAsList)
 
         out_array = self.leds[(transfernum*transfersize):packetnum]
         outArrayAsList = out_array.tolist()
-        wlogger.log_info(outArrayAsList)
+        
+        if log_buffer:
+            wlogger.log_info(outArrayAsList)
         self.spi.write(outArrayAsList)
         self.clock_end_frame()
 
