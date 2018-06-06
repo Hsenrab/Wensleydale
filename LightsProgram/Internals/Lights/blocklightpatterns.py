@@ -112,6 +112,10 @@ class BlockLightPattern(ColorCycleTemplate):
         # Return early if no blocks are given.
         if not blockList:
             return
+            
+        if blockList[0].get_pattern_index() == 0:
+            for block in blockList:
+                strip.clear_strip_no_refresh(block.get_start_index(), block.get_end_index())
 
         # Assume all blocks given in update blocks have the same local pattern/colour/speed.
         # Call the pattern function corresponding to the pattern enum stored on the first block.
@@ -136,6 +140,8 @@ class BlockLightPattern(ColorCycleTemplate):
             patterns.rainbow_slide(strip, num_steps_per_cycle, current_step, current_cycle, self.slide_speed, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.Twinkle:
             patterns.twinkle(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
+        elif blockList[0].get_pattern() == enums.WPattern.Frantic:
+            patterns.frantic(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.RandomInOut:
             patterns.random_in_out(strip, num_steps_per_cycle, current_step, current_cycle, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.ColourSnakesCombine:
@@ -143,7 +149,7 @@ class BlockLightPattern(ColorCycleTemplate):
         elif blockList[0].get_pattern() == enums.WPattern.BiColourSnakesCombine and hasattr(self, 'colour_b'):
             patterns.bi_colour_snakes_combine(strip, num_steps_per_cycle, current_step, current_cycle, self.colour_b, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.FixedMorse and hasattr(self, 'morse') and hasattr(self, 'colour_b'):
-            patterns.fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, blockList)
+            patterns.fixed_morse(strip, num_steps_per_cycle, current_step, current_cycle, self.morse, self.colour_b, blockList)
         elif blockList[0].get_pattern() == enums.WPattern.EndTest:
             patterns.end_test(strip, blockList)
         else:  #(to catch anything dodgy)
@@ -157,11 +163,12 @@ class ChangingBlockLightPattern(BlockLightPattern):
         super(ChangingBlockLightPattern, self).init(strip, num_led)
         
         # Set up pattern list, these are the patterns that will cycle when the buttons are pressed.
-        config.patternList = [  enums.WPattern.BlockedSlide,
+        config.patternList = [  enums.WPattern.Twinkle,
+                                enums.WPattern.RandomInOut,
+                                enums.WPattern.BlockedSlide,
                                 enums.WPattern.Snakes,
-                                enums.WPattern.Twinkle,
-                                enums.WPattern.Singles,
-                                enums.WPattern.RandomInOut]
+                                enums.WPattern.Singles
+                                ]
                                 
         # Set up colour list, these are the colours that will cycle when the buttons are pressed.
         config.colourList = [   enums.WColour.Orange,
@@ -179,7 +186,7 @@ class ChangingBlockLightPattern(BlockLightPattern):
                                 
                                 
         # Calibrate on dog. If the speed is set to cheetah
-        self.slide_speed = 10
+        self.slide_speed = 20
 
                         
         # Set up listening thread.
@@ -290,7 +297,7 @@ class FixedMorse(BlockLightPattern):
     
     def __init__(self, num_led, pause_value=0, num_steps_per_cycle=100,
                  num_cycles=-1, global_brightness=255, order='rbg',
-                 colour=enums.WColour.White, morse=[0,1,0,1,0], colour_b=enums.WColour.Red):
+                 colour=enums.WColour.Red, morse=[0,1,0,1,0], colour_b=enums.WColour.White):
                      
         super(FixedMorse, self).__init__(num_led,
                                          pause_value,
@@ -308,7 +315,7 @@ class FixedMorse(BlockLightPattern):
         
         super(FixedMorse, self).init(strip, num_led)
         
-        self.whiteBlocks = [self.A_01_02_EarRight, 
+        self.mainBlocks = [self.A_01_02_EarRight, 
                             self.B_04_03_EarLeft,
                             self.K_20_20_EarFrontLeft,
                             self.L_19_19_EarFrontRight,
@@ -317,30 +324,30 @@ class FixedMorse(BlockLightPattern):
                             self.I_17_16_LegUpperBack,
                             self.J_18_17_LegLowerBack]
 
-        #Set most of the dog to white.
+        #Set most of the dog to mainColour.
         self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.AllOn,
-                        self.whiteBlocks)
+                        self.mainBlocks)
                         
         ##Set the back lights to display the morse code.
-        self.set_blocks(self.colour_b,
+        self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
                         [self.E_14_05_BodyUpperRight])
                         
-        self.set_blocks(self.colour_b,
+        self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
                         [self.F_15_06_BodyLowerRight])
                         
                         
-        self.set_blocks(self.colour_b,
+        self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
                         [self.C_12_10_BodyUpperLeft])
                         
-        self.set_blocks(self.colour_b,
+        self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
                         [self.D_13_11_BodyLowerLeft]) 
@@ -354,7 +361,7 @@ class FixedMorse(BlockLightPattern):
            return 0
         else:
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                            self.whiteBlocks)
+                            self.mainBlocks)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
                                 [self.E_14_05_BodyUpperRight])
@@ -407,16 +414,16 @@ class GromitColours(BlockLightPattern):
                         enums.WPattern.AllOn,
                         self.greenBlocks)
                         
-        self.yellowBlocks = [   self.A_01_02_EarRight,
+        self.orangeBlocks = [   self.A_01_02_EarRight,
                                 self.B_04_03_EarLeft,
                                 self.K_20_20_EarFrontLeft,
                                 self.L_19_19_EarFrontRight]
                         
         # Set ears to yellow.
-        self.set_blocks(enums.WColour.Yellow,
+        self.set_blocks(enums.WColour.Orange,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.AllOn,
-                        self.yellowBlocks)
+                        self.orangeBlocks)
 
                         
 
@@ -431,7 +438,7 @@ class GromitColours(BlockLightPattern):
                                 self.greenBlocks)
                             
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                self.yellowBlocks)
+                                self.orangeBlocks)
 
             return 1
 

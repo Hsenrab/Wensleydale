@@ -200,6 +200,62 @@ class LegSlide(PartSlide):
                             self.slideBlocksB)
 
         return 1
+        
+        
+class GromitBlockSlide(PartSlide):
+
+    def init(self, strip, num_led):
+        
+        super(PartSlide, self).init(strip, num_led)
+        
+        self.blockSlideBlocks = [self.B_04_03_EarLeft,
+                                self.A_01_02_EarRight,
+                                self.K_20_20_EarFrontLeft,
+                                self.L_19_19_EarFrontRight,
+                                self.F_15_06_BodyLowerRight,
+                                self.D_13_11_BodyLowerLeft,
+                                self.E_14_05_BodyUpperRight,
+                                self.C_12_10_BodyUpperLeft]
+
+        #Set most of the dog to block slide.
+        self.set_blocks(self.colour,
+                        self.speed, # will be ignored
+                        enums.WPattern.BlockSlide,
+                        self.blockSlideBlocks)
+                        
+        # Set legs to slide together
+        self.set_blocks(self.colour,
+                        self.speed,
+                        enums.WPattern.Slide,
+                        [self.I_17_16_LegUpperBack, 
+                        self.J_18_17_LegLowerBack])
+                        
+        self.set_blocks(self.colour,
+                        self.speed,
+                        enums.WPattern.Slide,
+                        [self.G_08_07_LegUpperFront,
+                        self.H_09_08_LegLowerFront])
+                        
+                        
+    def update(self, strip, num_led, num_steps_per_cycle, current_step,
+               current_cycle):    
+                   
+        #Set most of the dog to off on first update.
+        if current_step == 0:
+            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
+                                self.blockSlideBlocks)
+
+                            
+        self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
+                            [self.I_17_16_LegUpperBack, 
+                            self.J_18_17_LegLowerBack])
+                            
+                            
+        self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
+                            [self.G_08_07_LegUpperFront,
+                            self.H_09_08_LegLowerFront])
+
+        return 1
 
 
 class GromitSlide(PartSlide):
@@ -353,13 +409,12 @@ class GromitSlide(PartSlide):
 
     def update(self, strip, num_led, num_steps_per_cycle, current_step, current_cycle):
         
-        
-        
-        if current_step < num_steps_per_cycle/4:
+
+        if current_step < num_steps_per_cycle/3:
             self.update_earslide(strip, num_led, num_steps_per_cycle, current_step,
                                     current_cycle)
                    
-        elif current_step < num_steps_per_cycle/2:
+        elif current_step < 2*num_steps_per_cycle/3:
             self.update_bodyslide_ears_on(strip, num_led, num_steps_per_cycle, current_step,
                                                     current_cycle)
                

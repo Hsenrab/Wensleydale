@@ -13,6 +13,7 @@ class WBlock:
         self._pattern = enums.WPattern.Singles
         self._invert_direction = invert_direction
         self._pattern_index = 0
+        self.colour_change = False
         
     def get_start_index(self):
         return self._start_index
@@ -21,7 +22,12 @@ class WBlock:
         return self._end_index
         
     def set_variables(self, colour, speed, pattern):
-        self._colour = colour
+        if self._colour is not colour:
+            self._colour = colour
+            self.colour_change = True
+        else:
+            self.colour_change = False
+            
         self._speed = speed
         
         # Update and reset if the pattern changes.
@@ -30,7 +36,12 @@ class WBlock:
             self._pattern_index = 0
         
     def set_colour(self, colour):
-        self._colour = colour
+        
+        if self._colour is not colour:
+            self._colour = colour
+            self.colour_change = True
+        else:
+            self.colour_change = False
         
     def get_colour(self):
         return self._colour
@@ -48,7 +59,7 @@ class WBlock:
             self._pattern_index = 0
             
     def get_pattern(self):
-        # Update and reset if the pattern changes.
+        # Return pattern.
         return self._pattern
         
     def set_pattern_index(self, pattern_index):

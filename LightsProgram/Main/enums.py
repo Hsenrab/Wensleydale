@@ -36,8 +36,8 @@ class WSpeed(enum.Enum):
 
 # Number of steps per
 speedDi = {}
-speedDi[WSpeed.Sloth] = 1
-speedDi[WSpeed.Hare] = 1
+speedDi[WSpeed.Sloth] = 5
+speedDi[WSpeed.Hare] = 2
 speedDi[WSpeed.Cheetah] = 1
 
 
@@ -59,7 +59,8 @@ class WPattern(enum.Enum):
     ColourSnakesCombine = 13
     BiColourSnakesCombine = 14
     EndTest = 15
-    MAX = 16
+    Frantic = 16
+    MAX = 17
 
 
 # Enum holding the direction options.

@@ -29,6 +29,7 @@ while keep_running:
         
     except KeyboardInterrupt:  # Ctrl-C can halt the light program
         keep_running = False
+        wlogger.tear_down_loggers()
         GPIO.cleanup()
         raise KeyboardInterrupt
 

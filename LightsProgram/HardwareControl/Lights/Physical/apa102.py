@@ -6,7 +6,7 @@ import Main.config as config
 import numpy as np
 import Internals.Utils.wlogger as wlogger
 
-log_buffer = True
+log_buffer = False
 
 
 RGB_MAP = { 'rgb': [3, 2, 1], 'rbg': [3, 1, 2], 'grb': [2, 3, 1],
@@ -77,7 +77,7 @@ class APA102:
     LED_START = 0b11100000 # Three "1" bits, followed by 5 brightness bits
 
     def __init__(self, num_led, global_brightness=MAX_BRIGHTNESS,
-                 order='rgb', mosi=10, sclk=11, max_speed_hz=8000000):
+                 order='rgb', mosi=10, sclk=11, max_speed_hz=2000000):
         """Initializes the library.
         
         """
@@ -106,9 +106,8 @@ class APA102:
         This method clocks out a start frame, telling the receiving LED
         that it must update its own color now.
         """
-        self.spi.write([0] * 4)  # Start frame, 32 zero bits
-        if log_buffer:
-            wlogger.log_info("Clock Start Frame" + str([0] * 4))
+        
+        return [0] * 4
 
 
     def clock_end_frame(self):
@@ -139,15 +138,10 @@ class APA102:
         been sent as part of "clockEndFrame".
         """
         # Reset frame:
-        reset_frame = [0] * 4
-        self.spi.write(reset_frame)
-        if log_buffer:
-            wlogger.log_info("Reset Frame" + str(reset_frame)) 
-        
-        dummy_data = [0] *(self.num_led//4)
-        self.spi.write(dummy_data)  # num_leds bits sent (n/2 minimum)
-        if log_buffer:
-            wlogger.log_info("Clock End Frame" + str(dummy_data))
+
+        reset_frame = [0] *((self.num_led//4) + 4) 
+        return reset_frame
+
 
 
     def clear_strip(self):
@@ -157,10 +151,12 @@ class APA102:
         
     def clear_strip_no_refresh(self, start_index, end_index):
         """ Turns off the strip and shows the result right away."""
+        if end_index - start_index == 0:
+            return
+            
         buffer_start_index = int(4 * start_index)
-        buffer_end_index = int(4 * start_index)
+        buffer_end_index = int(4 * end_index)
         self.leds[buffer_start_index:buffer_end_index] = np.tile([self.LED_START,0,0,0], end_index - start_index)
-        print("Clear Strip")
 
 
     def set_pixel(self, led_num, red, green, blue, bright_percent=100):
@@ -228,6 +224,7 @@ class APA102:
             return  False # again, invisible
             
         current_colour = self.get_pixel(led_num)
+        #print(current_colour)
         
         if current_colour[0] != 0 or current_colour[1] != 0 or current_colour[2] != 0:
             return True
@@ -253,15 +250,18 @@ class APA102:
         Done by mikey- needs testing
         """
                   
-        self.clock_start_frame()
+        start_frame = self.clock_start_frame()
+        end_frame = self.clock_end_frame()
+        
+        led_buffer = np.concatenate((start_frame, self.leds, end_frame))
 
-        packetnum = len(list(self.leds))
+        packetnum = len(list(led_buffer))
         transfersize = 4096
         transfernum = int(packetnum/transfersize)
 
         for x in range(0,transfernum):
             
-            out_array = self.leds[x*transfersize:(x+1)*transfersize]
+            out_array = led_buffer[x*transfersize:(x+1)*transfersize]
             outArrayAsList = out_array.tolist()
             
             if log_buffer:
@@ -269,13 +269,13 @@ class APA102:
 
             self.spi.write(outArrayAsList)
 
-        out_array = self.leds[(transfernum*transfersize):packetnum]
+        out_array = led_buffer[(transfernum*transfersize):packetnum]
         outArrayAsList = out_array.tolist()
         
         if log_buffer:
             wlogger.log_info(outArrayAsList)
         self.spi.write(outArrayAsList)
-        self.clock_end_frame()
+        
 
     def cleanup(self):
         """Release the SPI device; Call this method at the end"""

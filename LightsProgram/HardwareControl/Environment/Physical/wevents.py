@@ -227,7 +227,6 @@ def buttonThread():
             
             with lock:
                 config.wlight_pattern = next(pattern_cycle)
-                config.pattern_position_index = 0
                 if print_debug:
                     print("Button press - Pattern", flush=True)
                     print(config.wlight_pattern)

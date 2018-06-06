@@ -15,7 +15,7 @@ wlogger.setup_loggers(config.log_directory)
 wlogger.log_info("Run Block Light Pattern")
 
 
-NUM_LED = 10
+NUM_LED = 12*144
 print("Num LEDS")
 print(NUM_LED)
 
@@ -49,10 +49,10 @@ while keep_running:
                                                     #colour=enums.WColour.Blue, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.Rainbow)
         #MY_CYCLE.start()
         
-        print('Run AllOn Pattern')
-        MY_CYCLE = blocklightpatterns.GlobalPattern(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1,
-                                                    colour=enums.WColour.Yellow, pattern=enums.WPattern.AllOn)
-        MY_CYCLE.start()
+        #print('Run AllOn Pattern')
+        #MY_CYCLE = blocklightpatterns.GlobalPattern(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1,
+                                                    #colour=enums.WColour.Yellow, pattern=enums.WPattern.AllOn)
+        #MY_CYCLE.start()
         
         #print('Run BlockedSlide Pattern')
         #MY_CYCLE = blocklightpatterns.Slide(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=100, num_cycles=1,
@@ -73,6 +73,12 @@ while keep_running:
         #MY_CYCLE = blocklightpatterns.GlobalPattern(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=200, num_cycles=1,
                                                     #colour=enums.WColour.Pink, speed=enums.WSpeed.Sloth, pattern=enums.WPattern.RandomInOut)
         #MY_CYCLE.start()
+        
+        print('Run Frantic Pattern')
+        MY_CYCLE = blocklightpatterns.GlobalPattern(num_led=NUM_LED, pause_value=0.00, num_steps_per_cycle=600, num_cycles=1,
+                                                    colour=enums.WColour.Pink, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.Frantic)
+        MY_CYCLE.start()
+
 
         
     except KeyboardInterrupt:  # Ctrl-C can halt the light program
