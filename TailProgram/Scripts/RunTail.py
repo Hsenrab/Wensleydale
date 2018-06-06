@@ -18,7 +18,7 @@ while keep_running:
         aTail = wtail.Tail()
         aTail.control_tail()
         
-    except KeyboardInterrupt:  # Ctrl-C can halt the light program
+    except Exception:  # Ctrl-C can halt the light program
         keep_running = False
         print("Cleanup")
         reset = PCA9685(0x41)
