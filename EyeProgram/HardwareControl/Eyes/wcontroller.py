@@ -157,13 +157,13 @@ class Controller:
         wlogger.log_info("Performing Step Towards Centre")
 
         if abs(eye.eye_vert_angle) > abs(eye.eye_horiz_angle):
-            print("Vertical Step")
+            #print("Vertical Step")
             if eye.eye_vert_angle > 0:
                 eye.step_vert_angle(-stepSize)
             else:
                 eye.step_vert_angle(stepSize)
         else:
-            print("Horizontal Step")
+            #print("Horizontal Step")
             if eye.eye_horiz_angle > 0:
                 eye.step_horiz_angle(-stepSize)
             else:
@@ -210,11 +210,11 @@ class Controller:
         else:
             return
             
-        print("Start Straight")
-        print(LEhoriz)
-        print(LEvert)
-        print(REhoriz)
-        print(REvert)
+        #print("Start Straight")
+        #print(LEhoriz)
+        #print(LEvert)
+        #print(REhoriz)
+        #print(REvert)
 
         
         #calculate distance from given point of Left Eye
@@ -249,11 +249,11 @@ class Controller:
                 self.LeftEye.move_to(leftHorizAngle, leftVertAngle)
                 self.RightEye.move_to(rightHorizAngle, rightVertAngle)
             
-                print("Step :" + str(i))
-                print(leftHorizAngle)
-                print(leftVertAngle)
-                print(rightHorizAngle)
-                print(rightVertAngle)
+                #print("Step :" + str(i))
+                #print(leftHorizAngle)
+                #print(leftVertAngle)
+                #print(rightHorizAngle)
+                #print(rightVertAngle)
             
             # Final adjustment to correct position
             self.LeftEye.move_to(LEhoriz, LEvert)
@@ -299,12 +299,12 @@ class Controller:
         self.LeftEye.move_to(0, 0)
         self.RightEye.move_to(0, 0)
         
-        print("Centred")
-        print("left Vert Angle: " + str(self.LeftEye.eye_vert_angle))
-        print("left Horiz Angle: " + str(self.LeftEye.eye_horiz_angle))
+        #print("Centred")
+        #print("left Vert Angle: " + str(self.LeftEye.eye_vert_angle))
+        #print("left Horiz Angle: " + str(self.LeftEye.eye_horiz_angle))
         
-        print("right Vert Angle: " + str(self.RightEye.eye_vert_angle))
-        print("right Horiz Angle: " + str(self.RightEye.eye_horiz_angle))
+        #print("right Vert Angle: " + str(self.RightEye.eye_vert_angle))
+        #print("right Horiz Angle: " + str(self.RightEye.eye_horiz_angle))
         
         
     def zero_pwm(self):
@@ -364,8 +364,8 @@ class Controller:
                 horiz_angle = self.LeftEye.eye_movement_max_radius * math.cos(start_angle)
                 vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(start_angle)
                 
-                print(vert_angle)
-                print(horiz_angle)
+                #print(vert_angle)
+                #print(horiz_angle)
                 
                 
                 self.move_to(horiz_angle, vert_angle)
@@ -379,8 +379,8 @@ class Controller:
             vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(angle_rad)
             angle_rad += rad_interval
             
-            print(horiz_angle)
-            print(vert_angle)
+            #print(horiz_angle)
+            #print(vert_angle)
             
             self.move_to(horiz_angle, vert_angle)
             time.sleep(0.01)
@@ -390,8 +390,8 @@ class Controller:
         vert_angle = self.LeftEye.eye_movement_max_radius * math.sin(end_angle_rad)
         angle_rad += rad_interval
         
-        print(horiz_angle)
-        print(vert_angle)
+        #print(horiz_angle)
+        #print(vert_angle)
         
         self.move_to(horiz_angle, vert_angle)
         time.sleep(0.01)

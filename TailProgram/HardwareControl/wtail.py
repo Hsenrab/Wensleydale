@@ -8,16 +8,15 @@ from Adafruit_PCA9685 import PCA9685
 print_debug = True
 
 
-touchInputPin = 0
-touchOutputPin = 0
+
 
 class Tail:
     def set_up_pins(self):
         
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(touchInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.setup(touchOutputPin, GPIO.OUT)
+        GPIO.setup(config.touchInputPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(config.touchOutputPin, GPIO.OUT)
     
         self.touchInputPin = 0
         self.touchOutputPin = 0
@@ -25,8 +24,8 @@ class Tail:
         self.backwards_ch = 1
         
         # PWM Setup Variables
-        self.motor = PCA9685(0x40) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
-        self.pwm_freq = 50
+        self.motor = PCA9685(0x41) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
+        self.pwm_freq = 5000
         self.motor.set_pwm_freq(self.pwm_freq)
     
         self.pwm_bitres = 4096
@@ -36,15 +35,15 @@ class Tail:
     def set_tail_on(self):
         if print_debug:
             print("Tail On")
-        GPIO.output(touchOutputPin, GPIO.HIGH)
-        self.motor.set_pwm(self.forward_ch, 0, 200) # needs calibrating - changes speed of tail.
+        GPIO.output(config.touchOutputPin, GPIO.HIGH)
+        self.motor.set_pwm(self.forward_ch, 0, 2250) # needs calibrating - changes speed of tail.
         self.motor.set_pwm(self.backwards_ch, 0, 0)
     
     def set_tail_off(self):
         
         if print_debug:
             print("Tail Off")
-        GPIO.output(touchOutputPin, GPIO.LOW)
+        GPIO.output(config.touchOutputPin, GPIO.LOW)
         self.motor.set_pwm(self.forward_ch, 0, 0)
         self.motor.set_pwm(self.backwards_ch, 0, 0)
         
@@ -63,17 +62,19 @@ class Tail:
         self.set_up_pins()
 
         # Set tail off to start.
-        self.set_tail_on() #TODO
-        is_tail_on = True
+        self.set_tail_off()
+        is_tail_on = False
         
         continue_control = True
+        button_already_pressed = False
         
         while continue_control:    
             # Gather button input
-            inputButton = False #GPIO.input(touchInputPin)
+            inputButton = GPIO.input(config.touchInputPin)
     
             # Change BigLED if button is pressed.
-            if inputButton:
+            if inputButton and not button_already_pressed:
+                button_already_pressed = True
                 config.button_press_count += 1
                 
                 if is_tail_on: 
@@ -93,8 +94,10 @@ class Tail:
                     is_tail_on = True
                 
                 self.record_button_press()
+            elif not inputButton:
+                button_already_pressed = False
                 
-                
+            print(is_tail_on)
             if is_tail_on: 
                 self.set_tail_on()
             else:

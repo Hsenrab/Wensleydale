@@ -115,7 +115,7 @@ class Eye:
         if current_radius <= self.eye_movement_max_radius + tol:
             return horiz_angle, vert_angle
         
-        print("Warning eye bound hit")
+        #print("Warning eye bound hit")
         wlogger.log_warning("Eye bound hit")
         norm_horiz_angle = horiz_angle / current_radius
         norm_vert_angle = vert_angle / current_radius
@@ -312,20 +312,20 @@ class Eye:
         self.eye.set_pwm(self.vert_ch, 0, int( self.pwm_period_zero))
         
         for i in range(0, 10):
-            print(i)
+            #print(i)
             self.step_vert_angle(step)
-            print(self.eye_vert_angle)
+            #print(self.eye_vert_angle)
             time.sleep(0.3)
             self.step_vert_angle(-step)
-            print(self.eye_vert_angle)
+            #print(self.eye_vert_angle)
             time.sleep(0.3)
             self.step_vert_angle(-step)
-            print(self.eye_vert_angle)
+            #print(self.eye_vert_angle)
             time.sleep(0.3)
             self.step_vert_angle(step)
-            print(self.eye_vert_angle)
+            #print(self.eye_vert_angle)
             time.sleep(0.3)
-            print(self.eye_vert_angle)
+            #print(self.eye_vert_angle)
         
         self.eye.set_pwm(self.horiz_ch, 0, int( self.pwm_period_zero))
         self.eye.set_pwm(self.vert_ch, 0, int( self.pwm_period_zero))
@@ -336,7 +336,7 @@ class Eye:
         self.eye.set_pwm(self.vert_ch, 0, int( self.pwm_period_zero))
         
         for i in range(0, 10):
-            print(i)
+            #print(i)
             self.step_horiz_angle(step)
             time.sleep(0.3)
             self.step_horiz_angle(-step)
@@ -361,44 +361,44 @@ class Eye:
         
     def vert_test_increasing_steps(self):
         minimum_step = 2
-        print(minimum_step)
+        #print(minimum_step)
         
         self.eye.set_pwm(self.horiz_ch, 0, int( self.pwm_period_zero))
         self.eye.set_pwm(self.vert_ch, 0, int( self.pwm_period_zero))
         
         
         for j in range(0, 5):
-            print("Step:")
+            #print("Step:")
             step = minimum_step*j
-            print(step)
+            #print(step)
             
             for i in range(0, 2):
                 self.step_vert_angle(step)
-                print("Angles")
-                print(self.eye_vert_angle)
+                #print("Angles")
+                #print(self.eye_vert_angle)
                 time.sleep(0.3)
                 self.step_vert_angle(-step)
-                print(self.eye_vert_angle)
+                #print(self.eye_vert_angle)
                 time.sleep(0.3)
                 self.step_vert_angle(-step)
-                print(self.eye_vert_angle)
+                #print(self.eye_vert_angle)
                 time.sleep(0.3)
                 self.step_vert_angle(step)
-                print(self.eye_vert_angle)
+                #print(self.eye_vert_angle)
                 time.sleep(0.3)
-                print(self.eye_vert_angle)
+                #print(self.eye_vert_angle)
                 
                 self.step_horiz_angle(step)
-                print(self.eye_horiz_angle)
+                #print(self.eye_horiz_angle)
                 time.sleep(0.3)
                 self.step_horiz_angle(-step)
-                print(self.eye_horiz_angle)
+                #print(self.eye_horiz_angle)
                 time.sleep(0.3)
                 self.step_horiz_angle(-step)
-                print(self.eye_horiz_angle)
+                #print(self.eye_horiz_angle)
                 time.sleep(0.3)
                 self.step_horiz_angle(step)
-                print(self.eye_horiz_angle)
+                #print(self.eye_horiz_angle)
                 time.sleep(0.3)
                 
             
