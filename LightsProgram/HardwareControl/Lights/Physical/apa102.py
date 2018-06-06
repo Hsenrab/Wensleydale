@@ -3,6 +3,11 @@ import Adafruit_GPIO as GPIO
 import Adafruit_GPIO.SPI as SPI
 from math import ceil
 import Main.config as config
+import numpy as np
+import Internals.Utils.wlogger as wlogger
+
+log_buffer = True
+
 
 RGB_MAP = { 'rgb': [3, 2, 1], 'rbg': [3, 1, 2], 'grb': [2, 3, 1],
             'gbr': [2, 1, 3], 'brg': [1, 3, 2], 'bgr': [1, 2, 3] }
@@ -84,9 +89,10 @@ class APA102:
             self.global_brightness = self.MAX_BRIGHTNESS
         else:
             self.global_brightness = global_brightness
+            
+        print(self.global_brightness)
 
-                        # Temp set to all on as default.
-        self.leds = [self.LED_START,255,255,255] * (self.num_led + self.num_led//32) # Pixel buffer
+        self.leds = np.tile([self.LED_START,0,0,0], (self.num_led + 10)) # Pixel buffer number of LEDs plus 10 buffer
         
         # MOSI 10 and SCLK 11 is hardware SPI, which needs to be set-up differently
         if mosi == 10 and sclk == 11:
@@ -101,6 +107,8 @@ class APA102:
         that it must update its own color now.
         """
         self.spi.write([0] * 4)  # Start frame, 32 zero bits
+        if log_buffer:
+            wlogger.log_info("Clock Start Frame" + str([0] * 4))
 
 
     def clock_end_frame(self):
@@ -130,18 +138,29 @@ class APA102:
         of the driver could omit the "clockStartFrame" method if enough zeroes have
         been sent as part of "clockEndFrame".
         """
-        # Round up num_led/2 bits (or num_led/16 bytes)
-        for _ in range((self.num_led + 15) // 16):
-            x=0
-            #self.spi.write([0x00])
+        # Reset frame:
+        reset_frame = [0] * 4
+        self.spi.write(reset_frame)
+        if log_buffer:
+            wlogger.log_info("Reset Frame" + str(reset_frame)) 
+        
+        dummy_data = [0] *(self.num_led//4)
+        self.spi.write(dummy_data)  # num_leds bits sent (n/2 minimum)
+        if log_buffer:
+            wlogger.log_info("Clock End Frame" + str(dummy_data))
 
 
     def clear_strip(self):
         """ Turns off the strip and shows the result right away."""
-
-        for led in range(self.num_led):
-            self.set_pixel(led, 0, 0, 0)
+        self.leds = np.tile([self.LED_START,0,0,0], (self.num_led + 10))
         self.show()
+        
+    def clear_strip_no_refresh(self, start_index, end_index):
+        """ Turns off the strip and shows the result right away."""
+        buffer_start_index = int(4 * start_index)
+        buffer_end_index = int(4 * start_index)
+        self.leds[buffer_start_index:buffer_end_index] = np.tile([self.LED_START,0,0,0], end_index - start_index)
+        print("Clear Strip")
 
 
     def set_pixel(self, led_num, red, green, blue, bright_percent=100):
@@ -161,8 +180,11 @@ class APA102:
         # as we expect some brightness unless set to 0
         brightness = ceil(bright_percent*self.global_brightness/100.0)
         brightness = int(brightness)
+        brightness = min(self.global_brightness, brightness)
+        
 
         # LED startframe is three "1" bits, followed by 5 brightness bits
+        # LED_START = 0b11100000 
         ledstart = (brightness & 0b00011111) | self.LED_START
         
         
@@ -237,11 +259,22 @@ class APA102:
         transfersize = 4096
         transfernum = int(packetnum/transfersize)
 
-
         for x in range(0,transfernum):
-            self.spi.write(list(self.leds)[x*transfersize:(x+1)*transfersize])
+            
+            out_array = self.leds[x*transfersize:(x+1)*transfersize]
+            outArrayAsList = out_array.tolist()
+            
+            if log_buffer:
+                wlogger.log_info(outArrayAsList)
 
-        self.spi.write(list(self.leds)[(transfernum*transfersize):packetnum])
+            self.spi.write(outArrayAsList)
+
+        out_array = self.leds[(transfernum*transfersize):packetnum]
+        outArrayAsList = out_array.tolist()
+        
+        if log_buffer:
+            wlogger.log_info(outArrayAsList)
+        self.spi.write(outArrayAsList)
         self.clock_end_frame()
 
     def cleanup(self):

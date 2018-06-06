@@ -2,6 +2,8 @@ import os
 import logging
 import logging.handlers
 import enum
+import numpy as np
+np.set_printoptions(threshold=np.nan)
 
 import Internals.Utils.wtime as wtime
 

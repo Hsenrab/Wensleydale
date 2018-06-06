@@ -1,6 +1,7 @@
 """The module contains templates for colour cycles"""
 import time
 import HardwareControl.Lights.Physical.apa102 as apa102
+import Main.config as config
 
 
 class ColorCycleTemplate:
@@ -19,7 +20,7 @@ class ColorCycleTemplate:
         self.pause_value = pause_value  # How long to pause between two runs
         self.num_steps_per_cycle = num_steps_per_cycle  # Steps in one cycle.
         self.num_cycles = num_cycles  # How many times will the program run
-        self.global_brightness = global_brightness  # Brightness of the strip
+        self.global_brightness = config.global_brightness  # Brightness of the strip
         self.order = order  # Strip colour ordering
         
         
@@ -86,17 +87,29 @@ class ColorCycleTemplate:
             self.init(strip, self.num_led)  # Call the subclasses init method
             strip.show()
             current_cycle = 0
+            
+            start_time = time.time()
 
             while True:  # Loop forever
                 for current_step in range(self.num_steps_per_cycle):
+                    #print("Time:" + str(time.time() - start_time))
+                    start_time = time.time()
                     need_repaint = self.update(strip, self.num_led,
                                                self.num_steps_per_cycle,
                                                current_step, current_cycle)
                     if need_repaint:
+                        show_time = time.time()
                         strip.show()  # repaint if required
-                    time.sleep(self.pause_value)  # Pause until the next step
-
+                        #print("ShowTime!:" + str(time.time() - show_time))
+                        
+                    time.sleep(self.pause_value)
+                    
+                    #print("Sleep" + str(self.pause_value)) # Pause until the next step
+                    #print(current_step)
+                    
+                    
                 current_cycle += 1
+                
                 if self.num_cycles != -1:
                     if current_cycle >= self.num_cycles:
                         break

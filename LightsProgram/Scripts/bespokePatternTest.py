@@ -26,13 +26,13 @@ while keep_running:
     try:
         # Cycle of bespoke light pattern
         
-        print('Run Fixed Morse Renishaw Pattern')
-        MY_CYCLE = blocklightpatterns.FixedMorse(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1, morse=morse.renishaw)
-        MY_CYCLE.start()
+        #print('Run Fixed Morse Renishaw Pattern')
+        #MY_CYCLE = blocklightpatterns.FixedMorse(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=200, num_cycles=1, morse=morse.renishaw)
+        #MY_CYCLE.start()
         
-        print('Run Gromit Colours Pattern')
-        MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1)
-        MY_CYCLE.start()
+        #print('Run Gromit Colours Pattern')
+        #MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1)
+        #MY_CYCLE.start()
 
         print('Run ColourSnakesCombine Pattern')
         MY_CYCLE = blocklightpatterns.GlobalPattern(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=200, num_cycles=1,
