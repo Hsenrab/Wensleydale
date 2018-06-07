@@ -336,10 +336,14 @@ class FixedMorse(BlockLightPattern):
                         enums.WPattern.FixedMorse,
                         [self.E_14_05_BodyUpperRight])
                         
+        self.E_14_05_BodyUpperRight.dont_invert_direction()
+                        
         self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
                         [self.F_15_06_BodyLowerRight])
+                        
+        self.F_15_06_BodyLowerRight.dont_invert_direction()
                         
                         
         self.set_blocks(self.colour,
@@ -363,18 +367,56 @@ class FixedMorse(BlockLightPattern):
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
                             self.mainBlocks)
                             
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.E_14_05_BodyUpperRight])
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.F_15_06_BodyLowerRight])
-                            
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.C_12_10_BodyUpperLeft])
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.D_13_11_BodyLowerLeft]) 
+            upperLeftMorse = self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    upperLeftMorse,
+                                    self.colour_b,
+                                    [self.C_12_10_BodyUpperLeft])
+                                    
+                                    
+            lowerLeftMorse = [0,0,0,0] + self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    lowerLeftMorse,
+                                    self.colour_b,
+                                    [self.D_13_11_BodyLowerLeft])
+                                    
+                                    
+            upperRightMorse = [0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0] + self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    upperRightMorse,
+                                    self.colour_b,
+                                     [self.E_14_05_BodyUpperRight])
+                                     
+            lowerRightMorse = [0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0] + self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    lowerRightMorse,
+                                    self.colour_b,
+                                    [self.F_15_06_BodyLowerRight])
+                                    
+                                    
+            
+
 
 
             return 1
