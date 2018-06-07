@@ -23,7 +23,7 @@ while keep_running:
     try:
         #Cycle of light pattern
         print('Run Block Light Patterns')
-        MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=1700, num_cycles=1) 
+        MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=3000, num_cycles=1) 
         MY_CYCLE.start()
         
         print('Run Gromit Colours')
@@ -47,7 +47,7 @@ while keep_running:
         
 
         print('Run Gromit Colours')
-        MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=5, num_steps_per_cycle=1, num_cycles=1) 
+        MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=3, num_steps_per_cycle=1, num_cycles=1) 
         MY_CYCLE.start()
 
     
