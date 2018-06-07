@@ -240,7 +240,7 @@ class APA102:
         which means rotating in the opposite direction.
         """
         cutoff = 4 * (positions % self.num_led)
-        self.leds = self.leds[cutoff:] + self.leds[:cutoff]
+        self.leds = np.concatenate((self.leds[cutoff:], self.leds[:cutoff]))
 
 
     def show(self):
