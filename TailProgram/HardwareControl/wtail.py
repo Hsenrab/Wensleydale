@@ -43,8 +43,20 @@ class Tail:
             print("Tail On")
         GPIO.output(config.touchOutputPin, GPIO.HIGH)
         self.lock.acquire()
-        self.motor.set_pwm(self.forward_ch, 0, 2250) # Calibrated
-        self.motor.set_pwm(self.backwards_ch, 0, 0)
+        successful_move = False
+        while not successful_move:
+            try:
+                self.motor.set_pwm(self.forward_ch, 0, 2250) # Calibrated
+                self.motor.set_pwm(self.backwards_ch, 0, 0)
+                successful_move = True
+            except IOError as e:
+                if print_debug:
+                    print("ExceptionCaught")
+                wlogger.log_info("Exceptioin Caught")
+                wlogger.log_info(e)
+                successful_move = False
+                pass
+        
         self.lock.release()
         wlogger.log_info("Set Tail On")
     

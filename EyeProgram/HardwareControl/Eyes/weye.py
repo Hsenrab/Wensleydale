@@ -8,6 +8,7 @@ from Adafruit_PCA9685 import PCA9685
 
 import Internals.Utils.wgloballock as wgloballock
 
+print_debug = True
 
 class Eye:
 
@@ -95,8 +96,19 @@ class Eye:
 
         # Apply this new duty cycle to the servomotor
         
-        self.eye.set_pwm(self.vert_ch, 0, int(servo_pwm_period_vert))
-        self.eye.set_pwm(self.horiz_ch, 0, int(servo_pwm_period_horiz))
+        successful_move = False
+        while not successful_move:
+            try:
+                self.eye.set_pwm(self.vert_ch, 0, int(servo_pwm_period_vert))
+                self.eye.set_pwm(self.horiz_ch, 0, int(servo_pwm_period_horiz))
+                successful_move = True
+            except IOError as e:
+                if print_debug:
+                    print("ExceptionCaught")
+                wlogger.log_info("Exceptioin Caught")
+                wlogger.log_info(e)
+                successful_move = False
+                pass
         
         #Update the positions
         self.eye_horiz_angle = horiz_angle
