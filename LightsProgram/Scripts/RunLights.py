@@ -40,10 +40,11 @@ while keep_running:
 
     
         
-    except KeyboardInterrupt:  # Ctrl-C can halt the light program
+    except Exception as e:  # Ctrl-C can halt the light program
+        wlogger.log_info(e)  
         keep_running = False
         GPIO.cleanup()
-        raise KeyboardInterrupt
+        raise
 
 GPIO.cleanup()
 print('Finished the test')

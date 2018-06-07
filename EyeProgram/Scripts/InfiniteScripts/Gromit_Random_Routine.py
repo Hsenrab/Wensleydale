@@ -35,6 +35,6 @@ except Exception as e:
     # Just print(e) is cleaner and more likely what you want,
     # but if you insist on printing message specifically whenever possible...
     print(e)
-    wlogger.log_error(e)
+    wlogger.log_info(e)
 
     raise

@@ -17,10 +17,10 @@ while keep_running:
         print('Run Big Light LEDs')
         wlights.control_big_leds()
         
-    except KeyboardInterrupt:  # Ctrl-C can halt the light program
+    except Exception as e:  # Ctrl-C can halt the light program
+        wlogger.log_info(e)
         keep_running = False
         GPIO.cleanup()
-        reset = PCA9685(0x40)
-        raise KeyboardInterrupt
+        raise
         
         

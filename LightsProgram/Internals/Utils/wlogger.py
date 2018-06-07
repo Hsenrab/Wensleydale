@@ -126,6 +126,8 @@ def setup_loggers(directory_path, debug_on=False, test_mode_on=False, name='Log'
         logger.info('Logger Initialised with Debugging')
     else:
         logger.info('Logger Initialised')
+        
+    logger.info(os.getpid())
 
 
 def tear_down_loggers(name='Log'):

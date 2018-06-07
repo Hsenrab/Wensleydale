@@ -126,6 +126,8 @@ def setup_loggers(directory_path, debug_on=False, test_mode_on=False, name='Log'
         logger.info('Logger Initialised with Debugging')
     else:
         logger.info('Logger Initialised')
+        
+    logger.info(os.getpid())
 
 
 def tear_down_loggers(name='Log'):
@@ -143,7 +145,7 @@ def tear_down_loggers(name='Log'):
         uFile.close()
 
 def check_folder_size(DIR):
-    
+        
     dirList = [name for name in os.listdir(DIR) if os.path.isfile(os.path.join(DIR, name))]
     dirSize = len(dirList)
     dirList.sort()
@@ -151,7 +153,7 @@ def check_folder_size(DIR):
     print (dirSize)
     
     while dirSize >= 48 :
-        
+                
         current_file = os.path.join(DIR, dirList[0])        
         
         deleted_successfully = False
