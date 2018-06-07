@@ -8,6 +8,8 @@ import Main.config as config
 import HardwareControl.Eyes.weye as weye
 from operator import add
 
+import Internals.Utils.wgloballock as wgloballock
+
 
 class Controller:
     """ This class contains the various subcontrollers and routines to combine them"""
@@ -16,6 +18,9 @@ class Controller:
         """
         Create Controller
         """
+        
+        # Set up file lock.
+        self.lock = wgloballock.WFileLock("my_lock.txt", dir="/home/pi/temp")
 
         wlogger.log_info("Initialising Controller")
         self.LeftEye  = weye.Eye(1, ( 1, 0, 0), 4, 5)
@@ -69,12 +74,16 @@ class Controller:
             pygame.display.flip()
             
     def move_to(self, horiz_angle, vert_angle):
+            self.lock.acquire()
             self.LeftEye.move_to(horiz_angle, vert_angle)
             self.RightEye.move_to(horiz_angle, vert_angle)
+            self.lock.release()
             
     def unsafe_move_to(self, horiz_angle, vert_angle):
+        self.lock.acquire()
         self.LeftEye.unsafe_move_to_mapped_position(horiz_angle, vert_angle)
         self.RightEye.unsafe_move_to_mapped_position(horiz_angle, vert_angle)
+        self.lock.release()
 
 
     def extreme_left(self, stepSize):
@@ -238,14 +247,18 @@ class Controller:
             LEHorizStep = leftHorizChange/num_steps
             REVertStep = rightVertChange/num_steps
             REHorizStep = rightHorizChange/num_steps
-        
+            
+            self.lock.acquire()
         
             for i in range(num_steps):
+                
+                
                 leftHorizAngle = self.LeftEye.eye_horiz_angle + LEHorizStep
                 leftVertAngle = self.LeftEye.eye_vert_angle + LEVertStep
                 rightHorizAngle = self.RightEye.eye_horiz_angle + REHorizStep
                 rightVertAngle = self.RightEye.eye_vert_angle + REVertStep
             
+                
                 self.LeftEye.move_to(leftHorizAngle, leftVertAngle)
                 self.RightEye.move_to(rightHorizAngle, rightVertAngle)
             
@@ -256,8 +269,11 @@ class Controller:
                 #print(rightVertAngle)
             
             # Final adjustment to correct position
+            
+
             self.LeftEye.move_to(LEhoriz, LEvert)
             self.RightEye.move_to(REhoriz, REvert)
+            self.lock.release()
             
             
 

@@ -6,6 +6,8 @@ import Internals.Utils.wlogger as wlogger
 
 from Adafruit_PCA9685 import PCA9685 
 
+import Internals.Utils.wgloballock as wgloballock
+
 
 class Eye:
 
@@ -15,16 +17,25 @@ class Eye:
         The 'radius' and 'centre' arguments are for the simulation model, which is currently not included in this codebase. 
         """
 
+        # Set up file lock.
+        self.lock = wgloballock.WFileLock("my_lock.txt", dir="/home/pi/temp")
+        
         # PWM Setup Variables
+        
+        self.lock.acquire()
         self.eye                = PCA9685(0x40) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
         self.vert_ch            = vertical_channel
         self.horiz_ch           = horizontal_channel
         self.pwm_freq = 50.0 # Fixed by servos used.
         
         self.eye.set_pwm_freq(int(self.pwm_freq))
+        
+        self.lock.release()
 
         self.pwm_bitres = 4096.0
         self.pwm_scaler = self.pwm_bitres / (1/self.pwm_freq)
+        
+        
         # The PWM periods for a typical servomotor is between 1ms and 2ms, with 1.5ms being the middle of the useable range.        
         self.pwm_period_min   = 10e-4 * self.pwm_scaler # This is the minimum angle (1ms) These will need to be calibrated.
         self.pwm_period_zero  = 15e-4 * self.pwm_scaler # This angle is the middle of the servo range (1.5ms)
@@ -83,6 +94,7 @@ class Eye:
         #print("Servo PWM period Horiz: " + str(servo_pwm_period_horiz))
 
         # Apply this new duty cycle to the servomotor
+        
         self.eye.set_pwm(self.vert_ch, 0, int(servo_pwm_period_vert))
         self.eye.set_pwm(self.horiz_ch, 0, int(servo_pwm_period_horiz))
         

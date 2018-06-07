@@ -4,6 +4,7 @@ import Internals.Utils.wlogger as wlogger
 import Main.config as config
 
 from Adafruit_PCA9685 import PCA9685 
+import Internals.Utils.wgloballock as wgloballock
 
 print_debug = True
 
@@ -12,6 +13,9 @@ print_debug = True
 
 class Tail:
     def set_up_pins(self):
+        
+         # Set up file lock.
+        self.lock = wgloballock.WFileLock("my_lock.txt", dir="/home/pi/temp")
         
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BCM)
@@ -24,9 +28,11 @@ class Tail:
         self.backwards_ch = 1
         
         # PWM Setup Variables
+        self.lock.acquire()
         self.motor = PCA9685(0x41) # Always use the default i2c address for the PWM hats. This call turns off any pwm signal currently being sent.
         self.pwm_freq = 5000
         self.motor.set_pwm_freq(self.pwm_freq)
+        self.lock.release()
     
         self.pwm_bitres = 4096
         self.pwm_scaler = self.pwm_bitres / (1/self.pwm_freq)
@@ -36,20 +42,26 @@ class Tail:
         if print_debug:
             print("Tail On")
         GPIO.output(config.touchOutputPin, GPIO.HIGH)
-        self.motor.set_pwm(self.forward_ch, 0, 2250) # needs calibrating - changes speed of tail.
+        self.lock.acquire()
+        self.motor.set_pwm(self.forward_ch, 0, 2250) # Calibrated
         self.motor.set_pwm(self.backwards_ch, 0, 0)
+        self.lock.release()
+        wlogger.log_info("Set Tail On")
     
     def set_tail_off(self):
         
         if print_debug:
             print("Tail Off")
         GPIO.output(config.touchOutputPin, GPIO.LOW)
+        self.lock.acquire()
         self.motor.set_pwm(self.forward_ch, 0, 0)
         self.motor.set_pwm(self.backwards_ch, 0, 0)
+        self.lock.release()
+        wlogger.log_info("Set Tail Off")
         
     
     def record_button_press(self):
-        if config.button_press_count % 1000 == 0:
+        if config.button_press_count % 100 == 0:
             with open('TailButtonCount.log', 'w+') as f:
                 f.write(str(config.button_press_count))
             
