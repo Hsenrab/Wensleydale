@@ -482,7 +482,7 @@ class Controller:
         
     def randomSleep(self):
     
-        rand = random.randint(0,6)
+        rand = random.randint(0,4)
     
         if rand == 0:
             rand = 0.5
