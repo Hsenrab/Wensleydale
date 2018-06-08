@@ -128,6 +128,7 @@ def setup_loggers(directory_path, debug_on=False, test_mode_on=False, name='Log'
         logger.info('Logger Initialised')
         
     logger.info(os.getpid())
+    print(os.getpid())
 
 
 def tear_down_loggers(name='Log'):
@@ -150,7 +151,7 @@ def check_folder_size(DIR):
     dirSize = len(dirList)
     dirList.sort()
     
-    print (dirSize)
+    #print (dirSize)
     
     while dirSize >= 48 :
                 
