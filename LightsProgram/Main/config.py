@@ -35,7 +35,7 @@ random_change_frequency = 200
 
 # Delay before button can be pressed again. (Cycles not seconds)
 # There are approx 9.5 cycles per second.
-pause_cycles = 50
+pause_cycles = 25
 
 # Pin set up.
 colourInputPin = 24

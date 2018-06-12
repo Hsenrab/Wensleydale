@@ -31,24 +31,29 @@ while keep_running:
         
         print('Run BiColourSnakesCombine Pattern')
         # No extra variables given
-        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1,
+        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.00, num_steps_per_cycle=50, num_cycles=1,
                                                     colour=enums.WColour.Blue, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.BiColourSnakesCombine)
         MY_CYCLE.start()
         
             
-        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1,
+        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.00, num_steps_per_cycle=50, num_cycles=1,
                                                     colour=enums.WColour.Green, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.BiColourSnakesCombine,
                                                     colour_b=enums.WColour.Pink)
         MY_CYCLE.start()
         
-        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1,
+        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=50, num_cycles=1,
                                                     colour=enums.WColour.White, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.BiColourSnakesCombine,
                                                     colour_b=enums.WColour.Blue)
         MY_CYCLE.start()
         
-        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.04, num_steps_per_cycle=50, num_cycles=1,
+        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=50, num_cycles=1,
                                                     colour=enums.WColour.Green, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.BiColourSnakesCombine,
                                                     colour_b=enums.WColour.Red)
+                                                    
+        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=50, num_cycles=1,
+                                                    colour=enums.WColour.Blue, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.BiColourSnakesCombine,
+                                                    colour_b=enums.WColour.Yellow)
+                                                    
         MY_CYCLE.start()
         
     except KeyboardInterrupt:  # Ctrl-C can halt the light program

@@ -21,21 +21,33 @@ print(NUM_LED)
 keep_running = True
 while keep_running:
     try:
-        # Cycle of light pattern
+        #Cycle of light pattern
         print('Run Block Light Patterns')
-        MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=1700, num_cycles=1) 
+        MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=3000, num_cycles=1) 
         MY_CYCLE.start()
         
         print('Run Gromit Colours')
-        MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=3, num_steps_per_cycle=1, num_cycles=1) 
+        MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=5, num_steps_per_cycle=1, num_cycles=1) 
         MY_CYCLE.start()
         
         print('Run GromitSlide')
-        MY_CYCLE = partslidepatterns.GromitSlide(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=90, num_cycles=0, speed=enums.WSpeed.Cheetah, slide_speed=30)
+        MY_CYCLE = partslidepatterns.GromitSlide(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=70, num_cycles=0, speed=enums.WSpeed.Cheetah, slide_speed=25)
         MY_CYCLE.start()
         
         print('Run MorseCode')
         MY_CYCLE = blocklightpatterns.FixedMorse(num_led=NUM_LED, pause_value=10, num_steps_per_cycle=1, num_cycles=1, morse=morse.renishaw)
+        MY_CYCLE.start()
+        
+        
+        print('Run BiColours')
+        MY_CYCLE = blocklightpatterns.BiColour(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=50, num_cycles=1,
+                                                    colour=enums.WColour.Green, speed=enums.WSpeed.Cheetah, pattern=enums.WPattern.BiColourSnakesCombine,
+                                                    colour_b=enums.WColour.Pink)
+        MY_CYCLE.start()
+        
+
+        print('Run Gromit Colours')
+        MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=3, num_steps_per_cycle=1, num_cycles=1) 
         MY_CYCLE.start()
 
     

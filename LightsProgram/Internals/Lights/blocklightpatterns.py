@@ -51,37 +51,37 @@ class BlockLightPattern(ColorCycleTemplate):
         self.A_01_02_EarRight = wblock.WBlock(2, 171) #168
         self.blockList.append(self.A_01_02_EarRight)
         
-        self.B_04_03_EarLeft = wblock.WBlock(174, 345) #170
+        self.B_04_03_EarLeft = wblock.WBlock(175, 345) #170
         self.blockList.append(self.B_04_03_EarLeft)
         
-        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 442, True) #96
+        self.C_12_10_BodyUpperLeft = wblock.WBlock(345, 441, True) #96
         self.blockList.append(self.C_12_10_BodyUpperLeft)
         
-        self.D_13_11_BodyLowerLeft = wblock.WBlock(444, 548, True) #104
+        self.D_13_11_BodyLowerLeft = wblock.WBlock(445, 548, True) #104
         self.blockList.append(self.D_13_11_BodyLowerLeft)
         
-        self.E_14_05_BodyUpperRight = wblock.WBlock(548, 700, True) #150
+        self.E_14_05_BodyUpperRight = wblock.WBlock(550, 699, True) #150
         self.blockList.append(self.E_14_05_BodyUpperRight)
         
-        self.F_15_06_BodyLowerRight = wblock.WBlock(701, 866, True) #174
+        self.F_15_06_BodyLowerRight = wblock.WBlock(701, 861, True) #174
         self.blockList.append(self.F_15_06_BodyLowerRight)
         
-        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1044, True) #176
+        self.G_08_07_LegUpperFront = wblock.WBlock(867, 1039, True) #176
         self.blockList.append(self.G_08_07_LegUpperFront)
         
-        self.H_09_08_LegLowerFront = wblock.WBlock(1043, 1212, True) #170
+        self.H_09_08_LegLowerFront = wblock.WBlock(1043, 1210, True) #170
         self.blockList.append(self.H_09_08_LegLowerFront)
         
-        self.I_17_16_LegUpperBack = wblock.WBlock(1214, 1395, True) #180
+        self.I_17_16_LegUpperBack = wblock.WBlock(1218, 1393, True) #180
         self.blockList.append(self.I_17_16_LegUpperBack)
         
-        self.J_18_17_LegLowerBack = wblock.WBlock(1394, 1577, True) #182
+        self.J_18_17_LegLowerBack = wblock.WBlock(1397, 1575, True) #182
         self.blockList.append(self.J_18_17_LegLowerBack)
         
-        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1646, True) #67
+        self.K_20_20_EarFrontLeft = wblock.WBlock(1579, 1653, True) #67
         self.blockList.append(self.K_20_20_EarFrontLeft)
         
-        self.L_19_19_EarFrontRight = wblock.WBlock(1646, 1720, True) #74
+        self.L_19_19_EarFrontRight = wblock.WBlock(1653, 1720, True) #74
         self.blockList.append(self.L_19_19_EarFrontRight)
 
         
@@ -336,10 +336,14 @@ class FixedMorse(BlockLightPattern):
                         enums.WPattern.FixedMorse,
                         [self.E_14_05_BodyUpperRight])
                         
+        self.E_14_05_BodyUpperRight.dont_invert_direction()
+                        
         self.set_blocks(self.colour,
                         enums.WSpeed.Cheetah, # This will be ignored
                         enums.WPattern.FixedMorse,
                         [self.F_15_06_BodyLowerRight])
+                        
+        self.F_15_06_BodyLowerRight.dont_invert_direction()
                         
                         
         self.set_blocks(self.colour,
@@ -363,18 +367,56 @@ class FixedMorse(BlockLightPattern):
             self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
                             self.mainBlocks)
                             
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.E_14_05_BodyUpperRight])
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.F_15_06_BodyLowerRight])
-                            
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.C_12_10_BodyUpperLeft])
-                            
-            self.update_blocks(strip, num_steps_per_cycle, current_step, current_cycle,
-                                [self.D_13_11_BodyLowerLeft]) 
+            upperLeftMorse = self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    upperLeftMorse,
+                                    self.colour_b,
+                                    [self.C_12_10_BodyUpperLeft])
+                                    
+                                    
+            lowerLeftMorse = [0,0,0,0] + self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    lowerLeftMorse,
+                                    self.colour_b,
+                                    [self.D_13_11_BodyLowerLeft])
+                                    
+                                    
+            upperRightMorse = [0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0] + self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    upperRightMorse,
+                                    self.colour_b,
+                                     [self.E_14_05_BodyUpperRight])
+                                     
+            lowerRightMorse = [0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0,0,0,0,0,0,0,0,0,0,
+                                0] + self.morse
+            patterns.fixed_morse(   strip, 
+                                    num_steps_per_cycle,
+                                    current_step,
+                                    current_cycle,
+                                    lowerRightMorse,
+                                    self.colour_b,
+                                    [self.F_15_06_BodyLowerRight])
+                                    
+                                    
+            
+
 
 
             return 1
