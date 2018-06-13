@@ -92,10 +92,10 @@ class BlockLightPattern(ColorCycleTemplate):
         
     def set_blocks_to_current_global(self, blockList):
         
-        with threading.Lock():
-            current_pattern = config.wlight_pattern
-            current_speed = config.wlight_speed
-            current_colour = config.wlight_colour
+        with config.lock:
+            current_pattern = config.patternList[config.wpattern_index]
+            current_speed = config.speedList[config.wspeed_index]
+            current_colour = config.colourList[config.wcolour_index]
 
         for block in blockList:
             block.set_variables(current_colour, current_speed, current_pattern)
@@ -164,9 +164,9 @@ class ChangingBlockLightPattern(BlockLightPattern):
         
         # Set up pattern list, these are the patterns that will cycle when the buttons are pressed.
         config.patternList = [  enums.WPattern.Twinkle,
-                                enums.WPattern.RandomInOut,
                                 enums.WPattern.BlockedSlide,
                                 enums.WPattern.Snakes,
+                                enums.WPattern.RandomInOut,
                                 enums.WPattern.Singles
                                 ]
                                 
@@ -181,7 +181,6 @@ class ChangingBlockLightPattern(BlockLightPattern):
                                 
         # Set up speed list, these are the speeds that will cycle when the buttons are pressed.
         config.speedList = [    enums.WSpeed.Sloth,
-                                enums.WSpeed.Hare,
                                 enums.WSpeed.Cheetah]
                                 
                                 
@@ -211,6 +210,26 @@ class ChangingBlockLightPattern(BlockLightPattern):
                             self.blockList)
 
         return 1 # Always update as globals may have changed the pattern.
+        
+    def start(self, colour_index, speed_index, pattern_index):
+        
+        with config.lock:
+            config.wcolour_index = colour_index
+            config.wspeed_index = speed_index
+            config.wpattern_index = pattern_index
+            
+        super(ChangingBlockLightPattern, self).start()
+        
+        with config.lock:
+            colour_index = config.wcolour_index
+            speed_index = config.wspeed_index
+            pattern_index  = config.wpattern_index
+            
+        return colour_index, speed_index, pattern_index
+        
+        
+        
+        
         
 class GlobalPattern(BlockLightPattern):
     """Paints a pattern on all the strips."""

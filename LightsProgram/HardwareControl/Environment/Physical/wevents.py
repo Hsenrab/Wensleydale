@@ -46,45 +46,52 @@ def getkey():
     return ch
     
     
-def randomly_change_pattern(lock, colour_cycle, speed_cycle, pattern_cycle):
+def randomly_change_pattern():
     # Randomly change colour, speed or pattern.
-    variable_to_change = randint(0, 2)
+    variable_to_change = randint(0, 6)
     
     if variable_to_change == 0:
-        # Cycle a random number of times.
-        number_of_cycles = randint(1, len(config.speedList)-1)
-        
-        for cycle in range(0, number_of_cycles):
-            with lock:
-                config.wlight_speed = next(speed_cycle)
+        # Change to other speed.
+
+        with config.lock:
+            config.wspeed_index = (config.wspeed_index + 1) % len(config.speedList)
                 
         if print_debug:
             print("Auto Change - Speed", flush=True)
-            print(config.wlight_speed, flush=True)
+            print(config.speedList[config.wspeed_index], flush=True)
             
-    elif variable_to_change == 1:
-        # Cycle a random number of times.
-        number_of_cycles = randint(1, len(config.patternList)-1)
+    elif variable_to_change < 4:
+        # Change to random pattern.
         
-        for cycle in range(0, number_of_cycles):
-            with lock:
-                config.wlight_pattern = next(pattern_cycle)
-                
+        old_index = config.wpattern_index
+        
+        print("Pattern")
+        
+        with config.lock:
+            while old_index == config.wpattern_index:
+                config.wpattern_index = randint(0, len(config.patternList)-1)
+
         if print_debug:
             print("Auto Change - Pattern", flush=True)
-            print(config.wlight_pattern, flush=True)
+            with config.lock:
+                print(config.patternList[config.wpattern_index], flush=True)
             
-    elif variable_to_change == 2:
-        # Cycle a random number of times.
-        number_of_cycles = randint(1, len(config.colourList)-1)
+    else:
+        # Change to random colour.
         
-        for cycle in range(0, number_of_cycles):
-            with lock:
-                config.wlight_colour = next(colour_cycle)
+        old_index = config.wcolour_index
+        
+        print("Colour")
+        
+        with config.lock:
+            while old_index == config.wcolour_index:
+                config.wcolour_index = randint(0, len(config.colourList)-1)
+
                 
         if print_debug:
             print("Auto Change - Colour", flush=True)
-            print(config.wlight_colour, flush=True)
+            with config.lock:
+                print(config.colourList[config.wcolour_index], flush=True)
 
 def set_leds(canColourChange, canPatternChange, canSpeedChange, count):
     # Turn LEDs off if the buttons are available
@@ -120,8 +127,6 @@ def buttonThread():
     global button_press_count
     input_thread = threading.currentThread()
 
-    lock = threading.Lock()
-
     continue_thread = True
     
     canColourChange=0
@@ -129,15 +134,6 @@ def buttonThread():
     canPatternChange=0
     
     count = 0
-    
-    pattern_cycle = itertools.cycle(config.patternList)
-    colour_cycle = itertools.cycle(config.colourList)
-    speed_cycle = itertools.cycle(config.speedList)
-    
-    with lock:
-        config.wlight_pattern = next(pattern_cycle)
-        config.wlight_colour = next(colour_cycle)
-        config.wlight_speed = next(speed_cycle)
     
 
     while not input_thread.stopped():
@@ -147,12 +143,12 @@ def buttonThread():
         # Determine if the brightness needs changing by looking at the number
         # of cycles there has been without a button press.
         if config.cycles_without_button_press == config.num_cycles_before_dimming:
-            with lock:
+            with config.lock:
                 config.current_brightness = config.NIGHT_BRIGHTNESS
                 if print_debug:
                     print("Night Brightness: " + str(count))
         elif config.cycles_without_button_press == 0:
-            with lock:
+            with config.lock:
                 if print_debug:
                     print("Day Brightness: " + str(count))
                 config.current_brightness = config.MAX_BRIGHTNESS
@@ -168,7 +164,7 @@ def buttonThread():
             
             if print_debug:
                     print("Random Change: " + str(count))
-            randomly_change_pattern(lock, colour_cycle, speed_cycle, pattern_cycle)
+            randomly_change_pattern()
                 
 
         ## Gather button inputs
@@ -192,13 +188,13 @@ def buttonThread():
             button_press_count += 1
             canColourChange= count + config.pause_cycles
             
-            with lock:
-                config.wlight_colour = next(colour_cycle)
+            with config.lock:
+                config.wcolour_index = (config.wcolour_index + 1) % len(config.colourList)
                 wlogger.log_info("Button press - Colour, No. Presses: " + str(button_press_count))
                 
                 if print_debug:
                     print("Button press - Colour", flush=True)
-                    print(config.wlight_colour)
+                    print(config.colourList[config.wcolour_index])
                     print("Count: " + str(count))
                 
             GPIO.output(config.colourOutputPin, GPIO.HIGH)
@@ -209,12 +205,12 @@ def buttonThread():
             button_press_count += 1
             canSpeedChange= count + config.pause_cycles
             
-            with lock:
-                config.wlight_speed = next(speed_cycle)
+            with config.lock:
+                config.wspeed_index = (wspeed_index + 1) % config.wspeed_index
             
                 if print_debug:
                     print("Button press - Speed", flush=True)
-                    print(config.wlight_speed)
+                    print(config.speedList[config.wspeed_index])
                 
             GPIO.output(config.speedOutputPin, GPIO.HIGH)
             
@@ -225,11 +221,11 @@ def buttonThread():
             button_press_count += 1
             canPatternChange = count + config.pause_cycles
             
-            with lock:
-                config.wlight_pattern = next(pattern_cycle)
+            with config.lock:
+                config.wpattern_index = (config.wpattern_index + 1) % len(config.patternList)
                 if print_debug:
                     print("Button press - Pattern", flush=True)
-                    print(config.wlight_pattern)
+                    print(config.patternList[config.wpattern_index])
                 
             GPIO.output(config.patternOutputPin, GPIO.HIGH)
 

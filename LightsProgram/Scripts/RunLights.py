@@ -18,13 +18,17 @@ NUM_LED = 12*144
 print("Num LEDS")
 print(NUM_LED)
 
+colour_index = 0
+speed_index = 0
+pattern_index = 0
+
 keep_running = True
 while keep_running:
     try:
         #Cycle of light pattern
         print('Run Block Light Patterns')
         MY_CYCLE = blocklightpatterns.ChangingBlockLightPattern(num_led=NUM_LED, pause_value=0.0, num_steps_per_cycle=3000, num_cycles=1) 
-        MY_CYCLE.start()
+        (colour_index, speed_index, pattern_index) = MY_CYCLE.start(colour_index, speed_index, pattern_index)
         
         print('Run Gromit Colours')
         MY_CYCLE = blocklightpatterns.GromitColours(num_led=NUM_LED, pause_value=5, num_steps_per_cycle=1, num_cycles=1) 

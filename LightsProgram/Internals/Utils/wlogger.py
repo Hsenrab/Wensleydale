@@ -150,8 +150,6 @@ def check_folder_size(DIR):
     dirSize = len(dirList)
     dirList.sort()
     
-    print (dirSize)
-    
     while dirSize >= 48 :
                 
         current_file = os.path.join(DIR, dirList[0])        
