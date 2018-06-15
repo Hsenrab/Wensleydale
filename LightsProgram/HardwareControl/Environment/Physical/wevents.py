@@ -14,7 +14,7 @@ import sys
 import tty
 #from msvcrt import getwch
 
-print_debug = True
+print_debug = False
 
 
 def set_up_pins():
@@ -206,10 +206,9 @@ def buttonThread():
             canSpeedChange= count + config.pause_cycles
             
             with config.lock:
-                config.wspeed_index = (wspeed_index + 1) % config.wspeed_index
-            
+                config.wspeed_index = (config.wspeed_index + 1) % len(config.speedList)            
                 if print_debug:
-                    print("Button press - Speed", flush=True)
+                    print("Button press - Speed, No. Presses: " + str(button_press_count))
                     print(config.speedList[config.wspeed_index])
                 
             GPIO.output(config.speedOutputPin, GPIO.HIGH)
@@ -224,7 +223,7 @@ def buttonThread():
             with config.lock:
                 config.wpattern_index = (config.wpattern_index + 1) % len(config.patternList)
                 if print_debug:
-                    print("Button press - Pattern", flush=True)
+                    print("Button press - Pattern, No. Presses: " + str(button_press_count))
                     print(config.patternList[config.wpattern_index])
                 
             GPIO.output(config.patternOutputPin, GPIO.HIGH)
