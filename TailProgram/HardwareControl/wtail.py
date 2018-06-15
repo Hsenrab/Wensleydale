@@ -92,7 +92,35 @@ class Tail:
         continue_control = True
         button_already_pressed = False
         
-        while continue_control:    
+        while continue_control:
+            
+            # Assume this cycles has no button press. This will be reset to
+            # zero if a button is pressed.
+            config.cycles_without_button_press += 1
+
+            # Determine whether a random change is needed. 
+        
+            if config.cycles_without_button_press > config.num_cycles_before_random_wag:
+                if config.cycles_without_button_press % config.random_wag_frequency < config.random_wag_length:
+            
+                    wlogger.log_info("Random Wag -> Tail On")
+                    
+                    if print_debug:
+                        print("Random Wag -> Tail On", flush=True)
+                        
+                    is_tail_on = True
+                    
+                    
+                else:
+                    
+                    wlogger.log_info("Random Wag -> Tail Off")
+                    
+                    if print_debug:
+                        print("Random Wag -> Tail Off", flush=True)
+                        
+                    is_tail_on = False
+                
+            
             # Gather button input
             inputButton = GPIO.input(config.touchInputPin)
     

@@ -21,3 +21,10 @@ button_press_count = 0
 
 touchInputPin = 15
 touchOutputPin = 0
+
+
+config.num_cycles_before_random_wag = 300
+config.random_wag_frequency = 300
+config.random_wag_length = 100
+            
+                 
