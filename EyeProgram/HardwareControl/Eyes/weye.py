@@ -97,7 +97,8 @@ class Eye:
         # Apply this new duty cycle to the servomotor
         
         successful_move = False
-        while not successful_move:
+        num_tries = 0
+        while not successful_move and num_tries < 1000:
             try:
                 self.eye.set_pwm(self.vert_ch, 0, int(servo_pwm_period_vert))
                 self.eye.set_pwm(self.horiz_ch, 0, int(servo_pwm_period_horiz))
@@ -105,9 +106,10 @@ class Eye:
             except IOError as e:
                 if print_debug:
                     print("ExceptionCaught")
-                wlogger.log_info("Exceptioin Caught")
+                wlogger.log_info("Exception Caught")
                 wlogger.log_info(e)
                 successful_move = False
+                num_tries += 1
                 pass
         
         #Update the positions

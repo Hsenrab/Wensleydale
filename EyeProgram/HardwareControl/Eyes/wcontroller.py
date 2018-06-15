@@ -18,9 +18,6 @@ class Controller:
         """
         Create Controller
         """
-        
-        # Set up file lock.
-        self.lock = wgloballock.WFileLock("my_lock.txt", dir="/home/pi/temp")
 
         wlogger.log_info("Initialising Controller")
         self.LeftEye  = weye.Eye(1, ( 1, 0, 0), 4, 5)
@@ -74,16 +71,12 @@ class Controller:
             pygame.display.flip()
             
     def move_to(self, horiz_angle, vert_angle):
-            self.lock.acquire()
             self.LeftEye.move_to(horiz_angle, vert_angle)
             self.RightEye.move_to(horiz_angle, vert_angle)
-            self.lock.release()
             
     def unsafe_move_to(self, horiz_angle, vert_angle):
-        self.lock.acquire()
         self.LeftEye.unsafe_move_to_mapped_position(horiz_angle, vert_angle)
         self.RightEye.unsafe_move_to_mapped_position(horiz_angle, vert_angle)
-        self.lock.release()
 
 
     def extreme_left(self, stepSize):
@@ -248,7 +241,6 @@ class Controller:
             REVertStep = rightVertChange/num_steps
             REHorizStep = rightHorizChange/num_steps
             
-            self.lock.acquire()
         
             for i in range(num_steps):
                 
@@ -273,7 +265,6 @@ class Controller:
 
             self.LeftEye.move_to(LEhoriz, LEvert)
             self.RightEye.move_to(REhoriz, REvert)
-            self.lock.release()
             
             
 
