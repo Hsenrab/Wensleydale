@@ -35,6 +35,7 @@ cycles_without_button_press = 0
 num_cycles_before_dimming = 300000
 num_cycles_before_random_changes = 300
 random_change_frequency = 200
+num_cycles_between_button_recording = 6000
 
 # Delay before button can be pressed again. (Cycles not seconds)
 # There are approx 9.5 cycles per second.

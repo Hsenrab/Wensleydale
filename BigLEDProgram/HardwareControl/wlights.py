@@ -65,10 +65,20 @@ def set_leds_off():
     GPIO.output(config.BigLEDBOutputPinGreen, GPIO.LOW)
     
 
-def record_button_press():
-    if config.button_press_count % 1000 == 0:
-        with open('BigLEDsButtonCount.log', 'w+') as f:
-            f.write(str(config.button_press_count))
+def record_button_presses(button_press_count)
+ 
+    file_path = '/home/pi/BigLEDButtonPresses.csv'
+    if not os.path.isfile(file_path):
+        with open(file_path, 'a') as buttonFile:
+            wrtr = csv.writer(buttonFile, delimiter=',', quotechar='"')
+            wrtr.writerow(['Pi Time',
+                            'Total Count'])
+                            
+    with open(file_path, 'a') as buttonFile:
+        wrtr = csv.writer(buttonFile, delimiter=',', quotechar='"')
+        timestamp = time.time()
+        wrtr.writerow([datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
+                        button_press_count)
         
 
 
@@ -84,6 +94,7 @@ def control_big_leds():
     
     continue_control = True
     button_already_pressed = False
+    button_press_count = 0
     
     while continue_control:    
         # Gather button input
@@ -92,7 +103,7 @@ def control_big_leds():
         # Change BigLED if button is pressed.
         if inputButton and not button_already_pressed:
             GPIO.output(config.touchOutputPin, GPIO.HIGH)
-            config.button_press_count += 1
+            button_press_count += 1
             button_already_pressed = True
             
             if False: 
@@ -111,15 +122,23 @@ def control_big_leds():
                     print("Button press -> LEDs On", flush=True)
                     
                 is_LEDs_on = True
-                
-            record_button_press()
+
                  
         elif not inputButton:
             GPIO.output(config.touchOutputPin, GPIO.LOW)
             button_already_pressed = False
                 
        
-        
+        try:
+            if count % config.num_cycles_between_button_recording == 0:
+                record_button_presses(button_press_count)   
+                button_press_count = 0
+                
+        except Exception as e:
+            print("Recording Error")
+            wlogger.log_info(e)
+            pass
+            
         # Small time delay between each run through.
         time.sleep(0.1)
         

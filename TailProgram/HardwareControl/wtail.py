@@ -87,10 +87,20 @@ class Tail:
         wlogger.log_info("Set Tail Off")
         
     
-    def record_button_press(self):
-        if config.button_press_count % 100 == 0:
-            with open('TailButtonCount.log', 'w+') as f:
-                f.write(str(config.button_press_count))
+    def record_button_presses(button_press_count)
+ 
+        file_path = '/home/pi/TailButtonPresses.csv'
+        if not os.path.isfile(file_path):
+            with open(file_path, 'a') as buttonFile:
+                wrtr = csv.writer(buttonFile, delimiter=',', quotechar='"')
+                wrtr.writerow(['Pi Time',
+                                'Total Count'])
+                                
+        with open(file_path, 'a') as buttonFile:
+            wrtr = csv.writer(buttonFile, delimiter=',', quotechar='"')
+            timestamp = time.time()
+            wrtr.writerow([datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
+                            button_press_count)
             
     
     
@@ -108,6 +118,7 @@ class Tail:
         button_already_pressed = False
         
         config.cycles_without_button_press = 0
+        button_press_count = 0
         
         while continue_control:
             
@@ -142,7 +153,7 @@ class Tail:
             # Change BigLED if button is pressed.
             if inputButton and not button_already_pressed:
                 button_already_pressed = True
-                config.button_press_count += 1
+                button_press_count += 1
                 config.cycles_without_button_press = 0
                 
                 if is_tail_on: 
@@ -161,18 +172,18 @@ class Tail:
                         
                     is_tail_on = True
                 
-                self.record_button_press()
+
             elif not inputButton:
                 button_already_pressed = False
                 
-            print(is_tail_on)
+
             if is_tail_on: 
                 self.set_tail_on()
             else:
                 self.set_tail_off()
 
             
-            self.record_button_press()
+            self.record_button_press(button_press_count)
             
             # Small time delay between each run through.
             time.sleep(0.1)
