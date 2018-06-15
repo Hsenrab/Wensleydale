@@ -44,9 +44,13 @@ def setup_loggers(directory_path, debug_on=False, test_mode_on=False, name='Log'
     debug_folder = os.path.join(directory_path, 'Log_Debug')
     debug_path = os.path.join(debug_folder, datestr + "_DebugLog.txt")
 
+
+    n=0
+    filename, file_extension = os.path.splitext(info_path)
     while os.path.exists(info_path):
-        filename, file_extension = os.path.splitext(info_path)
-        info_path = filename + 'X.txt'
+        info_path = filename + str(n) + '.txt'
+        n+=1
+
 
     # Make folder for info log.
     try:

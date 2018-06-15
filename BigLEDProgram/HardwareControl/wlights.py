@@ -3,7 +3,12 @@ import time
 import Internals.Utils.wlogger as wlogger
 import Main.config as config
 import random
-print_debug = True
+
+import os
+import csv
+import datetime
+
+print_debug = False
 
 
 
@@ -23,7 +28,7 @@ def set_up_pins():
     
 
 
-def set_leds_on():
+def change_leds():
     
     set_leds_off() #Clear previous colours
     
@@ -65,7 +70,7 @@ def set_leds_off():
     GPIO.output(config.BigLEDBOutputPinGreen, GPIO.LOW)
     
 
-def record_button_presses(button_press_count)
+def record_button_presses(button_press_count):
  
     file_path = '/home/pi/BigLEDButtonPresses.csv'
     if not os.path.isfile(file_path):
@@ -78,7 +83,7 @@ def record_button_presses(button_press_count)
         wrtr = csv.writer(buttonFile, delimiter=',', quotechar='"')
         timestamp = time.time()
         wrtr.writerow([datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
-                        button_press_count)
+                        button_press_count])
         
 
 
@@ -89,14 +94,16 @@ def control_big_leds():
     set_up_pins()
     
     # Set LEDs on to start.
-    set_leds_on()
+    change_leds()
     is_LEDs_on = True
     
     continue_control = True
     button_already_pressed = False
     button_press_count = 0
+    count = 0
     
-    while continue_control:    
+    while continue_control:  
+        count += 1  
         # Gather button input
         inputButton = GPIO.input(config.touchInputPin)
 
@@ -106,24 +113,13 @@ def control_big_leds():
             button_press_count += 1
             button_already_pressed = True
             
-            if False: 
-                set_leds_off()
-                wlogger.log_info("Button press -> LEDs Off, No. Presses: " + str(config.button_press_count))
+            change_leds()
+            wlogger.log_info("Button press -> LEDs Changed")
                 
-                if print_debug:
-                    print("Button press -> LEDs Off", flush=True)
-                    
-                is_LEDs_on = False
-            else:
-                set_leds_on()
-                wlogger.log_info("Button press -> LEDs On, No. Presses: " + str(config.button_press_count))
-                
-                if print_debug:
-                    print("Button press -> LEDs On", flush=True)
-                    
-                is_LEDs_on = True
+            if print_debug:
+                print("Button press -> LEDs Changed", flush=True)
 
-                 
+
         elif not inputButton:
             GPIO.output(config.touchOutputPin, GPIO.LOW)
             button_already_pressed = False

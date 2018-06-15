@@ -2,11 +2,13 @@ import RPi.GPIO as GPIO
 import time
 import Internals.Utils.wlogger as wlogger
 import Main.config as config
-
+import os
+import datetime
+import csv
 from Adafruit_PCA9685 import PCA9685 
 import Internals.Utils.wgloballock as wgloballock
 
-print_debug = True
+print_debug = False
 
 
 
@@ -87,7 +89,7 @@ class Tail:
         wlogger.log_info("Set Tail Off")
         
     
-    def record_button_presses(button_press_count)
+    def record_button_presses(self, button_press_count):
  
         file_path = '/home/pi/TailButtonPresses.csv'
         if not os.path.isfile(file_path):
@@ -99,8 +101,7 @@ class Tail:
         with open(file_path, 'a') as buttonFile:
             wrtr = csv.writer(buttonFile, delimiter=',', quotechar='"')
             timestamp = time.time()
-            wrtr.writerow([datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'),
-                            button_press_count)
+            wrtr.writerow([datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'), button_press_count])
             
     
     
@@ -119,8 +120,10 @@ class Tail:
         
         config.cycles_without_button_press = 0
         button_press_count = 0
+        count = 0
         
         while continue_control:
+            count +=1
             
             # Assume this cycle has no button press.
             config.cycles_without_button_press += 1
@@ -157,7 +160,7 @@ class Tail:
                 config.cycles_without_button_press = 0
                 
                 if is_tail_on: 
-                    wlogger.log_info("Button press -> Tail Off, No. Presses: " + str(config.button_press_count))
+                    wlogger.log_info("Button press -> Tail Off")
                     
                     if print_debug:
                         print("Button press -> Tail Off", flush=True)
@@ -165,7 +168,7 @@ class Tail:
                     is_tail_on = False
                     
                 else:
-                    wlogger.log_info("Button press -> Tail On, No. Presses: " + str(config.button_press_count))
+                    wlogger.log_info("Button press -> Tail On")
                     
                     if print_debug:
                         print("Button press -> Tail On", flush=True)
@@ -183,7 +186,15 @@ class Tail:
                 self.set_tail_off()
 
             
-            self.record_button_press(button_press_count)
+            try:
+                if count % config.num_cycles_between_button_recording == 0:
+                    self.record_button_presses(button_press_count)   
+                    button_press_count = 0
+                
+            except Exception as e:
+                print("Recording Error")
+                wlogger.log_info(e)
+                pass
             
             # Small time delay between each run through.
             time.sleep(0.1)

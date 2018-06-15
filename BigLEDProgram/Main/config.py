@@ -16,7 +16,7 @@ log_directory = os.path.join(wensleydale_directory, 'Logs')
 
 
 # Button press count
-num_cycles_between_button_recording = 30 #6000
+num_cycles_between_button_recording = 6000
 
 
 # Pins
