@@ -14,7 +14,7 @@ print_debug = True
 class Tail:
     def set_up_pins(self):
         
-         # Set up file lock.
+        # Set up file lock.
         self.lock = wgloballock.WFileLock("my_lock.txt", dir="/home/pi/temp")
         
         GPIO.setwarnings(False)
@@ -42,9 +42,10 @@ class Tail:
         if print_debug:
             print("Tail On")
         GPIO.output(config.touchOutputPin, GPIO.HIGH)
-        self.lock.acquire()
+        
         successful_move = False
-        while not successful_move:
+        num_tries = 0
+        while not successful_move and num_tries < 1000:
             try:
                 self.motor.set_pwm(self.forward_ch, 0, 2250) # Calibrated
                 self.motor.set_pwm(self.backwards_ch, 0, 0)
@@ -52,12 +53,15 @@ class Tail:
             except IOError as e:
                 if print_debug:
                     print("ExceptionCaught")
-                wlogger.log_info("Exceptioin Caught")
+                wlogger.log_info("Exception Caught")
                 wlogger.log_info(e)
                 successful_move = False
+                num_tries += 1
                 pass
-        
-        self.lock.release()
+                
+        if num_tries >= 1000:
+            wlogger.log_info("Num Tries Reached")
+                
         wlogger.log_info("Set Tail On")
     
     def set_tail_off(self):
@@ -65,10 +69,21 @@ class Tail:
         if print_debug:
             print("Tail Off")
         GPIO.output(config.touchOutputPin, GPIO.LOW)
-        self.lock.acquire()
-        self.motor.set_pwm(self.forward_ch, 0, 0)
-        self.motor.set_pwm(self.backwards_ch, 0, 0)
-        self.lock.release()
+        successful_move = False
+        num_tries = 0
+        while not successful_move and num_tries < 1000:
+            try:
+                self.motor.set_pwm(self.forward_ch, 0, 0) # Calibrated
+                self.motor.set_pwm(self.backwards_ch, 0, 0)
+                successful_move = True
+            except IOError as e:
+                if print_debug:
+                    print("ExceptionCaught")
+                wlogger.log_info("Exception Caught")
+                wlogger.log_info(e)
+                successful_move = False
+                num_tries += 1
+                pass
         wlogger.log_info("Set Tail Off")
         
     
@@ -86,22 +101,22 @@ class Tail:
         self.set_up_pins()
 
         # Set tail off to start.
-        self.set_tail_off()
-        is_tail_on = False
+        self.set_tail_on()
+        is_tail_on = True
         
         continue_control = True
         button_already_pressed = False
         
+        config.cycles_without_button_press = 0
+        
         while continue_control:
             
-            # Assume this cycles has no button press. This will be reset to
-            # zero if a button is pressed.
+            # Assume this cycle has no button press.
             config.cycles_without_button_press += 1
-
-            # Determine whether a random change is needed. 
-        
+            
+             # Determine whether a random wag is needed. 
             if config.cycles_without_button_press > config.num_cycles_before_random_wag:
-                if config.cycles_without_button_press % config.random_wag_frequency < config.random_wag_length:
+                if config.cycles_without_button_press % config.random_wag_frequency == 0:
             
                     wlogger.log_info("Random Wag -> Tail On")
                     
@@ -111,7 +126,7 @@ class Tail:
                     is_tail_on = True
                     
                     
-                else:
+                elif config.cycles_without_button_press % config.random_wag_frequency == config.random_wag_length:
                     
                     wlogger.log_info("Random Wag -> Tail Off")
                     
@@ -119,8 +134,8 @@ class Tail:
                         print("Random Wag -> Tail Off", flush=True)
                         
                     is_tail_on = False
-                
-            
+
+
             # Gather button input
             inputButton = GPIO.input(config.touchInputPin)
     
@@ -128,6 +143,7 @@ class Tail:
             if inputButton and not button_already_pressed:
                 button_already_pressed = True
                 config.button_press_count += 1
+                config.cycles_without_button_press = 0
                 
                 if is_tail_on: 
                     wlogger.log_info("Button press -> Tail Off, No. Presses: " + str(config.button_press_count))
